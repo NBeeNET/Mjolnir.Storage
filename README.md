@@ -2,7 +2,7 @@
 
 ## NBeeNET - Mjolnir.Storage
 
-Mjolnir.Storage 是一个基于 .Net Core + Restful API 开发的对象存储代理服务。
+Mjolnir.Storage 是一个基于 .Net Core + Restful API 开发的对象存储代理作业服务。
 
 ## Mjolnir.Storage 能干什么
 
