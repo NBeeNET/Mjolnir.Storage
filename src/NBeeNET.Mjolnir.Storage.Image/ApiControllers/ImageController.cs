@@ -18,8 +18,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        [HttpPost,HttpPut,HttpPost,HttpPatch]
-        public async Task<IActionResult> Upload(IFormFile file)
+        [HttpPost("UploadImage")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
         {
             //验证是否是图片
             if (ImageValidation.IsCheck(file))
@@ -30,7 +30,85 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 
             return BadRequest("Invalid image file");
         }
-        
+
+        /// <summary>
+        /// 多图片上传
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        [HttpPost("UploadImages")]
+        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        {
+            return BadRequest("Invalid image file");
+            //try
+            //{
+            //    var result = new UploadResponse();
+            //    List<UploadFileEntity> fileEntities = new List<UploadFileEntity>();
+
+            //    //检查是否有文件，没有则从Request.Form.Files获取
+            //    if (files.Count == 0)
+            //    {
+            //        foreach (var item in Request.Form.Files)
+            //        {
+            //            files.Add(item);
+            //        }
+            //    }
+
+            //    foreach (var formFile in files)
+            //    {
+            //        if (formFile.Length > 0)
+            //        {
+            //            //检查是否是图片
+            //            if (CheckIfImageFile(formFile))
+            //            {
+            //                string guid = Guid.NewGuid().ToString();
+            //                string extension = "." + formFile.ContentType.Split("/")[1];
+            //                string fileName = guid + extension; //Create a new Name for the file due to security reasons.
+            //                string localUrl = Request.Scheme.ToString() + "://" + Request.Host.Value.ToString() + "/sso/images/" + fileName;
+
+            //                T_File _File = new T_File();
+            //                _File.Id = guid;
+            //                _File.FileName = fileName;
+            //                _File.ContentType = formFile.ContentType;
+            //                _File.Length = formFile.Length;
+            //                _File.SourceUrl = localUrl;
+            //                _File.Md5Str = MD5Helper.GetMD5HashFormFile(formFile);
+            //                _File.ShortCode = ShortURLHelper.CreateShortURL(localUrl);
+            //                _File.ShortUrl = Request.Scheme.ToString() + "://" + Request.Host.Value.ToString() + "/" + _File.ShortCode;
+            //                _File.Tags = "";
+            //                _File.AppId = "admin";
+            //                _File.IpAddress = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            //                _File.CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            //                //写入本地存储
+            //                await WriteFile(formFile, fileName);
+
+            //                //写入数据库
+            //                await InsertDatabase(_File);
+
+            //                //存入返回结果
+            //                fileEntities.Add(new UploadFileEntity()
+            //                {
+            //                    ContentType = _File.ContentType,
+            //                    LocalUrl = _File.SourceUrl,
+            //                    ShortUrl = _File.ShortUrl
+            //                });
+            //            }
+            //        }
+            //    }
+
+            //    result.Status = "success";
+            //    result.Total = files.Count;
+            //    result.Files = fileEntities;
+            //    return Ok(result);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
+
+        }
+
         /// <summary>
         /// Method to write file onto the disk
         /// </summary>
