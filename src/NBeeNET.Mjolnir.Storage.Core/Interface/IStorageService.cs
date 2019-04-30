@@ -25,12 +25,6 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
         /// <returns></returns>
         T GetInfo<T>(string guid);
 
-        /// <summary>
-        /// 获取文件的存储路径
-        /// </summary>
-        /// <param name="fileGuid"></param>
-        /// <returns></returns>
-        string GetPath(string guid);
 
         /// <summary>
         /// 删除文件

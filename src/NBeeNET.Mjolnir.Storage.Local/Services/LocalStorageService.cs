@@ -12,20 +12,6 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
     /// </summary>
     public class LocalStorageService : IStorageService
     {
-        /// <summary>
-        /// 默认根目录
-        /// </summary>
-        public string _rootPath = Directory.GetCurrentDirectory()+"\\wwwroot\\NBeeNet\\Storage\\Images\\";
-
-        public LocalStorageService()
-        {
-
-        }
-
-        public LocalStorageService(string rootPath)
-        {
-            _rootPath = rootPath;
-        }
 
         /// <summary>
         /// 复制文件夹
@@ -101,33 +87,6 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
             return result;
         }
 
-        /// <summary>
-        /// 获取文件信息
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public T GetInfo<T>(string guid)
-        {
-            try
-            {
-                //找到guid的文件夹
-                string directoryPath = FindDirectory(_rootPath, guid);
-                if (directoryPath == "")
-                {
-                    return null;
-                }
-                else
-                {
-                    string content = File.ReadAllText(directoryPath + guid + ".json");
-                    return JsonConvert.DeserializeObject<T>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
-        }
 
         /// <summary>
         /// 查找目录
@@ -138,7 +97,7 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
         public string FindDirectory(string path,string findStr)
         {
             string directoryPath = "";
-            foreach (string dir in Directory.GetDirectories(_rootPath))
+            foreach (string dir in Directory.GetDirectories(path))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(dir);
                 if (directoryInfo.Name != findStr)
@@ -153,27 +112,7 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
             return directoryPath;
         }
 
-        /// <summary>
-        /// 获取文件的存储路径
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public string GetPath(string guid)
-        {
-            try
-            {
-               var infoModel= this.GetInfo<ImageJsonModel>(guid);
-                if (infoModel != null)
-                {
-                    return infoModel.
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
+   
 
         /// <summary>
         /// 删除文件
