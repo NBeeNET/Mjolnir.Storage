@@ -18,13 +18,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
         /// <returns></returns>
         bool CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting);
 
-        /// <summary>
-        /// 获取文件信息
-        /// </summary>
-        /// <param name="fileGuid"></param>
-        /// <returns></returns>
-        T GetInfo<T>(string guid);
-
+        bool MoveDirectory(string sourceDir, string destinationDir);
 
         /// <summary>
         /// 删除文件
