@@ -99,34 +99,6 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
         }
 
         /// <summary>
-        /// 获取文件信息
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public T GetInfo<T>(string guid)
-        {
-            try
-            {
-                //找到guid的文件夹
-                string directoryPath = FindDirectory(_rootPath, guid);
-                if (directoryPath == "")
-                {
-                    return null;
-                }
-                else
-                {
-                    string content = File.ReadAllText(directoryPath + guid + ".json");
-                    return JsonConvert.DeserializeObject<T>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
-        }
-
-        /// <summary>
         /// 查找目录
         /// </summary>
         /// <param name="path"></param>
