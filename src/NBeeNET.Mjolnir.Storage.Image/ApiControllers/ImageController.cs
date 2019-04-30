@@ -39,7 +39,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                         _ImageRequest.Tags = tags;
                         _ImageRequest.Length = file.Length;
                         _ImageRequest.Type = file.ContentType;
-                        _ImageRequest.Url = await WriteTempFile(file);
+                        _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file, _ImageRequest.Id);
                         return Ok(_ImageRequest);
                     }
                 }
@@ -66,6 +66,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                     _ImageRequest = new Models.ImageRequest();
                     if (file.Length > 0)
                     {
+                        //验证是否是图片
                         if (ImageValidation.IsCheck(file))
                         {
                             _ImageRequest = new Models.ImageRequest();
@@ -74,7 +75,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             _ImageRequest.Tags = tags;
                             _ImageRequest.Length = file.Length;
                             _ImageRequest.Type = file.ContentType;
-                            _ImageRequest.Url = await WriteTempFile(file);
+                            _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file,_ImageRequest.Id);
                             _ImageRequests.Add(_ImageRequest);
                         }
                     }
@@ -83,33 +84,6 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
             }
             
             return BadRequest("图片上传失败！");
-        }
-
-        /// <summary>
-        /// Method to write file onto the disk
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        private async Task<string> WriteTempFile(IFormFile file)
-        {
-            string fileName;
-            try
-            {
-                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                fileName = Guid.NewGuid().ToString() + extension; //Create a new Name for the file due to security reasons.
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
-
-                using (var bits = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(bits);
-                }
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-
-            return fileName;
         }
         
     }

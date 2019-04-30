@@ -4,7 +4,9 @@ using System.Text;
 
 namespace NBeeNET.Mjolnir.Storage.Image.Serivces
 {
-    
+    /// <summary>
+    /// 
+    /// </summary>
     public class ImageHandleService
     {
         private Queue<int> _Queue = new Queue<int>();
