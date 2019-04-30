@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D9E837F0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Core", "src\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj", "{B323AF72-31F2-4BAB-86EB-A86C149E0952}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Local", "src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj", "{1F7E24B7-01DF-468D-B453-18744F1C056A}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Tests", "tests\NBeeNET.Mjolnir.Storage.Tests\NBeeNET.Mjolnir.Storage.Tests.csproj", "{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.NetCoreTests", "tests\NBeeNET.Mjolnir.Storage.NetCoreTests\NBeeNET.Mjolnir.Storage.NetCoreTests.csproj", "{4C76875B-E0CA-40CA-B76D-2600A4B4842D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Image", "src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj", "{1F7CD15F-BE8C-413C-A9CB-6CF51E6C59CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Local", "src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj", "{52291025-B072-403C-A604-F69903EA91BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +29,10 @@ Global
 		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,20 +45,16 @@ Global
 		{1F7CD15F-BE8C-413C-A9CB-6CF51E6C59CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F7CD15F-BE8C-413C-A9CB-6CF51E6C59CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F7CD15F-BE8C-413C-A9CB-6CF51E6C59CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52291025-B072-403C-A604-F69903EA91BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52291025-B072-403C-A604-F69903EA91BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52291025-B072-403C-A604-F69903EA91BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52291025-B072-403C-A604-F69903EA91BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B323AF72-31F2-4BAB-86EB-A86C149E0952} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{1F7E24B7-01DF-468D-B453-18744F1C056A} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E} = {D9E837F0-2088-4ACB-B0D1-D0288578BFCA}
 		{4C76875B-E0CA-40CA-B76D-2600A4B4842D} = {D9E837F0-2088-4ACB-B0D1-D0288578BFCA}
 		{1F7CD15F-BE8C-413C-A9CB-6CF51E6C59CE} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
-		{52291025-B072-403C-A604-F69903EA91BD} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}
