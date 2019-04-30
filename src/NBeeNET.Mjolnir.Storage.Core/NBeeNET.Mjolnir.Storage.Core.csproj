@@ -6,7 +6,12 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Interface\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.Runtime.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
