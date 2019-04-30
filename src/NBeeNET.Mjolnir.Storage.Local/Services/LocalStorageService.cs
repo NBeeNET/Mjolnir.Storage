@@ -151,28 +151,6 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
         }
 
         /// <summary>
-        /// 获取文件的存储路径
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public string GetPath(string guid)
-        {
-            try
-            {
-               var infoModel= this.GetInfo<ImageJsonModel>(guid);
-                if (infoModel != null)
-                {
-                    return infoModel.
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        /// <summary>
         /// 删除文件
         /// </summary>
         /// <param name="guid"></param>
