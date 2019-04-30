@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace NBeeNET.Mjolnir.Storage.Core
+namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 {
     public class Program
     {

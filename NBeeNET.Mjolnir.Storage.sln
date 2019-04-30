@@ -3,11 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Image", "src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj", "{2E7DDE25-D340-4C86-B03F-75F8864D8404}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47EB6CA2-8260-40AF-B81F-66F9E7523ED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Core", "src\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj", "{C8C503C2-8733-4BD4-8EA2-B98850F5980B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8BED08BA-CDBA-4B9C-BB94-C0755F8A5C03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Tests", "tests\NBeeNET.Mjolnir.Storage.Tests\NBeeNET.Mjolnir.Storage.Tests.csproj", "{3CD6DB0F-F037-4B62-8A71-D84E6C1D5E59}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D9E837F0-2088-4ACB-B0D1-D0288578BFCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.API", "src\NBeeNET.Mjolnir.Storage.API\NBeeNET.Mjolnir.Storage.API.csproj", "{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Core", "src\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj", "{B323AF72-31F2-4BAB-86EB-A86C149E0952}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Local", "src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj", "{1F7E24B7-01DF-468D-B453-18744F1C056A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Tests", "tests\NBeeNET.Mjolnir.Storage.Tests\NBeeNET.Mjolnir.Storage.Tests.csproj", "{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.NetCoreTests", "tests\NBeeNET.Mjolnir.Storage.NetCoreTests\NBeeNET.Mjolnir.Storage.NetCoreTests.csproj", "{4C76875B-E0CA-40CA-B76D-2600A4B4842D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,21 +25,36 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E7DDE25-D340-4C86-B03F-75F8864D8404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E7DDE25-D340-4C86-B03F-75F8864D8404}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E7DDE25-D340-4C86-B03F-75F8864D8404}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E7DDE25-D340-4C86-B03F-75F8864D8404}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8C503C2-8733-4BD4-8EA2-B98850F5980B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8C503C2-8733-4BD4-8EA2-B98850F5980B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8C503C2-8733-4BD4-8EA2-B98850F5980B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8C503C2-8733-4BD4-8EA2-B98850F5980B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CD6DB0F-F037-4B62-8A71-D84E6C1D5E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CD6DB0F-F037-4B62-8A71-D84E6C1D5E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CD6DB0F-F037-4B62-8A71-D84E6C1D5E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CD6DB0F-F037-4B62-8A71-D84E6C1D5E59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B323AF72-31F2-4BAB-86EB-A86C149E0952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F7E24B7-01DF-468D-B453-18744F1C056A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C76875B-E0CA-40CA-B76D-2600A4B4842D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C76875B-E0CA-40CA-B76D-2600A4B4842D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C76875B-E0CA-40CA-B76D-2600A4B4842D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C76875B-E0CA-40CA-B76D-2600A4B4842D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A22A0C4-FD6E-45D8-8540-E5E7B23946B9} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{B323AF72-31F2-4BAB-86EB-A86C149E0952} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{1F7E24B7-01DF-468D-B453-18744F1C056A} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{DE6E2ADC-EB51-49C4-874D-A8E714A5FC9E} = {D9E837F0-2088-4ACB-B0D1-D0288578BFCA}
+		{4C76875B-E0CA-40CA-B76D-2600A4B4842D} = {D9E837F0-2088-4ACB-B0D1-D0288578BFCA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}

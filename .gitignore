@@ -9,3 +9,9 @@
 /src/NBeeNET.Mjolnir.Storage.Image/bin
 /tests/NBeeNET.Mjolnir.Storage.Tests/obj
 /tests/NBeeNET.Mjolnir.Storage.Tests/bin
+/src/NBeeNET.Mjolnir.Storage.API/obj
+/src/NBeeNET.Mjolnir.Storage.API/bin
+/src/NBeeNET.Mjolnir.Storage.Local/obj
+/src/NBeeNET.Mjolnir.Storage.Local/bin
+/tests/NBeeNET.Mjolnir.Storage.NetCoreTests/obj
+/tests/NBeeNET.Mjolnir.Storage.NetCoreTests/bin

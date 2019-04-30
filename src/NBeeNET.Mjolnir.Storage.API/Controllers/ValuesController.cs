@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace NBeeNET.Mjolnir.Storage.Core.Controllers
+namespace NBeeNET.Mjolnir.Storage.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
