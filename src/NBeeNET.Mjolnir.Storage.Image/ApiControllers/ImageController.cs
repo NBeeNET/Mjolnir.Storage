@@ -16,97 +16,73 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <summary>
         /// 图片上传
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">图片</param>
+        /// <param name="name">自定义名称</param>
+        /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file,[FromForm]string name, [FromForm]string tags)
         {
-            //验证是否是图片
-            if (ImageValidation.IsCheck(file))
+            Models.ImageRequest _ImageRequest = new Models.ImageRequest();
+            if (file != null)
             {
-                var result = await WriteFile(file);
-                return new ObjectResult(result);
+                if (file.Length > 0)
+                {
+                    //验证是否是图片
+                    if (ImageValidation.IsCheck(file))
+                    {
+                        _ImageRequest.Id = Guid.NewGuid().ToString();
+                        if (string.IsNullOrEmpty(name))
+                            _ImageRequest.Name = file.FileName;
+                        else
+                            _ImageRequest.Name = name;
+                        _ImageRequest.Tags = tags;
+                        _ImageRequest.Length = file.Length;
+                        _ImageRequest.Type = file.ContentType;
+                        _ImageRequest.Url = await WriteTempFile(file);
+                        return Ok(_ImageRequest);
+                    }
+                }
             }
-
-            return BadRequest("Invalid image file");
+            return BadRequest("图片上传失败！");
         }
 
         /// <summary>
         /// 多图片上传
         /// </summary>
-        /// <param name="files"></param>
+        /// <param name="files">多个图片</param>
+        /// <param name="name">自定义名称</param>
+        /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("UploadImages")]
-        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        public async Task<IActionResult> UploadImages(List<IFormFile> files, [FromForm]string name, [FromForm]string tags)
         {
-            return BadRequest("Invalid image file");
-            //try
-            //{
-            //    var result = new UploadResponse();
-            //    List<UploadFileEntity> fileEntities = new List<UploadFileEntity>();
-
-            //    //检查是否有文件，没有则从Request.Form.Files获取
-            //    if (files.Count == 0)
-            //    {
-            //        foreach (var item in Request.Form.Files)
-            //        {
-            //            files.Add(item);
-            //        }
-            //    }
-
-            //    foreach (var formFile in files)
-            //    {
-            //        if (formFile.Length > 0)
-            //        {
-            //            //检查是否是图片
-            //            if (CheckIfImageFile(formFile))
-            //            {
-            //                string guid = Guid.NewGuid().ToString();
-            //                string extension = "." + formFile.ContentType.Split("/")[1];
-            //                string fileName = guid + extension; //Create a new Name for the file due to security reasons.
-            //                string localUrl = Request.Scheme.ToString() + "://" + Request.Host.Value.ToString() + "/sso/images/" + fileName;
-
-            //                T_File _File = new T_File();
-            //                _File.Id = guid;
-            //                _File.FileName = fileName;
-            //                _File.ContentType = formFile.ContentType;
-            //                _File.Length = formFile.Length;
-            //                _File.SourceUrl = localUrl;
-            //                _File.Md5Str = MD5Helper.GetMD5HashFormFile(formFile);
-            //                _File.ShortCode = ShortURLHelper.CreateShortURL(localUrl);
-            //                _File.ShortUrl = Request.Scheme.ToString() + "://" + Request.Host.Value.ToString() + "/" + _File.ShortCode;
-            //                _File.Tags = "";
-            //                _File.AppId = "admin";
-            //                _File.IpAddress = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            //                _File.CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            //                //写入本地存储
-            //                await WriteFile(formFile, fileName);
-
-            //                //写入数据库
-            //                await InsertDatabase(_File);
-
-            //                //存入返回结果
-            //                fileEntities.Add(new UploadFileEntity()
-            //                {
-            //                    ContentType = _File.ContentType,
-            //                    LocalUrl = _File.SourceUrl,
-            //                    ShortUrl = _File.ShortUrl
-            //                });
-            //            }
-            //        }
-            //    }
-
-            //    result.Status = "success";
-            //    result.Total = files.Count;
-            //    result.Files = fileEntities;
-            //    return Ok(result);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.Message);
-            //}
-
+            List<Models.ImageRequest> _ImageRequests = new List<Models.ImageRequest>();
+            Models.ImageRequest _ImageRequest = new Models.ImageRequest();
+            if (files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    _ImageRequest = new Models.ImageRequest();
+                    if (file.Length > 0)
+                    {
+                        if (ImageValidation.IsCheck(file))
+                        {
+                            _ImageRequest = new Models.ImageRequest();
+                            _ImageRequest.Id = Guid.NewGuid().ToString();
+                            _ImageRequest.Name = file.FileName;
+                            _ImageRequest.Tags = tags;
+                            _ImageRequest.Length = file.Length;
+                            _ImageRequest.Type = file.ContentType;
+                            _ImageRequest.Url = await WriteTempFile(file);
+                            _ImageRequests.Add(_ImageRequest);
+                        }
+                    }
+                }
+                return Ok(_ImageRequests);
+            }
+            
+            return BadRequest("图片上传失败！");
         }
 
         /// <summary>
@@ -114,7 +90,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        private async Task<string> WriteFile(IFormFile file)
+        private async Task<string> WriteTempFile(IFormFile file)
         {
             string fileName;
             try
