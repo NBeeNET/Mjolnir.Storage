@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,9 +11,22 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
     public class Model_Json : Model_Base
     {
         /// <summary>
+        /// 任务开始时间
+        /// </summary>
+        public DateTime StartTime { get; set; }
+        /// <summary>
         /// task列表
         /// </summary>
         public List<Model_JsonDetailed> Items { get; set; } = new List<Model_JsonDetailed>();
+
+        /// <summary>
+        /// 对象转json
+        /// </summary>
+        /// <returns></returns>
+        public string ConvertJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 
     /// <summary>
@@ -32,13 +46,5 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// 任务状态
         /// </summary>
         public string TaskStatus { get; set; }
-        /// <summary>
-        /// 任务开始时间
-        /// </summary>
-        public DateTime StartTime { get; set; }
-        /// <summary>
-        /// 任务结束时间
-        /// </summary>
-        public DateTime EndTime { get; set; }
     }
 }

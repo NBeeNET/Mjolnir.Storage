@@ -18,20 +18,12 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 文件大小(字节数)
+        /// 文件保存Url
         /// </summary>
-        public long Length { get; set; }
-        /// <summary>
-        /// 文件保存路径
-        /// </summary>
-        public string Path { get; set; }
+        public string PathUrl { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// 更新时间
-        /// </summary>
-        public DateTime ModifyTime { get; set; }
     }
 }
