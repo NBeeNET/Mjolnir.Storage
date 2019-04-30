@@ -16,7 +16,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <summary>
         /// 图片上传
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">图片</param>
+        /// <param name="name">自定义名称</param>
+        /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("UploadImage")]
         public async Task<IActionResult> UploadImage(IFormFile file,[FromForm]string name, [FromForm]string tags)
@@ -37,7 +39,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                         _ImageRequest.Tags = tags;
                         _ImageRequest.Length = file.Length;
                         _ImageRequest.Type = file.ContentType;
-                        _ImageRequest.Url = await WriteFile(file);
+                        _ImageRequest.Url = await WriteTempFile(file);
                         return Ok(_ImageRequest);
                     }
                 }
@@ -48,7 +50,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <summary>
         /// 多图片上传
         /// </summary>
-        /// <param name="files"></param>
+        /// <param name="files">多个图片</param>
+        /// <param name="name">自定义名称</param>
+        /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("UploadImages")]
         public async Task<IActionResult> UploadImages(List<IFormFile> files, [FromForm]string name, [FromForm]string tags)
@@ -70,7 +74,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             _ImageRequest.Tags = tags;
                             _ImageRequest.Length = file.Length;
                             _ImageRequest.Type = file.ContentType;
-                            _ImageRequest.Url = await WriteFile(file);
+                            _ImageRequest.Url = await WriteTempFile(file);
                             _ImageRequests.Add(_ImageRequest);
                         }
                     }
@@ -86,7 +90,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        private async Task<string> WriteFile(IFormFile file)
+        private async Task<string> WriteTempFile(IFormFile file)
         {
             string fileName;
             try
