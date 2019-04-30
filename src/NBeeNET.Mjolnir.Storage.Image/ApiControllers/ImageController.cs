@@ -19,16 +19,30 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file,[FromForm]string name, [FromForm]string tags)
         {
-            //验证是否是图片
-            if (ImageValidation.IsCheck(file))
+            Models.ImageRequest _ImageRequest = new Models.ImageRequest();
+            if (file != null)
             {
-                var result = await WriteFile(file);
-                return new ObjectResult(result);
+                if (file.Length > 0)
+                {
+                    //验证是否是图片
+                    if (ImageValidation.IsCheck(file))
+                    {
+                        _ImageRequest.Id = Guid.NewGuid().ToString();
+                        if (string.IsNullOrEmpty(name))
+                            _ImageRequest.Name = file.FileName;
+                        else
+                            _ImageRequest.Name = name;
+                        _ImageRequest.Tags = tags;
+                        _ImageRequest.Length = file.Length;
+                        _ImageRequest.Type = file.ContentType;
+                        _ImageRequest.Url = await WriteFile(file);
+                        return Ok(_ImageRequest);
+                    }
+                }
             }
-
-            return BadRequest("Invalid image file");
+            return BadRequest("图片上传失败！");
         }
 
         /// <summary>
@@ -37,9 +51,34 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost("UploadImages")]
-        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        public async Task<IActionResult> UploadImages(List<IFormFile> files, [FromForm]string name, [FromForm]string tags)
         {
-            return BadRequest("Invalid image file");
+            List<Models.ImageRequest> _ImageRequests = new List<Models.ImageRequest>();
+            Models.ImageRequest _ImageRequest = new Models.ImageRequest();
+            if (files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    _ImageRequest = new Models.ImageRequest();
+                    if (file.Length > 0)
+                    {
+                        if (ImageValidation.IsCheck(file))
+                        {
+                            _ImageRequest = new Models.ImageRequest();
+                            _ImageRequest.Id = Guid.NewGuid().ToString();
+                            _ImageRequest.Name = file.FileName;
+                            _ImageRequest.Tags = tags;
+                            _ImageRequest.Length = file.Length;
+                            _ImageRequest.Type = file.ContentType;
+                            _ImageRequest.Url = await WriteFile(file);
+                            _ImageRequests.Add(_ImageRequest);
+                        }
+                    }
+                }
+                return Ok(_ImageRequests);
+            }
+            
+            return BadRequest("图片上传失败！");
             //try
             //{
             //    var result = new UploadResponse();
