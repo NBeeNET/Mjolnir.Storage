@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
@@ -10,36 +13,50 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
     [ApiController]
     public class ImageController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        /// <summary>
+        /// 图片上传
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost,HttpPut,HttpPost,HttpPatch]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            return new string[] { "value1", "value2" };
-        }
+            //验证是否是图片
+            if (ImageValidation.IsCheck(file))
+            {
+                var result = await WriteFile(file);
+                return new ObjectResult(result);
+            }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
+            return BadRequest("Invalid image file");
         }
+        
+        /// <summary>
+        /// Method to write file onto the disk
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private async Task<string> WriteFile(IFormFile file)
+        {
+            string fileName;
+            try
+            {
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                fileName = Guid.NewGuid().ToString() + extension; //Create a new Name for the file due to security reasons.
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+                using (var bits = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(bits);
+                }
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            return fileName;
         }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        
     }
 }
