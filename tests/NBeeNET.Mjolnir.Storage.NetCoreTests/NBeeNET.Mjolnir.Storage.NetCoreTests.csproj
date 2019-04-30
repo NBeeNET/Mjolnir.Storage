@@ -13,7 +13,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.API\NBeeNET.Mjolnir.Storage.API.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj" />
   </ItemGroup>
 
 </Project>

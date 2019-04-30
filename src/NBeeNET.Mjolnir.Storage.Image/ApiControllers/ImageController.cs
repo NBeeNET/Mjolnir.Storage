@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace NBeeNET.Mjolnir.Storage.API.Controllers
+namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("/NBeeNET/Mjolnir.Storage/Api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ImageController : ControllerBase
     {
         // GET api/values
         [HttpGet]
