@@ -11,16 +11,16 @@ namespace NBeeNET.Mjolnir.Storage.Core
     /// <summary>
     /// 临时文件操作
     /// </summary>
-    public class TempFileOperation
+    public class TempStorageOperation
     {
         /// <summary>
-        /// 临时路径
+        /// 基础路径
         /// </summary>
-        public string TempFilePath
+        public string BasePath
         {
             get
             {
-                string tempDirectory = Directory.GetCurrentDirectory() + "\\wwwroot\\NBeeNET\\temp";
+                string tempDirectory = Directory.GetCurrentDirectory() + "\\temp";
                 if (!Directory.Exists(tempDirectory))
                 {
                     Directory.CreateDirectory(tempDirectory);
@@ -28,29 +28,15 @@ namespace NBeeNET.Mjolnir.Storage.Core
                 return tempDirectory;
             }
         }
-        /// <summary>
-        /// 保存路径
-        /// </summary>
-        public string SavePath
-        {
-            get
-            {
-                return ".//";
-            }
-        }
 
-        public TempFileOperation()
-        {
-
-        }
         /// <summary>
         /// 返回临时文件夹路径
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetTempPath(string id)
+        public string GetStoragePath(string id)
         {
-            string tempPath = Path.Combine(TempFilePath, id);
+            string tempPath = Path.Combine(BasePath, id);
             if (!Directory.Exists(tempPath))
             {
                 Directory.CreateDirectory(tempPath);
@@ -58,46 +44,65 @@ namespace NBeeNET.Mjolnir.Storage.Core
             return tempPath;
         }
 
+
+
+        ///// <summary>
+        ///// 保存路径
+        ///// </summary>
+        //public string SavePath
+        //{
+        //    get
+        //    {
+        //        return  ".//";
+        //    }
+        //}
+
+
         /// <summary>
         /// 返回存储文件夹路径
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetSavePath(string id)
-        {
-            string _savePath = Path.Combine(SavePath, id);
-            if (!Directory.Exists(_savePath))
-            {
-                Directory.CreateDirectory(_savePath);
-            }
-            return _savePath;
-        }
+        //public string GetSavePath(string id)
+        //{
+
+        //    string _savePath = Path.Combine(SavePath, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), id);
+
+        //    if (!Directory.Exists(_savePath))
+        //    {
+        //        Directory.CreateDirectory(_savePath);
+        //    }
+        //    return _savePath;
+        //}
         /// <summary>
-        /// 写入临时文件
+        /// 写入临时文件夹
         /// </summary>
         /// <param name="file"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> WriteTempFile(IFormFile file, string id,string name)
+        public async Task<string> Write(IFormFile file, string id)
         {
             try
             {
                 //存入临时目录
-                string tempDirectory = GetTempPath(id);
-                string fullFilePath = tempDirectory + name;
+                string tempDirectory = GetStoragePath(id);
+                string fullFilePath = tempDirectory + id;
 
                 using (var bits = new FileStream(fullFilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(bits);
                 }
                 return fullFilePath;
-
             }
-            catch (Exception e)
+            catch
             {
                 return "";
             }
         }
+
+        //删除临时文件夹
+
+
 
         /// <summary>
         /// 写入Json文件
@@ -108,7 +113,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         public void WriteJsonFile(string id, string jsonStr)
         {
             //存入临时目录
-            string tempDirectory = GetTempPath(id);
+            string tempDirectory = GetStoragePath(id);
             string jsonFilePath = tempDirectory + id + ".json";
 
             File.WriteAllText(jsonFilePath, jsonStr);
@@ -125,7 +130,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         {
 
             //存入临时目录
-            string tempDirectory = GetTempPath(id);
+            string tempDirectory = GetStoragePath(id);
             string jsonFilePath = tempDirectory + id + ".json";
 
             if (!File.Exists(jsonFilePath))
@@ -134,5 +139,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
             }
             return File.ReadAllText(jsonFilePath);
         }
+
+        
     }
 }

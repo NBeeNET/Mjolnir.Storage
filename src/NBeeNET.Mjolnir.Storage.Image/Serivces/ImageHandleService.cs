@@ -37,7 +37,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <returns></returns>
         public async Task<string> CreateTempFile(string id)
         {
-            return await new Core.TempFileOperation().WriteTempFile(formFile, id,"");
+            return await new Core.TempStorageOperation().Write(formFile, id);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             tasks.Add(new FileStrorageTaskModel() { Name = "MakeThumbnail", Param = "{ width:100; height:100;mode:'W'}", Status = "" });
             model.Tasks = tasks;
             string JsonStr = JsonConvert.SerializeObject(model);
-            new Core.TempFileOperation().WriteJsonFile(model.Id, JsonStr);
+            new Core.TempStorageOperation().WriteJsonFile(model.Id, JsonStr);
         }
 
         /// <summary>
