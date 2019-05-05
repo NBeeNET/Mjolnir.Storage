@@ -1,6 +1,7 @@
 ﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Local.Services
 {
@@ -9,20 +10,7 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
     /// </summary>
     public class LocalStorageService : IStorageService
     {
-        /// <summary>
-        /// 默认根目录
-        /// </summary>
-        public string _rootPath = Directory.GetCurrentDirectory()+"\\wwwroot\\NBeeNet\\Storage\\Images\\";
 
-        public LocalStorageService()
-        {
-
-        }
-
-        public LocalStorageService(string rootPath)
-        {
-            _rootPath = rootPath;
-        }
 
         /// <summary>
         /// 复制文件夹
@@ -31,7 +19,7 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
         /// <param name="destinationDir">目标文件夹</param>
         /// <param name="isOverwriteExisting">是否覆盖现有</param>
         /// <returns></returns>
-        public bool CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting)
+        public async Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting)
         {
             bool result = false;
             try
@@ -52,7 +40,7 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
                     foreach (string dir in Directory.GetDirectories(sourceDir))
                     {
                         DirectoryInfo directoryInfo = new DirectoryInfo(dir);
-                        if (CopyDirectory(dir, destinationDir + directoryInfo.Name, isOverwriteExisting) == false)
+                        if (await CopyDirectory(dir, destinationDir + directoryInfo.Name, isOverwriteExisting) == false)
                             result = false;
                     }
                     result = true;
@@ -98,29 +86,6 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
             return result;
         }
 
-        /// <summary>
-        /// 查找目录
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="findStr"></param>
-        /// <returns></returns>
-        public string FindDirectory(string path,string findStr)
-        {
-            string directoryPath = "";
-            foreach (string dir in Directory.GetDirectories(_rootPath))
-            {
-                DirectoryInfo directoryInfo = new DirectoryInfo(dir);
-                if (directoryInfo.Name != findStr)
-                {
-                    directoryPath = FindDirectory(dir, findStr);
-                }
-                else
-                {
-                    directoryPath = dir;
-                }
-            }
-            return directoryPath;
-        }
 
         /// <summary>
         /// 删除文件

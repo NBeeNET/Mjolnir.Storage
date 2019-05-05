@@ -1,0 +1,193 @@
+﻿@page
+@model ImageUpload
+@{
+    ViewData["Title"] = "ImageUpload";
+}
+
+
+<!--引入CSS-->
+<link rel="stylesheet" type="text/css" href="~/lib/webuploader/webuploader.css" />
+
+<style>
+    .space {
+        height: 30px;
+        width: 100%;
+    }
+</style>
+<h2>图片上传</h2>
+
+
+<div class="space"></div>
+<div class="card">
+    <div class="card-header">Form表单上传</div>
+    <div class="card-body">
+
+        <form method="post" enctype="multipart/form-data" action="/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage">
+            <div class="form-group">
+                <div class="col-md-10" style="text-align:left">
+                    <input type="text" name="name" /><br />
+                    <input type="text" name="tags" /><br />
+                    <p>请选择一张或多张图片文件:</p>
+                    <input class="file" type="file" name="files" multiple="multiple" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10" style="text-align:left">
+                    <button type="submit" class="btn btn-primary">上传</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="card">
+    <div class="card-header">Jquery Ajax上传</div>
+    <div class="card-body">
+
+        <form method="post" id="imageForm">
+            <div class="form-group">
+                <div class="col-md-10" style="text-align:left">
+                    <p>请选择一张或多张图片文件:</p>
+                    <input class="file" type="file" name="files" multiple="multiple" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10" style="text-align:left">
+                    <button id="btnUpload1" type="button" class="btn btn-primary">上传</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="comment">返回结果:</label>
+                <textarea class="form-control" rows="5" id="comment"></textarea>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<div class="space"></div>
+
+<div class="card">
+    <div class="card-header">Web Uploader上传</div>
+    <div class="card-body">
+
+        <p>您可以尝试文件拖拽，使用QQ截屏工具，然后激活窗口后粘贴，或者点击添加图片按钮，来体验此demo.</p>
+
+        <div id="uploader" class="wu-example">
+            <!--用来存放文件信息-->
+            <div id="thelist" class="uploader-list"></div>
+            <div class="btns">
+                <div id="picker">选择文件</div>
+                <button id="ctlBtn" type="button" class="btn btn-primary">开始上传</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="comment">返回结果:</label>
+            <textarea class="form-control" rows="5" id="comment2"></textarea>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="~/lib/webuploader/webuploader.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+
+        $("#btnUpload1").click(function () {
+
+            var formData = new FormData($('#imageForm')[0]);
+
+            $.ajax({
+                url: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $("#comment").text(JSON.stringify(returndata));
+                },
+                error: function (returndata) {
+                    alert("上传文件失败");
+                }
+            });
+
+        });
+
+        var uploader = WebUploader.create({
+
+            // swf文件路径
+            swf: '/lib/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/api/ImageUpload',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: {
+                id: '#picker',
+                label: '点击选择图片'
+            },
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: true
+        });
+
+        // 当有文件被添加进队列的时候
+        uploader.on('fileQueued', function (file) {
+            $('#thelist').html('<div id="' + file.id + '" class="item">' +
+                '<h4 class="info">' + file.name + '</h4>' +
+                '<p class="state">等待上传...</p>' +
+                '</div>');
+        });
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress .progress-bar');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<div class="progress progress-striped active">' +
+                    '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                    '</div>' +
+                    '</div>').appendTo($li).find('.progress-bar');
+            }
+
+            $li.find('p.state').text('上传中');
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        uploader.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).find('p.state').text('已上传');
+            //debugger;
+            //console.log(response);
+            $("#comment2").val(JSON.stringify(response));
+
+        });
+
+        uploader.on('uploadError', function (file) {
+            $('#' + file.id).find('p.state').text('上传出错');
+        });
+
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').fadeOut();
+            uploader.reset();
+        });
+        $("#ctlBtn").click(function () {
+            uploader.upload();
+            return false;
+        });
+
+
+    });
+
+</script>

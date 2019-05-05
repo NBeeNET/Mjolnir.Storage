@@ -15,3 +15,4 @@
 /src/NBeeNET.Mjolnir.Storage.Local/bin
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/obj
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/bin
+/.vs/VSWorkspaceState.json

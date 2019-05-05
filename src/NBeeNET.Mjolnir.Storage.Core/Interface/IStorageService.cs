@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Interface
 {
@@ -16,7 +17,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
         /// <param name="sourceDir"></param>
         /// <param name="saveDir"></param>
         /// <returns></returns>
-        bool CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting);
+        Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting);
 
         bool MoveDirectory(string sourceDir, string destinationDir);
 

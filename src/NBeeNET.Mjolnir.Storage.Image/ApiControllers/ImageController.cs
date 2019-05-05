@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NBeeNET.Mjolnir.Storage.Image.Serivces;
 
 namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 {
@@ -21,8 +22,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(IFormFile file,[FromForm]string name, [FromForm]string tags)
+        public async Task<IActionResult> UploadImage(IFormFile file, [FromForm]string name, [FromForm]string tags)
         {
+
             Models.ImageRequest _ImageRequest = new Models.ImageRequest();
             if (file != null)
             {
@@ -39,7 +41,29 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                         _ImageRequest.Tags = tags;
                         _ImageRequest.Length = file.Length;
                         _ImageRequest.Type = file.ContentType;
-                        _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file, _ImageRequest.Id);
+                        string url= new StringBuilder()
+                            .Append(Request.Scheme)
+                            .Append("://")
+                            .Append(Request.Host)
+                            .Append("/NBeeNET/Images/")
+                            .Append("/"+ _ImageRequest.Id)
+                            .Append("/" + _ImageRequest.Type.Split("/")[1])
+                            .ToString();
+                        string path = new StringBuilder()
+                           .Append("/NBeeNET/Images/")
+                           .Append("/" + _ImageRequest.Id)
+                           .Append("/" + _ImageRequest.Type.Split("/")[1])
+                           .ToString();
+                        ImageHandleService handleService = new ImageHandleService();
+                        //保存图片
+                        var result = await handleService.SaveImage(_ImageRequest.Id);
+                        if (result )
+                        {
+                            _ImageRequest.Url = url;
+                            _ImageRequest.Path = path;
+                        }
+                        //处理图片
+
                         return Ok(_ImageRequest);
                     }
                 }
@@ -75,16 +99,16 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             _ImageRequest.Tags = tags;
                             _ImageRequest.Length = file.Length;
                             _ImageRequest.Type = file.ContentType;
-                            _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file,_ImageRequest.Id);
+                            _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file, _ImageRequest.Id);
                             _ImageRequests.Add(_ImageRequest);
                         }
                     }
                 }
                 return Ok(_ImageRequests);
             }
-            
+
             return BadRequest("图片上传失败！");
         }
-        
+
     }
 }

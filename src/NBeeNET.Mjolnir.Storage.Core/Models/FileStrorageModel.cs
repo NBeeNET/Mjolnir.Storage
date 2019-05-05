@@ -8,7 +8,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
     /// <summary>
     /// 任务存储对象
     /// </summary>
-    public class Model_Json : Model_Base
+    public class FileStrorageModel : FileInfoBase
     {
         /// <summary>
         /// 任务开始时间
@@ -17,7 +17,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <summary>
         /// task列表
         /// </summary>
-        public List<Model_JsonDetailed> Items { get; set; } = new List<Model_JsonDetailed>();
+        public List<FileStrorageTaskModel> Tasks { get; set; } = new List<FileStrorageTaskModel>();
 
         /// <summary>
         /// 对象转json
@@ -32,19 +32,19 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
     /// <summary>
     /// task
     /// </summary>
-    public class Model_JsonDetailed
+    public class FileStrorageTaskModel
     {
         /// <summary>
         /// 任务名称
         /// </summary>
-        public string TaskName { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 任务参数
         /// </summary>
-        public List<string> Param { get; set; }
+        public string Param { get; set; }
         /// <summary>
         /// 任务状态
         /// </summary>
-        public string TaskStatus { get; set; }
+        public string Status { get; set; }
     }
 }

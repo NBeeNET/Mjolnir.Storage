@@ -7,12 +7,12 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
     /// <summary>
     /// 基础属性
     /// </summary>
-    public class Model_Base
+    public class FileInfoBase
     {
         /// <summary>
         /// guid
         /// </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 文件名
         /// </summary>
