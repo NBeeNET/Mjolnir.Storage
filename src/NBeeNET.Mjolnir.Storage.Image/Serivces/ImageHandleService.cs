@@ -37,7 +37,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <returns></returns>
         public async Task<string> CreateTempFile(string id)
         {
-            return await new Core.TempFileOperation().WriteTempFile(formFile, id);
+            return await new Core.TempFileOperation().WriteTempFile(formFile, id,"");
         }
 
         /// <summary>

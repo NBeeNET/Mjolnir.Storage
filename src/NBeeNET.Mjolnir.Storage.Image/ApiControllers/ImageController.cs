@@ -99,7 +99,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             _ImageRequest.Tags = tags;
                             _ImageRequest.Length = file.Length;
                             _ImageRequest.Type = file.ContentType;
-                            _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file, _ImageRequest.Id);
+                            _ImageRequest.Url = await new Core.TempFileOperation().WriteTempFile(file, _ImageRequest.Id,"");
                             _ImageRequests.Add(_ImageRequest);
                         }
                     }
