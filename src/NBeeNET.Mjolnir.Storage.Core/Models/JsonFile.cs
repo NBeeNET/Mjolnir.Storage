@@ -2,11 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Models
 {
     public class JsonFile
     {
+
+        public JsonFile()
+        {
+           
+        }
+
         /// <summary>
         /// Guid
         /// </summary>
@@ -32,8 +39,30 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// </summary>
         public List<JsonFileValues> Values { get; set; }
 
-        //保存
-        //读取
+        /// <summary>
+        /// 保存Json
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public async Task SaveAs(string filePath)
+        {
+            string jsonStr = JsonConvert.SerializeObject(this);
+            await System.IO.File.WriteAllTextAsync(filePath, jsonStr);
+        }
+
+        /// <summary>
+        /// 读取Json
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public async Task<JsonFile> ReadFrom( string filePath)
+        {
+            string jsonStr = await System.IO.File.ReadAllTextAsync(filePath);
+            return JsonConvert.DeserializeObject<JsonFile>(jsonStr);
+        }
+        
 
 
         /// <summary>

@@ -8,6 +8,7 @@ namespace NBeeNET.Mjolnir.Storage.Tests
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }

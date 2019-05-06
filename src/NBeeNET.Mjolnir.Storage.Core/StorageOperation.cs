@@ -14,7 +14,12 @@ namespace NBeeNET.Mjolnir.Storage.Core
         {
             get
             {
-                return ".//";
+                string storageDirectory = Directory.GetCurrentDirectory() + "\\wwwroot\\NBeeNET\\";
+                if (!Directory.Exists(storageDirectory))
+                {
+                    Directory.CreateDirectory(storageDirectory);
+                }
+                return storageDirectory;
             }
         }
 
@@ -26,7 +31,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         public string GetSavePath(string id)
         {
 
-            string _savePath = Path.Combine(SavePath, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), id);
+            string _savePath = Path.Combine(SavePath, DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));
 
             if (!Directory.Exists(_savePath))
             {

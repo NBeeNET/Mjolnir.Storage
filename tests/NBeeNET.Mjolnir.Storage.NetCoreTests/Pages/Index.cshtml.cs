@@ -9,9 +9,9 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests.Pages
 {
     public class IndexModel : PageModel
     {
-        public void OnGet()
+        public ActionResult OnGet()
         {
-
+            return RedirectToPage("ImageUpload");
         }
     }
 }

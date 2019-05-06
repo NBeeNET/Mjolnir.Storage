@@ -77,8 +77,8 @@ namespace NBeeNET.Mjolnir.Storage.Image
             g.DrawImage(originalImage, new Rectangle(0, 0, towidth, toheight), new Rectangle(x, y, ow, oh), GraphicsUnit.Pixel);
             try
             {
-                //以jpg格式保存缩略图 
-                bitmap.Save(thumbnailPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //以原格式保存缩略图 
+                bitmap.Save(thumbnailPath,originalImage.RawFormat);
             }
             catch (System.Exception e)
             {

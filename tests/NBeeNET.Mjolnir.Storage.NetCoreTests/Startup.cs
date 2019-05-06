@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NBeeNET.Mjolnir.Storage.Core.Interface;
+using NBeeNET.Mjolnir.Storage.Local.Services;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 {
@@ -31,6 +33,7 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddScoped<IStorageService, LocalStorageService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
