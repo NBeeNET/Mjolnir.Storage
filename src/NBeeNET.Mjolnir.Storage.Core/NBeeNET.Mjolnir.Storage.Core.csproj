@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\FileInfoBase.cs" />
+    <Compile Remove="Models\FileStrorageModel.cs" />
     <Compile Remove="Models\ImageJsonModel.cs" />
   </ItemGroup>
 
