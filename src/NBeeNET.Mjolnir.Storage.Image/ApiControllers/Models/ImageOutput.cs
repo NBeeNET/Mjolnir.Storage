@@ -45,8 +45,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers.Models
         public string Url { get; set; }
 
         /// <summary>
-        /// 相对路径(/NBeeNET/2019/01/01/Guid.jpg)
+        /// 相对路径(/NBeeNET/2019/01/01/)
         /// </summary>
-        //public string Path { get; set; }
+        public string Path { get; set; }
     }
 }

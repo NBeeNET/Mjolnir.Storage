@@ -28,7 +28,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string GetPath()
+        public static string GetSavePath()
         {
 
             string _savePath = Path.Combine(SavePath,"NBeeNET_Mjolnir",DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));
@@ -44,6 +44,13 @@ namespace NBeeNET.Mjolnir.Storage.Core
         {
             string url = Path.Combine("NBeeNET_Mjolnir",DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), filename);
             return url;
+        }
+
+        public static string GetPath()
+        {
+
+            string path = Path.Combine("NBeeNET_Mjolnir", DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));
+            return path;
         }
     }
 }

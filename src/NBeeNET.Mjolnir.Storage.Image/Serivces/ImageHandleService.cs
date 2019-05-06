@@ -43,12 +43,13 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Type = imageInput.File.ContentType;
             imageOutput.FileName = imageOutput.Id + "." + imageInput.File.ContentType.Split("/")[1];
             imageOutput.Url = Core.StorageOperation.GetUrl(imageOutput.FileName);
-            
+            imageOutput.Path = Core.StorageOperation.GetPath();
+
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
 
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetPath(), true);
+            await _StorageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetSavePath(), true);
 
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
@@ -62,9 +63,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //创建处理作业
             var task = new List<JsonFileValues>();
             //预览图
-            task.Add(new JsonFileValues() { Key = "Medium", Param = "Cut", Status = "0", Value = "" });
+            task.Add(new JsonFileValues() { Key = "Medium", Status = "0", Value = "" });
             //缩略图
-            task.Add(new JsonFileValues() { Key = "Small", Param = "Cut", Status = "0", Value = "" });
+            task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -73,7 +74,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await StartJob(jsonFile, tempFilePath);
 
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetPath(), true);
+            await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetSavePath(), true);
 
             //删除临时目录
             await tempStorage.Delete(jsonFile.Id);

@@ -19,9 +19,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
             string thumbnailName = string.Format("{0}_{1}{2}", fileName, "Small", fileInfo.Extension);
             string thumbnailPath = fileInfo.DirectoryName + "\\" + thumbnailName;
 
-            ThumbnailClass.MakeThumbnail(tempFilePath, thumbnailPath, 100, 100, job.Param);
+            ThumbnailClass.MakeThumbnail(tempFilePath, thumbnailPath, 100, 100, "Cut");
+            job.Param = "100x100";
             job.Status = "1";
             job.Value = Core.StorageOperation.GetUrl(thumbnailName);
+            job.CreateTime = DateTime.Now;
 
             return job;
         }

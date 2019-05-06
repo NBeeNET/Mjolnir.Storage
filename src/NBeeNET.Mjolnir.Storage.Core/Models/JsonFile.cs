@@ -99,5 +99,9 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// 子文件返回值
         /// </summary>
         public string Value { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }
