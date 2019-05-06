@@ -18,3 +18,8 @@
 /.vs/VSWorkspaceState.json
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/temp
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/wwwroot/NBeeNET
+/src/NBeeNET.Mjolnir.Storage.AWSS3/bin
+/src/NBeeNET.Mjolnir.Storage.AWSS3/obj
+/src/NBeeNET.Mjolnir.Storage.AzureBlob/bin
+/src/NBeeNET.Mjolnir.Storage.AzureBlob/obj
+/.vs
