@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests.Pages
 {
-    public class IndexModel : PageModel
+    public class UploadImages : PageModel
     {
-        public ActionResult OnGet()
+        public void OnGet()
         {
-            return RedirectToPage("UploadImage");
+
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page
-@model ImageUpload
+@model UploadImages
 @{
-    ViewData["Title"] = "图片上传";
+    ViewData["Title"] = "多图片上传";
 }
 
 
@@ -14,7 +14,7 @@
         width: 100%;
     }
 </style>
-<h2>图片上传</h2>
+<h2>多图片上传</h2>
 
 
 <div class="space"></div>
@@ -22,12 +22,11 @@
     <div class="card-header">Form表单上传</div>
     <div class="card-body">
 
-        <form method="post" enctype="multipart/form-data" action="/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage">
+        <form method="post" enctype="multipart/form-data" action="/NBeeNET/Mjolnir.Storage/Api/Image/UploadImages">
             <div class="form-group">
                 <div class="col-md-10" style="text-align:left">
-                    Name：<input type="text" name="name" /><br />
-                    Tags：<input type="text" name="tags" /><br />
-                    <p>请选择一张图片文件:</p>
+                  
+                    <p>请选择多张图片文件:</p>
                     <input class="file" type="file" name="file" multiple="multiple" />
                 </div>
             </div>
@@ -50,9 +49,8 @@
         <form method="post" id="imageForm">
             <div class="form-group">
                 <div class="col-md-10" style="text-align:left">
-                    Name：<input type="text" name="name" /><br />
-                    Tags：<input type="text" name="tags" /><br />
-                    <p>请选择一张或多张图片文件:</p>
+                  
+                    <p>请选择多张图片文件:</p>
                     <input class="file" type="file" name="file" multiple="multiple" />
                 </div>
             </div>
@@ -77,7 +75,7 @@
     <div class="card-header">Web Uploader上传</div>
     <div class="card-body">
 
-        <p>您可以尝试文件拖拽，使用QQ截屏工具，然后激活窗口后粘贴，或者点击添加图片按钮，来体验此demo.</p>
+        <p>点击选择图片按钮，来体验此demo.</p>
 
         <div id="uploader" class="wu-example">
             <!--用来存放文件信息-->
@@ -102,12 +100,22 @@
 <script type="text/javascript">
     $(function () {
 
+        $("#myTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab("show");
+        });
+        $("#myTab").on("show.bs.tab", function (e) {
+            $(e.target).css('outline', '1px solid black');
+        }).on("hide.bs.tab", function (e) {
+            $(e.target).css('outline', 'none');
+        });
+
         $("#btnUpload1").click(function () {
 
             var formData = new FormData($('#imageForm')[0]);
 
             $.ajax({
-                url: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage',
+                url: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImages',
                 type: 'POST',
                 data: formData,
                 async: false,
@@ -130,7 +138,7 @@
             swf: '/lib/webuploader/Uploader.swf',
 
             // 文件接收服务端。
-            server: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage',
+            server: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImages',
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.

@@ -44,7 +44,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Length = imageInput.File.Length;
             imageOutput.Type = imageInput.File.ContentType;
             string fileName = id + "." + imageInput.File.ContentType.Split("/")[1];
-            string path = storage.GetSavePath(id) + "\\" ;
+            string path = storage.GetSavePath(id) + "\\";
             string fullFileName = path + fileName;
             string url = new StringBuilder()
                            .Append(request.Scheme)
@@ -89,7 +89,22 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             return imageOutput;
         }
 
-
+        /// <summary>
+        /// 多图片上传处理
+        /// </summary>
+        /// <param name="imageInput"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<List<ImageOutput>> ProcessingImages(List<ImageInput> imageInput, HttpRequest request)
+        {
+            List<ImageOutput> output = new List<ImageOutput>();
+            for (int i = 0; i < imageInput.Count; i++)
+            {
+                var result = await Processing(imageInput[i], request);
+                output.Add(result);
+            }
+            return output;
+        }
 
         /// <summary>
         /// 开始处理任务

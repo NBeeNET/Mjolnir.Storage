@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests.Pages
 {
-    public class ImageUpload : PageModel
+    public class UploadImage : PageModel
     {
         public void OnGet()
         {

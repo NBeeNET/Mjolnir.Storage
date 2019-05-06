@@ -58,37 +58,46 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="name">自定义名称</param>
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
-        //[HttpPost("UploadImages")]
-        //public async Task<IActionResult> UploadImages(List<IFormFile> files, [FromForm]string name, [FromForm]string tags)
-        //{
-        //    List<Models.ImageRequest> _ImageRequests = new List<Models.ImageRequest>();
-        //    Models.ImageRequest _ImageRequest = new Models.ImageRequest();
-        //    if (files.Count > 0)
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            _ImageRequest = new Models.ImageRequest();
-        //            if (file.Length > 0)
-        //            {
-        //                //验证是否是图片
-        //                if (ImageValidation.IsCheck(file))
-        //                {
-        //                    _ImageRequest = new Models.ImageRequest();
-        //                    _ImageRequest.Id = Guid.NewGuid().ToString();
-        //                    _ImageRequest.Name = file.FileName;
-        //                    _ImageRequest.Tags = tags;
-        //                    _ImageRequest.Length = file.Length;
-        //                    _ImageRequest.Type = file.ContentType;
-        //                    _ImageRequest.Url = await new Core.TempStorageOperation().Write(file, _ImageRequest.Id);
-        //                    _ImageRequests.Add(_ImageRequest);
-        //                }
-        //            }
-        //        }
-        //        return Ok(_ImageRequests);
-        //    }
+        [HttpPost("UploadImages")]
+        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        {
 
-        //    return BadRequest("图片上传失败！");
-        //}
+            if (files.Count == 0)
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    foreach (var item in Request.Form.Files)
+                    {
+                        files.Add(item);
+                    }
+                }
+            }
+            if (files.Count>0)
+            {
+                List<ImageInput> imageInputs = new List<ImageInput>();
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        //验证是否是图片
+                        if (ImageValidation.IsCheck(file))
+                        {
+                            ImageInput input = new ImageInput();
+                            input.File = file;
+                            input.Name = file.Name;
+                            input.Tags = file.Name;
+                            imageInputs.Add(input);
+                        }
+                    }
+                }
+
+                ImageHandleService handleService = new ImageHandleService();
+                //处理图片
+                var output = await handleService.ProcessingImages(imageInputs, Request);
+                return Ok(output);
+            }
+            return BadRequest("图片上传失败！");
+        }
 
     }
 }
