@@ -16,3 +16,5 @@
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/obj
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/bin
 /.vs/VSWorkspaceState.json
+/tests/NBeeNET.Mjolnir.Storage.NetCoreTests/temp
+/tests/NBeeNET.Mjolnir.Storage.NetCoreTests/wwwroot/NBeeNET
