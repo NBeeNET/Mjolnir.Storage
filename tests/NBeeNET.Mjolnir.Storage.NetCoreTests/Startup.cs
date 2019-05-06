@@ -33,7 +33,8 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddScoped<IStorageService, LocalStorageService>();
+            //services.AddScoped<IStorageService, LocalStorageService>();
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -57,6 +58,8 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
             app.UseCookiePolicy();
 
             app.UseMvc();
+
+            Storage.Image.Serivces.ImageHandleService._StorageService.Add(new Local.Services.LocalStorageService());
         }
     }
 }

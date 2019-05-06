@@ -3,12 +3,8 @@ using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
 using NBeeNET.Mjolnir.Storage.Image.ApiControllers.Models;
-using NBeeNET.Mjolnir.Storage.Local.Services;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Image.Serivces
@@ -18,6 +14,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
     /// </summary>
     public class ImageHandleService
     {
+        public static List<IStorageService> _StorageService = new List<IStorageService>();
 
         public ImageHandleService()
         {
@@ -32,7 +29,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         public async Task<ImageOutput> Processing(ImageInput imageInput, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
-            IStorageService _StorageService = new LocalStorageService();
+            //IStorageService _StorageService = new LocalStorageService();
 
             //输出结果对象
             ImageOutput imageOutput = new ImageOutput();
@@ -48,8 +45,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
 
+            foreach (Core.Interface.IStorageService item in _StorageService)
+            {
+                await item.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetSavePath(), true);
+            }
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetSavePath(), true);
+            
 
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
@@ -74,7 +75,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await StartJob(jsonFile, tempFilePath);
 
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetSavePath(), true);
+            foreach (Core.Interface.IStorageService item in _StorageService)
+            {
+                await item.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetSavePath(), true);
+            }
+            
 
             //删除临时目录
             await tempStorage.Delete(jsonFile.Id);
