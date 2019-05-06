@@ -32,46 +32,39 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         public async Task<ImageOutput> Processing(ImageInput imageInput, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
-            StorageOperation storage = new StorageOperation();
             IStorageService _StorageService = new LocalStorageService();
 
             //输出结果对象
             ImageOutput imageOutput = new ImageOutput();
-            string id = Guid.NewGuid().ToString();
-            imageOutput.Id = id;
+            imageOutput.Id = Guid.NewGuid().ToString();
             imageOutput.Name = imageInput.Name;
             imageOutput.Tags = imageInput.Tags;
             imageOutput.Length = imageInput.File.Length;
             imageOutput.Type = imageInput.File.ContentType;
-            string fileName = id + "." + imageInput.File.ContentType.Split("/")[1];
-            string path = storage.GetSavePath(id) + "\\";
-            string fullFileName = path + fileName;
-            string url = new StringBuilder()
-                           .Append(request.Scheme)
-                           .Append("://")
-                           .Append(request.Host)
-                           .Append(fullFileName.Split("wwwroot")[1])
-                           .ToString().Replace("\\", "/");
-
-            imageOutput.Url = url;
-            imageOutput.Path = fullFileName.Split("wwwroot")[1];
-
+            imageOutput.FileName = imageOutput.Id + "." + imageInput.File.ContentType.Split("/")[1];
+            imageOutput.Url = Core.StorageOperation.GetUrl(imageOutput.FileName);
+            
             //写入临时文件夹
-            var tempFilePath = await tempStorage.Write(imageInput.File, id);
+            var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
 
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(id), storage.GetSavePath(id), true);
+            await _StorageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetPath(), true);
 
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
-            jsonFile.Id = id;
+            jsonFile.Id = imageOutput.Id;
             jsonFile.CreateTime = DateTime.Now;
-            jsonFile.SourceName = imageInput.Name;
-            jsonFile.Tags = imageInput.Tags;
-            jsonFile.Folder = storage.GetSavePath(id) + "\\";
-            jsonFile.Name = fileName;
+            jsonFile.Name = imageOutput.Name;
+            jsonFile.Tags = imageOutput.Tags;
+            jsonFile.Url = imageOutput.Url;
+            jsonFile.FileName = imageOutput.FileName;
+
+            //创建处理作业
             var task = new List<JsonFileValues>();
-            task.Add(new JsonFileValues() { Key = "MakeThumbnail", Param = "Cut", Status = "0", Value = "" });
+            //预览图
+            task.Add(new JsonFileValues() { Key = "Medium", Param = "Cut", Status = "0", Value = "" });
+            //缩略图
+            task.Add(new JsonFileValues() { Key = "Small", Param = "Cut", Status = "0", Value = "" });
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -80,7 +73,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await StartJob(jsonFile, tempFilePath);
 
             //复制目录
-            await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), storage.GetSavePath(jsonFile.Id), true);
+            await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetPath(), true);
 
             //删除临时目录
             await tempStorage.Delete(jsonFile.Id);
@@ -128,19 +121,15 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                     JsonFileValues job = null;
                     while (queues.TryDequeue(out job))
                     {
-                        //缩略图处理
-                        if (job.Key == "MakeThumbnail")
+                        //预览图处理
+                        if (job.Key == "Medium")
                         {
-                            FileInfo fileInfo = new FileInfo(tempFilePath);
-                            var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                            string thumbnailName = string.Format("{0}_{1}{2}", fileName, "100X100", fileInfo.Extension);
-                            string thumbnailPath = fileInfo.DirectoryName + "\\" + thumbnailName;
-
-                            ThumbnailClass.MakeThumbnail(tempFilePath, thumbnailPath, 100, 100, job.Param);
-                            job.Status = "1";
-                            job.Value = thumbnailName;
-                            jsonFile.Values.Add(job);
+                            jsonFile.Values.Add(new Jobs.ToMediumJob().Run(tempFilePath,job));
+                        }
+                        //缩略图处理
+                        if (job.Key == "Small")
+                        {
+                            jsonFile.Values.Add(new Jobs.ToSmallJob().Run(tempFilePath, job));
                         }
                     }
                 }

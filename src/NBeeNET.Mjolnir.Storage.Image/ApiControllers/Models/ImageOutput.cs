@@ -15,6 +15,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers.Models
         public string Id { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
         /// Name
         /// </summary>
         public string Name { get; set; }
@@ -35,13 +40,13 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers.Models
         public string Type { get; set; }
 
         /// <summary>
-        /// Url地址
+        /// Url地址(/NBeeNET/2019/01/01/Guid.jpg)
         /// </summary>
         public string Url { get; set; }
 
         /// <summary>
-        /// 相对路径
+        /// 相对路径(/NBeeNET/2019/01/01/Guid.jpg)
         /// </summary>
-        public string Path { get; set; }
+        //public string Path { get; set; }
     }
 }

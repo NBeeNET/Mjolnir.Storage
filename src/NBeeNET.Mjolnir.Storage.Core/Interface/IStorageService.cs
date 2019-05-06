@@ -15,7 +15,8 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
         /// 复制文件夹
         /// </summary>
         /// <param name="sourceDir"></param>
-        /// <param name="saveDir"></param>
+        /// <param name="destinationDir"></param>
+        /// <param name="isOverwriteExisting">是否覆盖</param>
         /// <returns></returns>
         Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting);
 
