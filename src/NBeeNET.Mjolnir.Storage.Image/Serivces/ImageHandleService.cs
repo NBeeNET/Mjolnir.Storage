@@ -44,19 +44,20 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Length = imageInput.File.Length;
             imageOutput.Type = imageInput.File.ContentType;
             string fileName = id + "." + imageInput.File.ContentType.Split("/")[1];
-            string path = storage.GetSavePath(id) + "\\" + fileName;
+            string path = storage.GetSavePath(id) + "\\" ;
+            string fullFileName = path + fileName;
             string url = new StringBuilder()
                            .Append(request.Scheme)
                            .Append("://")
                            .Append(request.Host)
-                           .Append(path.Split("wwwroot")[1])
+                           .Append(fullFileName.Split("wwwroot")[1])
                            .ToString().Replace("\\", "/");
 
             imageOutput.Url = url;
-            imageOutput.Path = path.Split("wwwroot")[1];
+            imageOutput.Path = fullFileName.Split("wwwroot")[1];
 
             //写入临时文件夹
-            var tempPath = await tempStorage.Write(imageInput.File, id);
+            var tempFilePath = await tempStorage.Write(imageInput.File, id);
 
             //复制目录
             await _StorageService.CopyDirectory(tempStorage.GetTempPath(id), storage.GetSavePath(id), true);
@@ -65,16 +66,18 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             JsonFile jsonFile = new JsonFile();
             jsonFile.Id = id;
             jsonFile.CreateTime = DateTime.Now;
-            jsonFile.Name = imageInput.Name;
+            jsonFile.SourceName = imageInput.Name;
             jsonFile.Tags = imageInput.Tags;
-            jsonFile.PathUrl = tempPath;
+            jsonFile.Folder = storage.GetSavePath(id) + "\\";
+            jsonFile.Name = fileName;
             var task = new List<JsonFileValues>();
-            task.Add(new JsonFileValues() { Key = "MakeThumbnail", Param = "{}", Status = "0", Value = "" });
+            task.Add(new JsonFileValues() { Key = "MakeThumbnail", Param = "Cut", Status = "0", Value = "" });
+
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             //开始处理任务
-            await StartJob(jsonFile);
+            await StartJob(jsonFile, tempFilePath);
 
             //复制目录
             await _StorageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), storage.GetSavePath(jsonFile.Id), true);
@@ -92,7 +95,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// 开始处理任务
         /// </summary>
         /// <returns></returns>
-        public async Task StartJob(JsonFile jsonFile)
+        public async Task StartJob(JsonFile jsonFile, string tempFilePath)
         {
             if (jsonFile.Values.Count > 0)
             {
@@ -110,14 +113,18 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                     JsonFileValues job = null;
                     while (queues.TryDequeue(out job))
                     {
+                        //缩略图处理
                         if (job.Key == "MakeThumbnail")
                         {
-                            FileInfo fileInfo = new FileInfo(jsonFile.PathUrl);
+                            FileInfo fileInfo = new FileInfo(tempFilePath);
                             var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-                            string thumbnailUrl = string.Format("{0}\\{1}_{2}{3}", fileInfo.DirectoryName, fileName, "100X100", fileInfo.Extension);
-                            ThumbnailClass.MakeThumbnail(jsonFile.PathUrl, thumbnailUrl, 100, 100, "Cut");
+
+                            string thumbnailName = string.Format("{0}_{1}{2}", fileName, "100X100", fileInfo.Extension);
+                            string thumbnailPath = fileInfo.DirectoryName + "\\" + thumbnailName;
+
+                            ThumbnailClass.MakeThumbnail(tempFilePath, thumbnailPath, 100, 100, job.Param);
                             job.Status = "1";
-                            job.Value = thumbnailUrl;
+                            job.Value = thumbnailName;
                             jsonFile.Values.Add(job);
                         }
                     }

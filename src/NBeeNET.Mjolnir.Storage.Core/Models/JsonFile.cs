@@ -19,17 +19,21 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 文件名
+        /// 源文件名
         /// </summary>
-        public string Name { get; set; }
+        public string SourceName { get; set; }
         /// <summary>
         /// 文件Tags
         /// </summary>
         public string Tags { get; set; }
         /// <summary>
-        /// 文件默认存储Url
+        /// 默认存储文件夹路径
         /// </summary>
-        public string PathUrl { get; set; }
+        public string Folder { get; set; }
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string Name { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
