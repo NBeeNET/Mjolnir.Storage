@@ -19,7 +19,9 @@
 - 上传的源文件及作业处理过的文件可以自动的存储到本地、AWS S3、Azure Blob等对象存储中。
 
 <h1 align="center">
+    <br>
     <img src="/docs/images/Mjolnir.Storage.png" alt="Mjolnir.Storage" width="600"/>
+    <br>
     <br>
 </h1>
 
@@ -28,13 +30,25 @@
 | Library | 说明 |
 | :--- | :--- |
 | **NBeeNET.Mjolnir.Storage.Core** | 实现公共及核心业务 |
-| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理（生成缩略图、预览图、格式转换WebP） |
+| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.File** | 实现文件上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Local** | 实现本地存储 |
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
 | **NBeeNET.Mjolnir.Storage.AWSS3** | 实现AWS S3存储 |
+
+# Mjolnir.Storage 的功能
+## 图片
+### 上传
+- 单文件上传
+- 多文件上传
+### 处理
+- 生成缩略图
+- 生成预览图
+- WebP 格式转码
+### 存储
+- 本地存储
 
 <!-- ## 支持存储
 
