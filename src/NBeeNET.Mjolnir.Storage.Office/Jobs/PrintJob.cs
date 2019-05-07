@@ -18,9 +18,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
     {
         public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
-
             FileInfo fileInfo = new FileInfo(tempFilePath);
-            var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+            //var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
             switch (fileInfo.Extension)
             {
                 case ".xls":
