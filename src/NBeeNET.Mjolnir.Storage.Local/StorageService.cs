@@ -1,17 +1,20 @@
 ﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NBeeNET.Mjolnir.Storage.Local.Services
+namespace NBeeNET.Mjolnir.Storage.Local
 {
     /// <summary>
     /// 本地存储服务
     /// </summary>
-    public class LocalStorageService : IStorageService
+    public class StorageService : IStorageService
     {
+        public string BasePath { get; set; } =  Directory.GetCurrentDirectory() + "\\wwwroot\\";
 
-
+        public string A { get; set; }
+        
         /// <summary>
         /// 复制文件夹
         /// </summary>
@@ -51,20 +54,19 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                 result = false;
             }
             return result;
         }
-
+        
         /// <summary>
-        /// 移动文件夹
+        /// 移动
         /// </summary>
-        /// <param name="sourceDir">源文件夹</param>
-        /// <param name="destinationDir">目标文件夹</param>
+        /// <param name="sourceDir"></param>
+        /// <param name="destinationDir"></param>
         /// <returns></returns>
-
         public bool MoveDirectory(string sourceDir, string destinationDir)
         {
             bool result = false;
@@ -79,23 +81,42 @@ namespace NBeeNET.Mjolnir.Storage.Local.Services
                 Directory.Move(sourceDir, destinationDir);
                 result = true;
             }
-            catch (Exception ex)
+            catch
             {
                 result = false;
             }
             return result;
         }
 
-
         /// <summary>
-        /// 删除文件
+        /// 删除
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public bool Delete(string guid)
+        public bool DeleteDirectory(string guid)
         {
-            return true;
+            bool result = false;
+            return result;
         }
 
+        public string GetPath()
+        {
+            return Core.StorageOperation.GetPath();
+        }
+
+        public string GetUrl(string filename)
+        {
+            return Core.StorageOperation.GetUrl(filename);
+        }
+
+        public string GetSavePath()
+        {
+            string storageDirectory = BasePath + GetPath();
+            if (!Directory.Exists(storageDirectory))
+            {
+                Directory.CreateDirectory(storageDirectory);
+            }
+            return storageDirectory;
+        }
     }
 }

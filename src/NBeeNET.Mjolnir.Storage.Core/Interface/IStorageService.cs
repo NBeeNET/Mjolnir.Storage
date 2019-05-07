@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -20,15 +21,44 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
         /// <returns></returns>
         Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting);
 
+        /// <summary>
+        /// 移动文件夹
+        /// </summary>
+        /// <param name="sourceDir"></param>
+        /// <param name="destinationDir"></param>
+        /// <returns></returns>
         bool MoveDirectory(string sourceDir, string destinationDir);
 
 
         /// <summary>
-        /// 删除文件
+        /// 删除文件夹
         /// </summary>
         /// <param name="fileGuid"></param>
         /// <returns></returns>
-        bool Delete(string guid);
+        bool DeleteDirectory(string guid);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        string GetSavePath();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        string GetPath();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        string GetUrl(string filename);
+
+        /// <summary>
+        /// 参数
+        /// </summary>
+        //private Hashtable Options { get; set; }
+        
     }
 }
