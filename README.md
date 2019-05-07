@@ -16,7 +16,7 @@
 
 - Mjolnir.Storage 提供标准的 Restful API 文件上传接口，可以直接与各类终端对接使用。
 - 上传到 Mjolnir.Storage 中的文件支持多种作业处理。
-- 作业处理过的文件可以自动的存储到本地、AWS S3、Azure Blob等对象存储中。
+- 上传的源文件及作业处理过的文件可以自动的存储到本地、AWS S3、Azure Blob等对象存储中。
 
 <h1 align="center">
     <img src="/docs/images/Mjolnir.Storage.png" alt="Mjolnir.Storage" width="600"/>
