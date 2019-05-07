@@ -23,3 +23,5 @@
 /src/NBeeNET.Mjolnir.Storage.AzureBlob/bin
 /src/NBeeNET.Mjolnir.Storage.AzureBlob/obj
 /.vs
+/src/NBeeNET.Mjolnir.Storage.Office/bin
+/src/NBeeNET.Mjolnir.Storage.Office/obj
