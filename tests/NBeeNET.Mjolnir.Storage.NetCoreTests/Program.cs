@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NBeeNET.Mjolnir.Storage.Image.Jobs;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 {
@@ -14,6 +15,7 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
     {
         public static void Main(string[] args)
         {
+            new PrintJob().PrintPDF("");
             CreateWebHostBuilder(args).Build().Run();
         }
 
