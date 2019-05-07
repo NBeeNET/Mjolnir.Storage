@@ -38,25 +38,33 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Length = imageInput.File.Length;
             imageOutput.Type = imageInput.File.ContentType;
             imageOutput.FileName = imageOutput.Id + "." + imageInput.File.ContentType.Split("/")[1];
-           
+            imageOutput.Url = StorageOperation.GetUrl(imageOutput.FileName);
+            imageOutput.Path = StorageOperation.GetPath();
+
 
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
-            if (ImageServiceProviders.Providers.Count == 0)
+
+            if (Register._IStorageService.Count == 0)
             {
                 return imageOutput;
             }
-            foreach (var provider in ImageServiceProviders.Providers)
+
+            foreach (var storageService in Register._IStorageService)
             {
-                await provider.Service.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), provider.Options.GetSavePath(), true);
-                if (provider.Options.StorageType == StorageType.Local)
-                {
-                    imageOutput.Url = provider.Options.GetUrl(imageOutput.FileName);
-                    imageOutput.Path = provider.Options.GetPath();
-                }
+                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), storageService.GetSavePath(), true);
             }
+            //foreach (var provider in ImageServiceProviders.Providers)
+            //{
+            //    await provider.Service.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), provider.Options.GetSavePath(), true);
+            //    if (provider.Options.StorageType == StorageType.Local)
+            //    {
+            //        imageOutput.Url = provider.Options.GetUrl(imageOutput.FileName);
+            //        imageOutput.Path = provider.Options.GetPath();
+            //    }
+            //}
             //复制目录
-            
+
 
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
@@ -74,7 +82,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //缩略图
             task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
             //WebP格式
-            task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
+            //task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -83,9 +91,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await StartJob(jsonFile, tempFilePath);
 
             //复制目录
-            foreach (var provider in ImageServiceProviders.Providers)
+            foreach (var storageService in Register._IStorageService)
             {
-                await provider.Service.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), provider.Options.GetSavePath(), true);
+                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), storageService.GetSavePath(), true);
             }
 
             //删除临时目录

@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interface\IStorageOptions.cs" />
     <Compile Remove="Models\FileInfoBase.cs" />
     <Compile Remove="Models\FileStrorageModel.cs" />
     <Compile Remove="Models\ImageJsonModel.cs" />
+    <Compile Remove="StorageEnum.cs" />
   </ItemGroup>
 
   <ItemGroup>
