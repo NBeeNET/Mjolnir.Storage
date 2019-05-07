@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Spire.PDF" Version="5.4.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
+  </ItemGroup>
+
 </Project>
