@@ -1,32 +1,22 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Amazon;
+using Amazon.S3;
+using Amazon.S3.Model;
 using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
-using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NBeeNET.Mjolnir.Storage.AzureBlob
+namespace NBeeNET.Mjolnir.Storage.AWSS3
 {
-    /// <summary>
-    /// AzureBlob 存储
-    /// </summary>
     public class StorageService : IStorageService
     {
-        public string ConnectionString { get; set; } = "";
 
-        /// <summary>
-        /// AzureBlob Container名称
-        /// </summary>
-        public string Container { get; set; } = "upload";//
+        public string bucketName { get; set; } = "3824a2880e5769dcc0d1c47af6b44a97573b790c511f3caceb158d3abcfd86c5";
 
-        private StorageContext context;
+        public string keyName { get; set; } = "nbeenetmjolnir";
 
-        public StorageService()
-        {
-            
-        }
+
         /// <summary>
         /// 复制文件夹
         /// </summary>
@@ -39,28 +29,44 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             bool result = false;
             try
             {
-                context = new StorageContext(this.ConnectionString);
+                IAmazonS3 client = new AmazonS3Client(RegionEndpoint.CNNorth1);
+
                 // Get and create the container
-                var blobContainer = context.BlobClient.GetContainerReference(Container);
-                await blobContainer.CreateIfNotExistsAsync();
+                PutBucketRequest request = new PutBucketRequest();
+                request.BucketName = bucketName;
+                request.BucketRegion = S3Region.CN;    
+                await client.PutBucketAsync(request);
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
                 foreach (var file in directoryInfo.GetFiles())
                 {
                     var filename = StorageOperation.GetPath() + "/" + file.Name;
 
-                    var blob = blobContainer.GetBlockBlobReference(filename);
-                    await blob.UploadFromFileAsync(file.FullName);
+                    PutObjectRequest objectRequest = new PutObjectRequest()
+                    {
+                        FilePath = file.FullName,
+                        BucketName = bucketName,
+                        Key = keyName
+                    };
+
+                    await client.PutObjectAsync(objectRequest);
+
                 }
-                
+
                 result = true;
 
             }
-            catch
+            catch (Exception ex)
             {
                 result = false;
             }
             return result;
+        }
+
+
+        static void CreateABucket()
+        {
+
         }
 
         /// <summary>
@@ -74,13 +80,7 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             bool result = false;
             try
             {
-                DirectoryInfo destinationDirInfo = new DirectoryInfo(destinationDir);
-                if (destinationDirInfo.GetDirectories().Length > 0 || destinationDirInfo.GetFiles().Length > 0)
-                {
-                    destinationDirInfo.Delete(true);
-                    destinationDirInfo.Create();
-                }
-                Directory.Move(sourceDir, destinationDir);
+
                 result = true;
             }
             catch
@@ -103,7 +103,7 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
 
         public string GetSavePath()
         {
-           return string.Empty;
+            return string.Empty;
         }
 
         public string GetPath()
@@ -115,22 +115,5 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
         {
             return string.Empty;
         }
-    }
-
-
-    public class StorageContext
-    {
-        private CloudStorageAccount _storageAccount;
-
-        public StorageContext(string connectionString)
-        {
-            _storageAccount = CloudStorageAccount.Parse(connectionString);
-        }
-
-        public CloudBlobClient BlobClient
-        {
-            get { return _storageAccount.CreateCloudBlobClient(); }
-        }
-
     }
 }
