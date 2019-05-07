@@ -135,7 +135,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                         //缩略图处理
                         if (job.Key == "Small")
                         {
-                            jsonFile.Values.Add(new Jobs.ToSmallJob().Run(tempFilePath, job));
+                            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
                         }
                     }
                 }
