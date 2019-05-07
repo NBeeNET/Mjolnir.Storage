@@ -29,6 +29,9 @@
 | :--- | :--- |
 | **NBeeNET.Mjolnir.Storage.Core** | 实现公共及核心业务 |
 | **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传及作业处理 |
+| **NBeeNET.Mjolnir.Storage.File** | 实现文件上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Local** | 实现本地存储 |
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
 | **NBeeNET.Mjolnir.Storage.AWSS3** | 实现AWS S3存储 |
