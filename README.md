@@ -38,16 +38,16 @@
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
 | **NBeeNET.Mjolnir.Storage.AWSS3** | 实现AWS S3存储 |
 
-# Mjolnir.Storage 的功能
-## 图片
-### 上传
+## Mjolnir.Storage 的功能
+### 图片
+#### 上传
 - 单文件上传
 - 多文件上传
-### 处理
+#### 处理
 - 生成缩略图
 - 生成预览图
 - WebP 格式转码
-### 存储
+#### 存储
 - 本地存储
 
 <!-- ## 支持存储
