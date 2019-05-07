@@ -47,8 +47,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
 
             if (Register._IStorageService.Count == 0)
             {
-                return imageOutput;
+                throw new Exception("必须添加存储服务");
             }
+
 
             //复制目录
             foreach (var storageService in Register._IStorageService)
@@ -79,17 +80,9 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             //开始处理任务
-            await StartJob(jsonFile, tempFilePath);
+            StartJob(jsonFile, tempFilePath);
 
-            //复制目录
-            foreach (var storageService in Register._IStorageService)
-            {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), storageService.GetSavePath(), true);
-            }
-
-            //删除临时目录
-            await tempStorage.Delete(jsonFile.Id);
-
+            Console.WriteLine("return:" + DateTime.Now.ToString());
             //返回结果
             return imageOutput;
         }
@@ -117,6 +110,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <returns></returns>
         public async Task StartJob(JsonFile jsonFile, string tempFilePath)
         {
+            
             if (jsonFile.Values.Count > 0)
             {
                 StorageOperation storage = new StorageOperation();
@@ -153,7 +147,15 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
+                //复制目录
+                foreach (var storageService in Register._IStorageService)
+                {
+                    await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), storageService.GetSavePath(), true);
+                }
 
+                //删除临时目录
+                await tempStorage.Delete(jsonFile.Id);
+                Console.WriteLine("StartJob:" + DateTime.Now.ToString());
             }
         }
     }

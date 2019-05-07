@@ -17,8 +17,8 @@ namespace NBeeNET.Mjolnir.Storage.Image
     public class OperationValues
     {
         /// <summary>
-        /// 上传文件最大限制
+        /// 上传文件最大限制 单位：字节
         /// </summary>
-        public int MaxLength { get; set; } = 1024 * 4;
+        public int MaxLength { get; set; } = 1024 * 1024 * 4;
     }
 }

@@ -25,9 +25,15 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
         {
-            if (file==null)
+            if (file == null)
             {
                 file = Request.Form.Files[0];
+            }
+
+            if (file.Length >= Operation._OperationValues.MaxLength)
+            {
+                string msg = "上传文件的大小超过了最大限制" + Operation._OperationValues.MaxLength / 1024 / 1024 + "M";
+                return BadRequest("图片上传失败！原因：" + msg);
             }
             ImageOutput output = new ImageOutput();
             if (file != null)
@@ -39,11 +45,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                     {
                         ImageInput input = new ImageInput();
                         input.File = file;
-                        input.Name = name;
+                        input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
                         input.Tags = tags;
                         ImageHandleService handleService = new ImageHandleService();
                         //处理图片
                         output = await handleService.Processing(input, Request);
+
                         return Ok(output);
                     }
                 }
@@ -72,8 +79,15 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                     }
                 }
             }
-            if (files.Count>0)
+            if (files.Count > 0)
             {
+
+                if (files.Sum(b => b.Length) >= Operation._OperationValues.MaxLength)
+                {
+                    string msg = "上传文件的总大小超过了最大限制" + Operation._OperationValues.MaxLength / 1024 / 1024 + "M";
+                    return BadRequest("图片上传失败！原因：" + msg);
+                }
+
                 List<ImageInput> imageInputs = new List<ImageInput>();
                 foreach (var file in files)
                 {

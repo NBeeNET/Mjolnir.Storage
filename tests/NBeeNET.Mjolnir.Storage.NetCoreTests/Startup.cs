@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NBeeNET.Mjolnir.Storage.Core.Interface;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 {
@@ -63,9 +57,10 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
             //        Service = new LocalStorageService(),
             //        Options = new Local.LocalStorageOptions() { StorageType= Core.StorageType.Local, SavePath = "wwwroot" } }
             //);
-            NBeeNET.Mjolnir.Storage.Image.Operation.Set(new Image.OperationValues() { MaxLength = 1024 });
+            NBeeNET.Mjolnir.Storage.Image.Operation.Set(new Image.OperationValues() { MaxLength = 1024 * 1024 * 4 });
 
-            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.Local.StorageService() { A = "A"} );
+            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.Local.StorageService() { A = "A" });
+            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.AzureBlob.StorageService() { B = "B" });
 
             //Storage.Register.AddStorage(new Storage.AzureBlob.StorageService() { B = "B" });
         }
