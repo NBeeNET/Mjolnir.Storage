@@ -24,6 +24,7 @@
 </h1>
 
 **Library 说明**
+
 | Library | 说明 |
 | :--- | :--- |
 | **NBeeNET.Mjolnir.Storage.Core** | 实现公共及核心业务 |
@@ -31,6 +32,7 @@
 | **NBeeNET.Mjolnir.Storage.Local** | 实现本地存储 |
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
 | **NBeeNET.Mjolnir.Storage.AWSS3** | 实现AWS S3存储 |
+
 <!-- ## 支持存储
 
 - 图片：生成缩略图、格式转换、加水印、AI物体识别
