@@ -1,8 +1,16 @@
-![NBeeNET Logo](/docs/images/logo.png)
+<h1 align="center">
+    <img src="/docs/images/logo.png" alt="NBeeNET" width="175"/>
+    <br>
+    NBeeNET - Mjolnir.Storage
+    <br>
+    <br>
+    <a href="https://ci.appveyor.com/project/JamesSouth/imageprocessor/branch/develop" rel="nofollow"><img src="https://ci.appveyor.com/api/projects/status/8ypr7527dnao04yr/branch/develop?svg=true" alt="Build status" data-canonical-src="https://ci.appveyor.com/api/projects/status/8ypr7527dnao04yr/branch/Framework?svg=true" style="max-width:100%;"></a>
+<a href="https://huboard.com/JimBobSquarePants/ImageProcessor/" rel="nofollow"><img src="https://img.shields.io/github/issues-raw/JimBobSquarePants/imageprocessor.svg" alt="Issues open" style="max-width:100%;"></a>
+<a href="http://sourcebrowser.io/Browse/JimBobSquarePants/ImageProcessor/" rel="nofollow"><img src="https://img.shields.io/badge/Browse-Source-green.svg" alt="Source Browser" style="max-width:100%;"></a>
+<a href="https://gitter.im/JimBobSquarePants/ImageProcessor?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge" rel="nofollow"><img src="https://badges.gitter.im/Join%20Chat.svg" style="max-width:100%;"></a>
+</h1>
 
-## NBeeNET - Mjolnir.Storage
-
-Mjolnir.Storage 是一个基于 .Net Core + Restful API 开发的对象存储代理作业服务。
+**Mjolnir.Storage** 是一个基于 .Net Core + Restful API 开发的对象存储代理作业服务。
 
 ## Mjolnir.Storage 能干什么
 
