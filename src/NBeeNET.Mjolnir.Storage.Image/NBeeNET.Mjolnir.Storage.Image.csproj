@@ -5,17 +5,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ImageServiceProviders.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Imazen.WebP" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Imazen.WebP">
+      <HintPath>lib\Imazen.WebP.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libwebp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Lib\" />
   </ItemGroup>
 
 </Project>
