@@ -17,6 +17,7 @@
 - Mjolnir.Storage 提供标准的 Restful API 文件上传接口，可以直接与各类终端对接使用。
 - 上传到 Mjolnir.Storage 中的文件支持多种作业处理。
 - 上传的源文件及作业处理过的文件可以自动的存储到本地、AWS S3、Azure Blob等对象存储中。
+- 作业处理及存储方式可以灵活配置，**适用于公有云及私有云的互相迁移**。
 
 <h1 align="center">
     <br>
@@ -30,10 +31,10 @@
 | Library | 说明 |
 | :--- | :--- |
 | **NBeeNET.Mjolnir.Storage.Core** | 实现公共及核心业务 |
-| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理 |
-| **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传及作业处理 |
-| **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传及作业处理 |
-| **NBeeNET.Mjolnir.Storage.File** | 实现文件上传及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传接口及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传接口及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传接口及作业处理 |
+| **NBeeNET.Mjolnir.Storage.File** | 实现文件上传接口及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Local** | 实现本地存储 |
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
 | **NBeeNET.Mjolnir.Storage.AWSS3** | 实现AWS S3存储 |
