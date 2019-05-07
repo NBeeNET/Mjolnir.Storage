@@ -1,4 +1,7 @@
-﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
 using System.Collections;
 using System.IO;
@@ -12,7 +15,12 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
     public class StorageService : IStorageService
     {
         public string B { get; set; } = "B1";
-        
+
+        /// <summary>
+        /// AzureBlob Container名称
+        /// </summary>
+        public string Container { get; set; } = "upload";//
+
         /// <summary>
         /// 复制文件夹
         /// </summary>
@@ -25,31 +33,22 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             bool result = false;
             try
             {
-                sourceDir = sourceDir.EndsWith(@"\") ? sourceDir : sourceDir + @"\";
-                destinationDir = destinationDir.EndsWith(@"\") ? destinationDir : destinationDir + @"\";
+                var context = new StorageContext();
 
-                if (Directory.Exists(sourceDir))
-                {
-                    if (!Directory.Exists(destinationDir))
-                        Directory.CreateDirectory(destinationDir);
+                // Get and create the container
+                var blobContainer = context.BlobClient.GetContainerReference(Container);
+                await blobContainer.CreateIfNotExistsAsync();
 
-                    foreach (string file in Directory.GetFiles(sourceDir))
-                    {
-                        FileInfo fileInfo = new FileInfo(file);
-                        fileInfo.CopyTo(destinationDir + fileInfo.Name, isOverwriteExisting);
-                    }
-                    foreach (string dir in Directory.GetDirectories(sourceDir))
-                    {
-                        DirectoryInfo directoryInfo = new DirectoryInfo(dir);
-                        if (await CopyDirectory(dir, destinationDir + directoryInfo.Name, isOverwriteExisting) == false)
-                            result = false;
-                    }
-                    result = true;
-                }
-                else
+                DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
+                foreach (var file in directoryInfo.GetFiles())
                 {
-                    result = false;
+                    var filename = StorageOperation.GetPath() + "/" + file.Name;
+
+                    var blob = blobContainer.GetBlockBlobReference(filename);
+                    await blob.UploadFromFileAsync(file.FullName);
                 }
+                
+                result = true;
 
             }
             catch
@@ -58,7 +57,7 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             }
             return result;
         }
-        
+
         /// <summary>
         /// 移动
         /// </summary>
@@ -99,17 +98,34 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
 
         public string GetSavePath()
         {
-            throw new NotImplementedException();
+           return string.Empty;
         }
 
         public string GetPath()
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
         public string GetUrl(string filename)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
+    }
+
+
+    public class StorageContext
+    {
+        private CloudStorageAccount _storageAccount;
+
+        public StorageContext()
+        {
+            _storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=get6;AccountKey=dpC3WSz7aUACwWQ8INEndZZmv0K8T9E1uz9N5WPgDB67FGgWrgUZGjnhzzGkV+xTnQ8Zu+4FfW8Rtl8N9FxljA==;EndpointSuffix=core.chinacloudapi.cn");
+        }
+
+        public CloudBlobClient BlobClient
+        {
+            get { return _storageAccount.CreateCloudBlobClient(); }
+        }
+
     }
 }

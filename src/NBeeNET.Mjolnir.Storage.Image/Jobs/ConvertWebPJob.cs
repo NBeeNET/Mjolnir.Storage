@@ -25,13 +25,13 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
             job.CreateTime = DateTime.Now;
 
            
-            System.Drawing.Image image = System.Drawing.Image.FromFile(tempFilePath);
-            using (var bmp = new System.Drawing.Bitmap(image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            System.Drawing.Image originalImage = System.Drawing.Image.FromFile(tempFilePath);
+            using (var bmp = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             {
                 // 将图片重绘到新画布
                 using (var g = System.Drawing.Graphics.FromImage(bmp))
                 {
-                    g.DrawImage(image, 0, 0, image.Width, image.Height);
+                    g.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
                 }
 
                 //转码并保存文件
@@ -40,6 +40,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
                     Imazen.WebP.SimpleEncoder.Encode(bmp, fs, 100);
                 }
             }
+
+            originalImage.Dispose();
 
             return job;
         }
