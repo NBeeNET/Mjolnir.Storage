@@ -28,7 +28,7 @@
 | Library | 说明 |
 | :--- | :--- |
 | **NBeeNET.Mjolnir.Storage.Core** | 实现公共及核心业务 |
-| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传及作业处理（生成缩略图、预览图、格式转换WebP） |
 | **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传及作业处理 |
 | **NBeeNET.Mjolnir.Storage.File** | 实现文件上传及作业处理 |
