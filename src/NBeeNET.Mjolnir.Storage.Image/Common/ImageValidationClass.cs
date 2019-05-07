@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NBeeNET.Mjolnir.Storage.Image
 {
-    public class ImageValidation
+    public class ImageValidationClass
     {
         /// <summary>
         /// 是否为图片

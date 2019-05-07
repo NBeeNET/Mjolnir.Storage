@@ -22,7 +22,7 @@
     <div class="card-header">Form表单上传</div>
     <div class="card-body">
 
-        <form method="post" enctype="multipart/form-data" action="/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage">
+        <form method="post" enctype="multipart/form-data" action="/StorageApi/Image/Upload">
             <div class="form-group">
                 <div class="col-md-10" style="text-align:left">
                     <div class="form-group">
@@ -132,7 +132,7 @@
             var formData = new FormData($('#imageForm')[0]);
 
             $.ajax({
-                url: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage',
+                url: '/StorageApi/Image/Upload',
                 type: 'POST',
                 data: formData,
                 async: false,
@@ -155,7 +155,7 @@
             swf: '/lib/webuploader/Uploader.swf',
 
             // 文件接收服务端。
-            server: '/NBeeNET/Mjolnir.Storage/Api/Image/UploadImage',
+            server: '/StorageApi/Image/Upload',
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.

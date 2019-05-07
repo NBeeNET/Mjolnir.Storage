@@ -1,25 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Interface;
+using System;
 using System.IO;
-using System.Text;
 
-namespace NBeeNET.Mjolnir.Storage.Core
+namespace NBeeNET.Mjolnir.Storage.Local
 {
-    public class StorageOperation
+    public class LocalStorageOptions : IStorageOptions
     {
+        /// <summary>
+        /// 存储类型
+        /// </summary>
+        public StorageType StorageType { get; set; }
+
+        /// <summary>
+        /// 默认
+        /// </summary>
+        private string _SavePath = "wwwroot";
+
         /// <summary>
         /// 保存路径
         /// </summary>
-        private static string SavePath
+        public string SavePath
         {
             get
             {
-                string storageDirectory = Directory.GetCurrentDirectory() + "\\wwwroot\\";
+                string storageDirectory = Directory.GetCurrentDirectory() + "\\" + _SavePath + "\\";
                 if (!Directory.Exists(storageDirectory))
                 {
                     Directory.CreateDirectory(storageDirectory);
                 }
                 return storageDirectory;
+            }
+            set
+            {
+                _SavePath = value;
             }
         }
 
@@ -28,10 +42,10 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string GetSavePath()
+        public string GetSavePath()
         {
 
-            string _savePath = Path.Combine(SavePath,"NBeeNET_Mjolnir",DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));
+            string _savePath = Path.Combine(SavePath, "NBeeNET_Mjolnir", DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));
 
             if (!Directory.Exists(_savePath))
             {
@@ -45,9 +59,9 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static string GetUrl(string filename)
+        public string GetUrl(string filename)
         {
-            string url = Path.Combine("NBeeNET_Mjolnir",DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), filename);
+            string url = Path.Combine("NBeeNET_Mjolnir", DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), filename);
             return url;
         }
 
@@ -55,7 +69,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// 获取相对目录路径
         /// </summary>
         /// <returns></returns>
-        public static string GetPath()
+        public string GetPath()
         {
 
             string path = Path.Combine("NBeeNET_Mjolnir", DateTime.Now.Year.ToString("0000"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"));

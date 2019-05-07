@@ -34,7 +34,7 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
             });
 
             //services.AddScoped<IStorageService, LocalStorageService>();
-            
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -59,7 +59,11 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 
             app.UseMvc();
 
-            Storage.Image.Serivces.ImageHandleService._StorageService.Add(new Local.Services.LocalStorageService());
+            Image.ImageServiceProviders.Providers.Add(
+                new Image.ServiceProvider() {
+                    Service = new LocalStorageService(),
+                    Options = new Local.LocalStorageOptions() { StorageType= Core.StorageType.Local, SavePath = "wwwroot" } }
+            );
         }
     }
 }

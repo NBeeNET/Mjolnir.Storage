@@ -14,7 +14,6 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
     /// </summary>
     public class ImageHandleService
     {
-        public static List<IStorageService> _StorageService = new List<IStorageService>();
 
         public ImageHandleService()
         {
@@ -39,15 +38,22 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Length = imageInput.File.Length;
             imageOutput.Type = imageInput.File.ContentType;
             imageOutput.FileName = imageOutput.Id + "." + imageInput.File.ContentType.Split("/")[1];
-            imageOutput.Url = Core.StorageOperation.GetUrl(imageOutput.FileName);
-            imageOutput.Path = Core.StorageOperation.GetPath();
+           
 
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
-
-            foreach (Core.Interface.IStorageService item in _StorageService)
+            if (ImageServiceProviders.Providers.Count == 0)
             {
-                await item.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), Core.StorageOperation.GetSavePath(), true);
+                return imageOutput;
+            }
+            foreach (var provider in ImageServiceProviders.Providers)
+            {
+                await provider.Service.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), provider.Options.GetSavePath(), true);
+                if (provider.Options.StorageType == StorageType.Local)
+                {
+                    imageOutput.Url = provider.Options.GetUrl(imageOutput.FileName);
+                    imageOutput.Path = provider.Options.GetPath();
+                }
             }
             //复制目录
             
@@ -67,6 +73,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             task.Add(new JsonFileValues() { Key = "Medium", Status = "0", Value = "" });
             //缩略图
             task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
+            //WebP格式
+            task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -75,11 +83,10 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await StartJob(jsonFile, tempFilePath);
 
             //复制目录
-            foreach (Core.Interface.IStorageService item in _StorageService)
+            foreach (var provider in ImageServiceProviders.Providers)
             {
-                await item.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), Core.StorageOperation.GetSavePath(), true);
+                await provider.Service.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), provider.Options.GetSavePath(), true);
             }
-            
 
             //删除临时目录
             await tempStorage.Delete(jsonFile.Id);
@@ -130,12 +137,17 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                         //预览图处理
                         if (job.Key == "Medium")
                         {
-                            jsonFile.Values.Add(new Jobs.ToMediumJob().Run(tempFilePath,job));
+                            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath,job));
                         }
                         //缩略图处理
                         if (job.Key == "Small")
                         {
-                            jsonFile.Values.Add(new Jobs.ToSmallJob().Run(tempFilePath, job));
+                            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
+                        }
+                        //WebP格式转换
+                        if (job.Key == "WebP")
+                        {
+                            jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
                         }
                     }
                 }

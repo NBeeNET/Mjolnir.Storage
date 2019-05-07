@@ -11,7 +11,7 @@ using NBeeNET.Mjolnir.Storage.Image.Serivces;
 
 namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 {
-    [Route("/NBeeNET/Mjolnir.Storage/Api/[controller]")]
+    [Route("/StorageApi/[controller]")]
     [ApiController]
     public class ImageController : ControllerBase
     {
@@ -22,8 +22,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="name">自定义名称</param>
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
-        [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(IFormFile file, [FromForm]string name, [FromForm]string tags)
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
         {
             if (file==null)
             {
@@ -35,7 +35,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                 if (file.Length > 0)
                 {
                     //验证是否是图片
-                    if (ImageValidation.IsCheck(file))
+                    if (ImageValidationClass.IsCheck(file))
                     {
                         ImageInput input = new ImageInput();
                         input.File = file;
@@ -58,8 +58,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="name">自定义名称</param>
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
-        [HttpPost("UploadImages")]
-        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        [HttpPost("MultipartUpload")]
+        public async Task<IActionResult> MultipartUpload(List<IFormFile> files)
         {
 
             if (files.Count == 0)
@@ -80,7 +80,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                     if (file.Length > 0)
                     {
                         //验证是否是图片
-                        if (ImageValidation.IsCheck(file))
+                        if (ImageValidationClass.IsCheck(file))
                         {
                             ImageInput input = new ImageInput();
                             input.File = file;
