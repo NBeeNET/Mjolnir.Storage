@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
-    <PackageReference Include="NPOI" Version="2.4.1" />
+    <PackageReference Include="Spire.Office" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NBeeNET.Mjolnir.Storage.Image.Jobs;
+using NBeeNET.Mjolnir.Storage.Office.Jobs;
 
 namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 {
@@ -15,7 +16,10 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
     {
         public static void Main(string[] args)
         {
-            new PrintJob().PrintPDF("");
+            //string path = @"C:\Users\94885\Desktop\123.docx";
+            //string path = @"C:\Users\94885\Desktop\123.pdf";
+            string path = @"C:\Users\94885\Desktop\123.xlsx";
+            new PrintJob().Run(path,null);
             CreateWebHostBuilder(args).Build().Run();
         }
 
