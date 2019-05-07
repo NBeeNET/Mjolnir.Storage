@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.AzureBlob\NBeeNET.Mjolnir.Storage.AzureBlob.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Office\NBeeNET.Mjolnir.Storage.Office.csproj" />
   </ItemGroup>
 
 </Project>

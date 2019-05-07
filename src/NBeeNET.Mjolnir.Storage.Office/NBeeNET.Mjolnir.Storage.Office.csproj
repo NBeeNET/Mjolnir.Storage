@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spire.PDF" Version="5.4.21" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Spire.Office" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>
