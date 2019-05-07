@@ -63,6 +63,7 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
             //        Service = new LocalStorageService(),
             //        Options = new Local.LocalStorageOptions() { StorageType= Core.StorageType.Local, SavePath = "wwwroot" } }
             //);
+            NBeeNET.Mjolnir.Storage.Image.Operation.Set(new Image.OperationValues() { MaxLength = 1024 });
 
             NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.Local.StorageService() { A = "A"} );
 
