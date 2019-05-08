@@ -4,6 +4,7 @@ using Amazon.S3.Model;
 using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,11 +13,13 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
     public class StorageService : IStorageService
     {
 
-        public string bucketName { get; set; } = "3824a2880e5769dcc0d1c47af6b44a97573b790c511f3caceb158d3abcfd86c5";
+        public string AwsAccessKeyId { get; set; } = "nbeenetmjolnir";
 
-        public string keyName { get; set; } = "nbeenetmjolnir";
+        public string AwsSecretAccessKey { get; set; } = "3824a2880e5769dcc0d1c47af6b44a97573b790c511f3caceb158d3abcfd86c5";
 
+        public string BucketName { get; set; } = "upload";
 
+        public static IAmazonS3 client;
         /// <summary>
         /// 复制文件夹
         /// </summary>
@@ -29,28 +32,33 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
             bool result = false;
             try
             {
-                IAmazonS3 client = new AmazonS3Client(RegionEndpoint.CNNorth1);
+                client = new AmazonS3Client(AwsAccessKeyId, AwsSecretAccessKey, RegionEndpoint.USWest1);
 
-                // Get and create the container
-                PutBucketRequest request = new PutBucketRequest();
-                request.BucketName = bucketName;
-                request.BucketRegion = S3Region.CN;    
-                await client.PutBucketAsync(request);
+                //验证名称为bucketName的bucket是否存在，不存在则创建  
+                if (!await checkBucketExists(BucketName))
+                {
+                    // Get and create the container
+                    PutBucketRequest request = new PutBucketRequest();
+                    request.BucketName = BucketName;
+
+                    await client.PutBucketAsync(request);
+                }
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
                 foreach (var file in directoryInfo.GetFiles())
                 {
+                    //上传文件  
                     var filename = StorageOperation.GetPath() + "/" + file.Name;
-
                     PutObjectRequest objectRequest = new PutObjectRequest()
                     {
                         FilePath = file.FullName,
-                        BucketName = bucketName,
-                        Key = keyName
+                        BucketName = BucketName,
+                        Key = file.Name
                     };
 
-                    await client.PutObjectAsync(objectRequest);
-
+                    var response = await client.PutObjectAsync(objectRequest);
+                    var url= client.GeneratePreSignedURL(BucketName, file.Name, new DateTime(2020, 12, 31), null);
+                    Console.WriteLine(url);
                 }
 
                 result = true;
@@ -58,15 +66,25 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 result = false;
             }
             return result;
         }
 
 
-        static void CreateABucket()
+        public async Task<bool> checkBucketExists(String bucketName)
         {
-
+            ListBucketsResponse response = await client.ListBucketsAsync();
+            foreach (S3Bucket bucket in response.Buckets)
+            {
+                Console.WriteLine("You own Bucket with name: {0}", bucket.BucketName);
+                if (bucket.BucketName == bucketName)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

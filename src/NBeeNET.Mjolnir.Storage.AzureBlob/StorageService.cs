@@ -39,7 +39,13 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             bool result = false;
             try
             {
+                if (ConnectionString == "")
+                {
+                    return false;
+                }
+                //创建上下文
                 context = new StorageContext(this.ConnectionString);
+                
                 // Get and create the container
                 var blobContainer = context.BlobClient.GetContainerReference(Container);
                 await blobContainer.CreateIfNotExistsAsync();
@@ -47,10 +53,13 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
                 DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
                 foreach (var file in directoryInfo.GetFiles())
                 {
+                    //上传文件
                     var filename = StorageOperation.GetPath() + "/" + file.Name;
 
                     var blob = blobContainer.GetBlockBlobReference(filename);
                     await blob.UploadFromFileAsync(file.FullName);
+
+                    Console.WriteLine("Azure Url: http://cnd.get6.cn/upload/" + filename);
                 }
                 
                 result = true;
