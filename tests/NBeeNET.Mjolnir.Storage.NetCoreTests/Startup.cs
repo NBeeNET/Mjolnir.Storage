@@ -59,9 +59,9 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
             //);
             NBeeNET.Mjolnir.Storage.Image.Operation.Set(new Image.OperationValues() { MaxLength = 1024 * 1024 * 4 });
 
-            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.Local.StorageService());
-            //NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.AzureBlob.StorageService() { ConnectionString = "DefaultEndpointsProtocol=https;AccountName=get6;AccountKey=dpC3WSz7aUACwWQ8INEndZZmv0K8T9E1uz9N5WPgDB67FGgWrgUZGjnhzzGkV+xTnQ8Zu+4FfW8Rtl8N9FxljA==;EndpointSuffix=core.chinacloudapi.cn" });
-            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.AWSS3.StorageService());
+            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.Local.StorageService() { A = "A" });
+            NBeeNET.Mjolnir.Storage.Register.AddStorage(new Storage.AzureBlob.StorageService() { B = "B" });
+
             //Storage.Register.AddStorage(new Storage.AzureBlob.StorageService() { B = "B" });
         }
     }

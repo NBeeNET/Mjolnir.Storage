@@ -14,19 +14,13 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
     /// </summary>
     public class StorageService : IStorageService
     {
-        public string ConnectionString { get; set; } = "";
+        public string B { get; set; } = "B1";
 
         /// <summary>
         /// AzureBlob Container名称
         /// </summary>
         public string Container { get; set; } = "upload";//
 
-        private StorageContext context;
-
-        public StorageService()
-        {
-            
-        }
         /// <summary>
         /// 复制文件夹
         /// </summary>
@@ -39,13 +33,8 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
             bool result = false;
             try
             {
-                if (ConnectionString == "")
-                {
-                    return false;
-                }
-                //创建上下文
-                context = new StorageContext(this.ConnectionString);
-                
+                var context = new StorageContext();
+
                 // Get and create the container
                 var blobContainer = context.BlobClient.GetContainerReference(Container);
                 await blobContainer.CreateIfNotExistsAsync();
@@ -53,13 +42,10 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
                 DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
                 foreach (var file in directoryInfo.GetFiles())
                 {
-                    //上传文件
                     var filename = StorageOperation.GetPath() + "/" + file.Name;
 
                     var blob = blobContainer.GetBlockBlobReference(filename);
                     await blob.UploadFromFileAsync(file.FullName);
-
-                    Console.WriteLine("Azure Url: http://cnd.get6.cn/upload/" + filename);
                 }
                 
                 result = true;
@@ -131,9 +117,9 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
     {
         private CloudStorageAccount _storageAccount;
 
-        public StorageContext(string connectionString)
+        public StorageContext()
         {
-            _storageAccount = CloudStorageAccount.Parse(connectionString);
+            _storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=get6;AccountKey=dpC3WSz7aUACwWQ8INEndZZmv0K8T9E1uz9N5WPgDB67FGgWrgUZGjnhzzGkV+xTnQ8Zu+4FfW8Rtl8N9FxljA==;EndpointSuffix=core.chinacloudapi.cn");
         }
 
         public CloudBlobClient BlobClient

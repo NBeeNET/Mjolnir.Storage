@@ -82,7 +82,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //开始处理任务
             StartJob(jsonFile, tempFilePath);
 
-           
+            Console.WriteLine("return:" + DateTime.Now.ToString());
             //返回结果
             return imageOutput;
         }
@@ -155,7 +155,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
 
                 //删除临时目录
                 await tempStorage.Delete(jsonFile.Id);
-            
+                Console.WriteLine("StartJob:" + DateTime.Now.ToString());
             }
         }
     }
