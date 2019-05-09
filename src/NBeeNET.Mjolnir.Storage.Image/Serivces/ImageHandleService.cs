@@ -30,6 +30,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             TempStorageOperation tempStorage = new TempStorageOperation();
             //IStorageService _StorageService = new LocalStorageService();
 
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(DateTime.Now + ":上传图片开始...");
             //输出结果对象
             ImageOutput imageOutput = new ImageOutput();
             imageOutput.Id = Guid.NewGuid().ToString();
@@ -50,11 +52,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 throw new Exception("必须添加存储服务");
             }
 
-
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(DateTime.Now + ":开始复制目录...");
             //复制目录
             foreach (var storageService in Register._IStorageService)
             {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id), storageService.GetSavePath(), true);
+                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id));
             }
 
 
@@ -80,9 +83,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             //开始处理任务
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(DateTime.Now + ":任务处理开始...");
             StartJob(jsonFile, tempFilePath);
 
-            Console.WriteLine("return:" + DateTime.Now.ToString());
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(DateTime.Now + ":上传图片结束...");
             //返回结果
             return imageOutput;
         }
@@ -110,7 +116,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <returns></returns>
         public async Task StartJob(JsonFile jsonFile, string tempFilePath)
         {
-            
+
             if (jsonFile.Values.Count > 0)
             {
                 StorageOperation storage = new StorageOperation();
@@ -130,7 +136,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                         //预览图处理
                         if (job.Key == "Medium")
                         {
-                            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath,job));
+                            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
                         }
                         //缩略图处理
                         if (job.Key == "Small")
@@ -147,15 +153,19 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine(DateTime.Now + ":任务处理完成...");
+
+                Console.WriteLine(DateTime.Now + ":再次复制目录...");
                 //复制目录
                 foreach (var storageService in Register._IStorageService)
                 {
-                    await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id), storageService.GetSavePath(), true);
+                    await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
                 }
 
                 //删除临时目录
                 await tempStorage.Delete(jsonFile.Id);
-                Console.WriteLine("StartJob:" + DateTime.Now.ToString());
+
             }
         }
     }
