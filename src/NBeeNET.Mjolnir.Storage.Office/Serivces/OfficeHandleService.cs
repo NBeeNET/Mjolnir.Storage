@@ -97,7 +97,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             //复制目录
             foreach (var storageService in Register._IStorageService)
             {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id), storageService.GetSavePath(), true);
+                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
             }
 
             //开始处理任务

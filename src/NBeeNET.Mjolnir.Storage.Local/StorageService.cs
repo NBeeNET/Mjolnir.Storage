@@ -1,4 +1,5 @@
-﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
+﻿using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
 using System.Collections;
 using System.IO;
@@ -11,24 +12,24 @@ namespace NBeeNET.Mjolnir.Storage.Local
     /// </summary>
     public class StorageService : IStorageService
     {
+        /// <summary>
+        /// 本地存储的根路径，置绝对路径
+        /// </summary>
         public string BasePath { get; set; } =  Directory.GetCurrentDirectory() + "\\wwwroot\\";
 
-        public string A { get; set; }
         
         /// <summary>
         /// 复制文件夹
         /// </summary>
         /// <param name="sourceDir">源文件夹</param>
-        /// <param name="destinationDir">目标文件夹</param>
-        /// <param name="isOverwriteExisting">是否覆盖现有</param>
         /// <returns></returns>
-        public async Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting)
+        public async Task<bool> CopyDirectory(string sourceDir)
         {
             bool result = false;
             try
             {
                 sourceDir = sourceDir.EndsWith(@"\") ? sourceDir : sourceDir + @"\";
-                destinationDir = destinationDir.EndsWith(@"\") ? destinationDir : destinationDir + @"\";
+                string destinationDir = BasePath+ StorageOperation.GetPath();
 
                 if (Directory.Exists(sourceDir))
                 {
@@ -38,12 +39,14 @@ namespace NBeeNET.Mjolnir.Storage.Local
                     foreach (string file in Directory.GetFiles(sourceDir))
                     {
                         FileInfo fileInfo = new FileInfo(file);
-                        fileInfo.CopyTo(destinationDir + fileInfo.Name, isOverwriteExisting);
+                        fileInfo.CopyTo(destinationDir + fileInfo.Name, true);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("Local Url:" + destinationDir + fileInfo.Name);
                     }
                     foreach (string dir in Directory.GetDirectories(sourceDir))
                     {
                         DirectoryInfo directoryInfo = new DirectoryInfo(dir);
-                        if (await CopyDirectory(dir, destinationDir + directoryInfo.Name, isOverwriteExisting) == false)
+                        if (await CopyDirectory(dir) == false)
                             result = false;
                     }
                     result = true;

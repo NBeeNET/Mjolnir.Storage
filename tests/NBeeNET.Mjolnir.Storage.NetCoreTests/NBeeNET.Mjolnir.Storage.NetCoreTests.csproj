@@ -5,6 +5,13 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="temp\**" />
+    <Content Remove="temp\**" />
+    <EmbeddedResource Remove="temp\**" />
+    <None Remove="temp\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -13,6 +20,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.AWSS3\NBeeNET.Mjolnir.Storage.AWSS3.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.AzureBlob\NBeeNET.Mjolnir.Storage.AzureBlob.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj" />
