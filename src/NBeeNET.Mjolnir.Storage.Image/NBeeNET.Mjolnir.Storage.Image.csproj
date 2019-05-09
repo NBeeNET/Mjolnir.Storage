@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="ImageServiceProviders.cs" />
+    <Compile Remove="Jobs\ConvertWebPJob.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="libwebp.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,18 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Imazen.WebP">
-      <HintPath>lib\Imazen.WebP.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="libwebp.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
