@@ -21,28 +21,38 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     {
         public JsonFileValues Run(string tempFilePath)
         {
+            Console.WriteLine("开始打印");
+            Console.WriteLine("打印文件路径:" + tempFilePath);
             JsonFileValues job = new JsonFileValues();
             FileInfo fileInfo = new FileInfo(tempFilePath);
-            //var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-            switch (fileInfo.Extension)
+            try
             {
-                case ".xls":
-                case ".xlsx":
-                    PrintExcel(tempFilePath);
-                    break;
-                case ".doc":
-                case ".docx":
-                    PrintDoc(tempFilePath);
-                    break;
-                case ".pdf":
-                    PrintPDF(tempFilePath);
-                    break;
+                //var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+                switch (fileInfo.Extension)
+                {
+                    case ".xls":
+                    case ".xlsx":
+                        PrintExcel(tempFilePath);
+                        break;
+                    case ".doc":
+                    case ".docx":
+                        PrintDoc(tempFilePath);
+                        break;
+                    case ".pdf":
+                        PrintPDF(tempFilePath);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
             job.Key = "Print";
             job.Param = "";
             job.Status = "1";
             job.Value = Core.StorageOperation.GetUrl(fileInfo.Name);
             job.CreateTime = DateTime.Now;
+            Console.WriteLine("结束打印");
             return job;
         }
         /// <summary>

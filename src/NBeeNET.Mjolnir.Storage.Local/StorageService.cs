@@ -15,7 +15,7 @@ namespace NBeeNET.Mjolnir.Storage.Local
         /// <summary>
         /// 本地存储的根路径，置绝对路径
         /// </summary>
-        public string BasePath { get; set; } =  Directory.GetCurrentDirectory() + "\\wwwroot\\";
+        public string BasePath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
         
         /// <summary>
@@ -28,8 +28,8 @@ namespace NBeeNET.Mjolnir.Storage.Local
             bool result = false;
             try
             {
-                sourceDir = sourceDir.EndsWith(@"\") ? sourceDir : sourceDir + @"\";
-                string destinationDir = BasePath+ StorageOperation.GetPath();
+                //sourceDir = sourceDir.EndsWith(@"\") ? sourceDir : sourceDir + @"\";
+                string destinationDir = Path.Combine(BasePath, StorageOperation.GetPath());
 
                 if (Directory.Exists(sourceDir))
                 {
@@ -39,9 +39,9 @@ namespace NBeeNET.Mjolnir.Storage.Local
                     foreach (string file in Directory.GetFiles(sourceDir))
                     {
                         FileInfo fileInfo = new FileInfo(file);
-                        fileInfo.CopyTo(destinationDir + fileInfo.Name, true);
+                        fileInfo.CopyTo(Path.Combine(destinationDir, fileInfo.Name), true);
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("Local Url:" + destinationDir + fileInfo.Name);
+                        Console.WriteLine("Local Url:" + Path.Combine(destinationDir, fileInfo.Name));
                     }
                     foreach (string dir in Directory.GetDirectories(sourceDir))
                     {
@@ -114,7 +114,7 @@ namespace NBeeNET.Mjolnir.Storage.Local
 
         public string GetSavePath()
         {
-            string storageDirectory = BasePath + GetPath();
+            string storageDirectory = Path.Combine(BasePath, GetPath());
             if (!Directory.Exists(storageDirectory))
             {
                 Directory.CreateDirectory(storageDirectory);

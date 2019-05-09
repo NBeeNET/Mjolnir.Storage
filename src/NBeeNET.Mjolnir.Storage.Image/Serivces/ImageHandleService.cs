@@ -133,21 +133,30 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                     JsonFileValues job = null;
                     while (queues.TryDequeue(out job))
                     {
-                        //预览图处理
-                        if (job.Key == "Medium")
+                        Console.WriteLine("正在处理图片:" + job.Key);
+                        try
                         {
-                            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
+                            //预览图处理
+                            if (job.Key == "Medium")
+                            {
+                                jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
+                            }
+                            //缩略图处理
+                            if (job.Key == "Small")
+                            {
+                                jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
+                            }
+                            //WebP格式转换
+                            //if (job.Key == "WebP")
+                            //{
+                            //    jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
+                            //}
                         }
-                        //缩略图处理
-                        if (job.Key == "Small")
+                        catch (Exception ex)
                         {
-                            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
+                            Console.WriteLine(ex.ToString());
                         }
-                        //WebP格式转换
-                        if (job.Key == "WebP")
-                        {
-                            jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                        }
+                        Console.WriteLine("处理图片结束:" + job.Key);
                     }
                 }
                 //保存Json文件

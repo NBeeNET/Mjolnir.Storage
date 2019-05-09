@@ -20,7 +20,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         {
             get
             {
-                string tempDirectory = Directory.GetCurrentDirectory() + "\\temp";
+                string tempDirectory = Path.Combine(Directory.GetCurrentDirectory() , "temp");
                 if (!Directory.Exists(tempDirectory))
                 {
                     Directory.CreateDirectory(tempDirectory);
@@ -56,7 +56,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
             {
                 Directory.CreateDirectory(tempPath);
             }
-            string jsonFilePath = tempPath + "\\" + id + ".json";
+            string jsonFilePath = Path.Combine(tempPath, id + ".json");
 
             return jsonFilePath;
         }
@@ -74,8 +74,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
                 //存入临时目录
                 string tempDirectory = GetTempPath(id);
                 string type = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                string fullFilePath = tempDirectory + "\\" + id + "." + type;
-
+                string fullFilePath = Path.Combine(tempDirectory, id + "." + type);
                 using (var bits = new FileStream(fullFilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(bits);
