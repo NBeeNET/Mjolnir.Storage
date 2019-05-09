@@ -112,7 +112,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// 开始处理任务
         /// </summary>
         /// <returns></returns>
-        private async Task StartJob(OfficeOutput OfficeOutput, string tempFilePath)
+        private async void StartJob(OfficeOutput OfficeOutput, string tempFilePath)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
             //保存Json文件
@@ -139,7 +139,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// </summary>
         /// <param name="tempFilePath"></param>
         /// <returns></returns>
-        private async Task DeleteTempFile(string tempFilePath)
+        private void DeleteTempFile(string tempFilePath)
         {
             File.Delete(tempFilePath);
         }
