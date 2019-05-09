@@ -13,11 +13,11 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
     public class StorageService : IStorageService
     {
 
-        public string AwsAccessKeyId { get; set; } = "nbeenetmjolnir";
+        public string AwsAccessKeyId { get; set; } = "AKIARYB4OSG7FYGB2AOE";
 
-        public string AwsSecretAccessKey { get; set; } = "3824a2880e5769dcc0d1c47af6b44a97573b790c511f3caceb158d3abcfd86c5";
+        public string AwsSecretAccessKey { get; set; } = "4FFBCIXkArCS3Jox4BPQh35IASXBoMBI8tqUaX4/";
 
-        public string BucketName { get; set; } = "upload";
+        public string BucketName { get; set; } = "nbeenet-mjolnir";
 
         public static IAmazonS3 client;
         /// <summary>
@@ -32,7 +32,7 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
             bool result = false;
             try
             {
-                client = new AmazonS3Client(AwsAccessKeyId, AwsSecretAccessKey, RegionEndpoint.USWest1);
+                client = new AmazonS3Client(AwsAccessKeyId, AwsSecretAccessKey, RegionEndpoint.USEast1);
 
                 //验证名称为bucketName的bucket是否存在，不存在则创建  
                 if (!await checkBucketExists(BucketName))
@@ -40,7 +40,7 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
                     // Get and create the container
                     PutBucketRequest request = new PutBucketRequest();
                     request.BucketName = BucketName;
-
+                    request.BucketRegion = S3Region.US;
                     await client.PutBucketAsync(request);
                 }
 
@@ -53,11 +53,11 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
                     {
                         FilePath = file.FullName,
                         BucketName = BucketName,
-                        Key = file.Name
+                        Key = filename
                     };
 
                     var response = await client.PutObjectAsync(objectRequest);
-                    var url= client.GeneratePreSignedURL(BucketName, file.Name, new DateTime(2020, 12, 31), null);
+                    var url= client.GeneratePreSignedURL(BucketName, filename, new DateTime(2020, 12, 31), null);
                     Console.WriteLine(url);
                 }
 
