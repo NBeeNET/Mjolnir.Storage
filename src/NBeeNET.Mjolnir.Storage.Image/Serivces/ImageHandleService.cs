@@ -77,7 +77,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //缩略图
             task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
             //WebP格式
-            task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
+            //task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -144,10 +144,10 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                             jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
                         }
                         //WebP格式转换
-                        if (job.Key == "WebP")
-                        {
-                            jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                        }
+                        //if (job.Key == "WebP")
+                        //{
+                        //    jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
+                        //}
                     }
                 }
                 //保存Json文件
