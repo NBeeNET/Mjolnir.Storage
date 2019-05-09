@@ -73,7 +73,8 @@ namespace NBeeNET.Mjolnir.Storage.Core
             {
                 //存入临时目录
                 string tempDirectory = GetTempPath(id);
-                string fullFilePath = tempDirectory + "\\" + id + "." + file.ContentType.Split("/")[1];
+                string type = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                string fullFilePath = tempDirectory + "\\" + id + "." + type;
 
                 using (var bits = new FileStream(fullFilePath, FileMode.Create))
                 {

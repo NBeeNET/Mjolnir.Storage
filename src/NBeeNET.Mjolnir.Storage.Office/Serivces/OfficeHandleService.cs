@@ -76,12 +76,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
             //输出结果对象
             OfficeOutput OfficeOutput = new OfficeOutput();
+            
             OfficeOutput.Id = Guid.NewGuid().ToString();
             OfficeOutput.Name = OfficeInput.Name;
             OfficeOutput.Tags = OfficeInput.Tags;
             OfficeOutput.Length = OfficeInput.File.Length;
-            OfficeOutput.Type = OfficeInput.File.ContentType;
-            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeInput.File.ContentType.Split("/")[1];
+            OfficeOutput.Type = OfficeInput.File.FileName.Split('.')[OfficeInput.File.FileName.Split('.').Length - 1];
+            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeOutput.Type;
             OfficeOutput.Url = StorageOperation.GetUrl(OfficeOutput.FileName);
             OfficeOutput.Path = StorageOperation.GetPath();
 
@@ -122,15 +123,16 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.Tags = OfficeOutput.Tags;
             jsonFile.Url = OfficeOutput.Url;
             jsonFile.FileName = OfficeOutput.FileName;
-
+            jsonFile.Values = new List<JsonFileValues>();
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
             //执行job
             for (int i = 0; i < jobList.Count; i++)
             {
                 jsonFile.Values.Add(jobList[i].Run(tempFilePath));
             }
+            string dir = tempStorage.GetTempPath(OfficeOutput.Id);
             //job执行完删除临时文件
-            File.Delete(tempFilePath);
+            Directory.Delete(dir, true);
         }
         /// <summary>
         /// 删除文件
