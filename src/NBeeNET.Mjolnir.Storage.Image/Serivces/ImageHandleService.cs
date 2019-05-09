@@ -164,7 +164,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 }
 
                 //删除临时目录
-                await tempStorage.Delete(jsonFile.Id);
+                tempStorage.Delete(jsonFile.Id);
 
             }
         }
