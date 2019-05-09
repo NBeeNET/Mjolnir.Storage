@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>0.0.1</Version>
+    <Version>0.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <NeutralLanguage>guz-KE</NeutralLanguage>
+    <NeutralLanguage></NeutralLanguage>
+    <Company>NBeeNET</Company>
+    <Product>NBeeNET.Mjolnir.Storage</Product>
+    <Authors>NBeeNET</Authors>
   </PropertyGroup>
 
   <ItemGroup>
