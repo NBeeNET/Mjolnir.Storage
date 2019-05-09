@@ -14,26 +14,35 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
     /// </summary>
     public class StorageService : IStorageService
     {
-        public string B { get; set; } = "B1";
+        public string ConnectionString { get; set; } = "";
 
         /// <summary>
         /// AzureBlob Container名称
         /// </summary>
         public string Container { get; set; } = "upload";//
 
+        private StorageContext context;
+
+        public StorageService()
+        {
+
+        }
         /// <summary>
         /// 复制文件夹
         /// </summary>
         /// <param name="sourceDir">源文件夹</param>
-        /// <param name="destinationDir">目标文件夹</param>
-        /// <param name="isOverwriteExisting">是否覆盖现有</param>
         /// <returns></returns>
-        public async Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting)
+        public async Task<bool> CopyDirectory(string sourceDir)
         {
             bool result = false;
             try
             {
-                var context = new StorageContext();
+                if (ConnectionString == "")
+                {
+                    return false;
+                }
+                //创建上下文
+                context = new StorageContext(this.ConnectionString);
 
                 // Get and create the container
                 var blobContainer = context.BlobClient.GetContainerReference(Container);
@@ -42,12 +51,17 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
                 DirectoryInfo directoryInfo = new DirectoryInfo(sourceDir);
                 foreach (var file in directoryInfo.GetFiles())
                 {
+                    //上传文件
                     var filename = StorageOperation.GetPath() + "/" + file.Name;
 
                     var blob = blobContainer.GetBlockBlobReference(filename);
                     await blob.UploadFromFileAsync(file.FullName);
+
+                    string url= blob.StorageUri.GetUri(StorageLocation.Primary).ToString();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("Azure Url:" + url);
                 }
-                
+
                 result = true;
 
             }
@@ -98,7 +112,7 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
 
         public string GetSavePath()
         {
-           return string.Empty;
+            return string.Empty;
         }
 
         public string GetPath()
@@ -117,9 +131,9 @@ namespace NBeeNET.Mjolnir.Storage.AzureBlob
     {
         private CloudStorageAccount _storageAccount;
 
-        public StorageContext()
+        public StorageContext(string connectionString)
         {
-            _storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=get6;AccountKey=dpC3WSz7aUACwWQ8INEndZZmv0K8T9E1uz9N5WPgDB67FGgWrgUZGjnhzzGkV+xTnQ8Zu+4FfW8Rtl8N9FxljA==;EndpointSuffix=core.chinacloudapi.cn");
+            _storageAccount = CloudStorageAccount.Parse(connectionString);
         }
 
         public CloudBlobClient BlobClient

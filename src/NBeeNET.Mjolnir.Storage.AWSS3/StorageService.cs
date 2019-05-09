@@ -13,25 +13,27 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
     public class StorageService : IStorageService
     {
 
-        public string AwsAccessKeyId { get; set; } = "AKIARYB4OSG7FYGB2AOE";
+        public string AwsAccessKeyId { get; set; } = "";
 
-        public string AwsSecretAccessKey { get; set; } = "4FFBCIXkArCS3Jox4BPQh35IASXBoMBI8tqUaX4/";
+        public string AwsSecretAccessKey { get; set; } = "";
 
-        public string BucketName { get; set; } = "nbeenet-mjolnir";
+        public string BucketName { get; set; } = "";
 
         public static IAmazonS3 client;
         /// <summary>
         /// 复制文件夹
         /// </summary>
         /// <param name="sourceDir">源文件夹</param>
-        /// <param name="destinationDir">目标文件夹</param>
-        /// <param name="isOverwriteExisting">是否覆盖现有</param>
         /// <returns></returns>
-        public async Task<bool> CopyDirectory(string sourceDir, string destinationDir, bool isOverwriteExisting)
+        public async Task<bool> CopyDirectory(string sourceDir)
         {
             bool result = false;
             try
             {
+                if (string.IsNullOrEmpty(AwsAccessKeyId)  || string.IsNullOrEmpty(AwsSecretAccessKey) || string.IsNullOrEmpty(BucketName))
+                {
+                    return result;
+                }
                 client = new AmazonS3Client(AwsAccessKeyId, AwsSecretAccessKey, RegionEndpoint.USEast1);
 
                 //验证名称为bucketName的bucket是否存在，不存在则创建  
@@ -58,7 +60,8 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
 
                     var response = await client.PutObjectAsync(objectRequest);
                     var url= client.GeneratePreSignedURL(BucketName, filename, new DateTime(2020, 12, 31), null);
-                    Console.WriteLine(url);
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("AWS Url:" + url);
                 }
 
                 result = true;
@@ -78,7 +81,6 @@ namespace NBeeNET.Mjolnir.Storage.AWSS3
             ListBucketsResponse response = await client.ListBucketsAsync();
             foreach (S3Bucket bucket in response.Buckets)
             {
-                Console.WriteLine("You own Bucket with name: {0}", bucket.BucketName);
                 if (bucket.BucketName == bucketName)
                 {
                     return true;
