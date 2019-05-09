@@ -73,7 +73,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         /// <param name="filePath"></param>
         public void PrintPDF(string filePath)
         {
-            filePath = "C:/Users/94885/Desktop/启动指令.pdf";
             //Create a pdf document.
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(filePath);

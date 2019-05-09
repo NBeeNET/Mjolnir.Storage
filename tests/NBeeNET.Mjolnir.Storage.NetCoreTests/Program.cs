@@ -20,6 +20,8 @@ namespace NBeeNET.Mjolnir.Storage.NetCoreTests
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseIISIntegration()
+                .UseUrls("http://*:5000")
                 .UseStartup<Startup>();
     }
 }
