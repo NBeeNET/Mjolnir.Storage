@@ -29,3 +29,7 @@
 /src/NBeeNET.Mjolnir.Storage.Audio/bin
 /src/NBeeNET.Mjolnir.Storage.Video/obj
 /src/NBeeNET.Mjolnir.Storage.Video/bin
+/samples/NetworkPrint/bin
+/samples/NetworkPrint/obj
+/samples/NetworkPrint/temp
+/samples/NetworkPrint/wwwroot/NBeeNET_Mjolnir
