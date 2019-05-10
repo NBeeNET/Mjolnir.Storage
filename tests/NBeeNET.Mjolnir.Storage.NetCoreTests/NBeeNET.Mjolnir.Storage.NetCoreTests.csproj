@@ -14,7 +14,11 @@
 
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0"/>
+=======
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+>>>>>>> dab64d75e7dc1aea15b1d9da0a5af71c702e66ed
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 

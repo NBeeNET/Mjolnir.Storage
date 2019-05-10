@@ -19,7 +19,7 @@ namespace NBeeNET.Mjolnir.Storage.Image
         {
 
             System.Drawing.Image originalImage = System.Drawing.Image.FromFile(originalImagePath);
-
+            
             int towidth = width;
             int toheight = height;
 

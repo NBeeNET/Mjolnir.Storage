@@ -6,15 +6,18 @@
 
   <ItemGroup>
     <Compile Remove="ImageServiceProviders.cs" />
-    <Compile Remove="Jobs\ConvertWebPJob.cs" />
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <None Remove="libwebp.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0"/>
+=======
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+>>>>>>> dab64d75e7dc1aea15b1d9da0a5af71c702e66ed
     <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview5.19224.8" />
   </ItemGroup>
 
@@ -24,6 +27,18 @@
 
   <ItemGroup>
     <Folder Include="Lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Imazen.WebP">
+      <HintPath>lib\Imazen.WebP.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libwebp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
