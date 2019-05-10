@@ -19,6 +19,7 @@ namespace NetworkPrint
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://*:5001")
                 .UseStartup<Startup>();
     }
 }

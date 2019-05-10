@@ -92,7 +92,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             using (var proc = CreateProcess(filePath))
             {
                 proc.Start();
-                bool result = proc.WaitForExit(1000);
+                bool result = proc.WaitForExit(30000);
                 if (!result)
                 {
                     proc.Kill();

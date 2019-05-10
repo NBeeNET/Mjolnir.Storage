@@ -5,6 +5,54 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="card">
+        <div class="card-header">上传PDF打印</div>
+        <div class="card-body">
+
+            <form method="post" id="imageForm">
+                <div class="form-group">
+                    <div class="col-md-10" style="text-align:left">
+                        <p>请选择一个PDF文件:</p>
+                        <input class="file" type="file" name="file" accept=".pdf"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10" style="text-align:left">
+                        <button id="btnUpload1" type="button" class="btn btn-primary">上传</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="comment">返回结果:</label>
+                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div>
+            </form>
+
+        </div>
+    </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnUpload1").click(function () {
+
+            var formData = new FormData($('#imageForm')[0]);
+
+            $.ajax({
+                url: '/StorageApi/Office/UploadPrint',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $("#comment").text(JSON.stringify(returndata));
+                },
+                error: function (returndata) {
+                    alert("上传文件失败");
+                }
+            });
+
+        });
+    })
+</script>
