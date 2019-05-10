@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\ConsoleHelper.cs" />
     <Compile Remove="Interface\IStorageOptions.cs" />
     <Compile Remove="Models\FileInfoBase.cs" />
     <Compile Remove="Models\FileStrorageModel.cs" />

@@ -25,3 +25,7 @@
 /.vs
 /src/NBeeNET.Mjolnir.Storage.Office/bin
 /src/NBeeNET.Mjolnir.Storage.Office/obj
+/src/NBeeNET.Mjolnir.Storage.Audio/obj
+/src/NBeeNET.Mjolnir.Storage.Audio/bin
+/src/NBeeNET.Mjolnir.Storage.Video/obj
+/src/NBeeNET.Mjolnir.Storage.Video/bin

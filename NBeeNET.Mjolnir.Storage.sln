@@ -23,7 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Azu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.AWSS3", "src\NBeeNET.Mjolnir.Storage.AWSS3\NBeeNET.Mjolnir.Storage.AWSS3.csproj", "{B029DD62-B30B-455F-9CBA-B12CDA3A687A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Office", "src\NBeeNET.Mjolnir.Storage.Office\NBeeNET.Mjolnir.Storage.Office.csproj", "{AC482937-508B-4092-B19A-97EE59C82D0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Office", "src\NBeeNET.Mjolnir.Storage.Office\NBeeNET.Mjolnir.Storage.Office.csproj", "{AC482937-508B-4092-B19A-97EE59C82D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Audio", "src\NBeeNET.Mjolnir.Storage.Audio\NBeeNET.Mjolnir.Storage.Audio.csproj", "{5C5E3E48-C205-48C5-8EE2-A564597711EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Video", "src\NBeeNET.Mjolnir.Storage.Video\NBeeNET.Mjolnir.Storage.Video.csproj", "{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{AC482937-508B-4092-B19A-97EE59C82D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC482937-508B-4092-B19A-97EE59C82D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC482937-508B-4092-B19A-97EE59C82D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C5E3E48-C205-48C5-8EE2-A564597711EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C5E3E48-C205-48C5-8EE2-A564597711EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C5E3E48-C205-48C5-8EE2-A564597711EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C5E3E48-C205-48C5-8EE2-A564597711EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +88,8 @@ Global
 		{AB43866B-C0DC-4761-819A-11565DCD262F} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{B029DD62-B30B-455F-9CBA-B12CDA3A687A} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{AC482937-508B-4092-B19A-97EE59C82D0E} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{5C5E3E48-C205-48C5-8EE2-A564597711EB} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}

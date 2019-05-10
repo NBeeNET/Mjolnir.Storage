@@ -5,6 +5,7 @@ using NBeeNET.Mjolnir.Storage.Core.Models;
 using NBeeNET.Mjolnir.Storage.Image.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Image.Serivces
@@ -76,8 +77,13 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             task.Add(new JsonFileValues() { Key = "Medium", Status = "0", Value = "" });
             //缩略图
             task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
-            //WebP格式
-            //task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
+
+            //.Net Core生成 WebP格式,目前仅支持在Windows
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                //WebP格式
+                task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
+            }
 
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -147,10 +153,10 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                                 jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
                             }
                             //WebP格式转换
-                            //if (job.Key == "WebP")
-                            //{
-                            //    jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                            //}
+                            if (job.Key == "WebP")
+                            {
+                                jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
+                            }
                         }
                         catch (Exception ex)
                         {
