@@ -114,7 +114,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// 开始处理任务
         /// </summary>
         /// <returns></returns>
-        public async Task StartJob(JsonFile jsonFile, string tempFilePath)
+        public async void StartJob(JsonFile jsonFile, string tempFilePath)
         {
 
             if (jsonFile.Values.Count > 0)
@@ -173,7 +173,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 }
 
                 //删除临时目录
-                await tempStorage.Delete(jsonFile.Id);
+                tempStorage.Delete(jsonFile.Id);
 
             }
         }

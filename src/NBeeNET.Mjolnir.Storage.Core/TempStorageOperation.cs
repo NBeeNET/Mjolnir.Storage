@@ -94,13 +94,13 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task Delete(string id)
+        public void Delete(string id)
         {
             try
             {
                 //存入临时目录
                 string tempDirectory = GetTempPath(id);
-                System.IO.Directory.Delete(tempDirectory,true);
+                System.IO.Directory.Delete(tempDirectory, true);
             }
             catch
             {
