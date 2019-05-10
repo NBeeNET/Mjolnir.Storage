@@ -10,7 +10,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace NBeeNET.Mjolnir.Storage.Office.Jobs
 {
@@ -87,10 +89,43 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         {
             //PrintDocument    
             //Create a pdf document.
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(filePath);
-            doc.Print();
-            doc.Close();
+            //PdfDocument doc = new PdfDocument();
+            //doc.LoadFromFile(filePath);
+            //doc.Print();
+            //doc.Close();
+            using (var proc = CreateProcess(filePath))
+            {
+                proc.Start();
+                bool result = proc.WaitForExit(1000);
+                if (!result)
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        private static readonly string utilPath = GetUtilPath();
+        
+        private static Process CreateProcess(string filePath)
+        {
+            return new Process
+            {
+                StartInfo =
+                    {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = utilPath,
+                        Arguments = $@"""{filePath}""",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+            };
+        }
+
+        private static string GetUtilPath()
+        {
+            return Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "PDFtoPrinter.exe");
         }
     }
 }
