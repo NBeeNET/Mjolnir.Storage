@@ -1,9 +1,5 @@
 ﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
-using Spire.Doc;
-using Spire.Pdf;
-using Spire.Pdf.Graphics;
-using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,11 +32,11 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                 {
                     case ".xls":
                     case ".xlsx":
-                        PrintExcel(tempFilePath);
+                        //PrintExcel(tempFilePath);
                         break;
                     case ".doc":
                     case ".docx":
-                        PrintDoc(tempFilePath);
+                        //PrintDoc(tempFilePath);
                         break;
                     case ".pdf":
                         PrintPDF(tempFilePath);
@@ -59,28 +55,28 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             Console.WriteLine("结束打印");
             return job;
         }
-        /// <summary>
-        /// 打印excel
-        /// </summary>
-        /// <param name="filePath"></param>
-        public void PrintExcel(string filePath)
-        {
-            Workbook workbook = new Workbook();
-            workbook.LoadFromFile(filePath);
-            workbook.PrintDocument.Print();
-            workbook.Dispose();
-        }
-        /// <summary>
-        /// 打印word
-        /// </summary>
-        /// <param name="filePath"></param>
-        public void PrintDoc(string filePath)
-        {
-            Document document = new Document();
-            document.LoadFromFile(filePath);
-            document.PrintDocument.Print();
-            document.Close();
-        }
+        ///// <summary>
+        ///// 打印excel
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        //public void PrintExcel(string filePath)
+        //{
+        //    Workbook workbook = new Workbook();
+        //    workbook.LoadFromFile(filePath);
+        //    workbook.PrintDocument.Print();
+        //    workbook.Dispose();
+        //}
+        ///// <summary>
+        ///// 打印word
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        //public void PrintDoc(string filePath)
+        //{
+        //    Document document = new Document();
+        //    document.LoadFromFile(filePath);
+        //    document.PrintDocument.Print();
+        //    document.Close();
+        //}
         /// <summary>
         /// 打印pdf
         /// </summary>
