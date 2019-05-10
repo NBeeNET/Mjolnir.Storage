@@ -19,12 +19,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
         public OfficeHandleService()
         {
+            jobList.Add(new TransfPDFJob());
             jobList.Add(new PrintJob());
         }
         /// <summary>
         /// 执行job列表
         /// </summary>
-        private List<IJob> jobList = new List<IJob>();
+        public List<IJob> jobList = new List<IJob>();
 
         /// <summary>
         /// 执行保存和删除临时文件

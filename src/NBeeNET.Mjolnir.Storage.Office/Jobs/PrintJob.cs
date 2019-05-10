@@ -22,6 +22,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         public JsonFileValues Run(string tempFilePath)
         {
             Console.WriteLine("开始打印");
+            PrintDocument fPrintDocument = new PrintDocument();    //获取默认打印机的方法
+            Console.WriteLine("默认打印机:" + fPrintDocument.PrinterSettings.PrinterName);
             Console.WriteLine("打印文件路径:" + tempFilePath);
             JsonFileValues job = new JsonFileValues();
             FileInfo fileInfo = new FileInfo(tempFilePath);
@@ -83,6 +85,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         /// <param name="filePath"></param>
         public void PrintPDF(string filePath)
         {
+            //PrintDocument    
             //Create a pdf document.
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(filePath);
