@@ -97,10 +97,10 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             {
                 proc.Start();
                 bool result = proc.WaitForExit(30000);
-                if (!result)
-                {
-                    proc.Kill();
-                }
+                //if (!result)
+                //{
+                //    proc.Kill();
+                //}
             }
         }
 
