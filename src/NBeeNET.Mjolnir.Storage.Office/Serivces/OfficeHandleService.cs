@@ -132,6 +132,11 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 jsonFile.Values.Add(jobList[i].Run(tempFilePath));
             }
             string dir = tempStorage.GetTempPath(OfficeOutput.Id);
+            //复制目录
+            foreach (var storageService in Register._IStorageService)
+            {
+                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
+            }
             //job执行完删除临时文件
             Directory.Delete(dir, true);
         }

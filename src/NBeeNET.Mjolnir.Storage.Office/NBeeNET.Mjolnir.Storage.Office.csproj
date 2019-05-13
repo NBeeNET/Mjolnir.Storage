@@ -6,9 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
-    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
-    <PackageReference Include="NPOI" Version="2.4.1" />
+    <PackageReference Include="NetOffice.Excel" Version="1.7.4.4" />
+    <PackageReference Include="NetOffice.Word" Version="1.7.4.4" />
   </ItemGroup>
 
   <ItemGroup>
