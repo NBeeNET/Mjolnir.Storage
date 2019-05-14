@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
+using NBeeNET.Mjolnir.Storage.Office.Common;
 using NBeeNET.Mjolnir.Storage.Office.Serivces;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
@@ -10,6 +15,13 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
     [ApiController]
     public class OfficeController : ControllerBase
     {
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public OfficeController(IServiceScopeFactory serviceScopeFactory)
+        {
+            _serviceScopeFactory = serviceScopeFactory;
+        }
+
+
         /// <summary>
         /// office文件上传
         /// </summary>
@@ -20,76 +32,103 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
         {
-            if (file == null)
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                file = Request.Form.Files[0];
-            }
-            OfficeOutput output = new OfficeOutput();
-            if (file != null)
-            {
-                if (file.Length > 0)
+                if (file == null)
                 {
-                    OfficeInput input = new OfficeInput();
-                    input.File = file;
-                    input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
-                    input.Tags = tags;
-                    OfficeHandleService handleService = new OfficeHandleService();
-                    //处理office文件
-                    output = await handleService.SaveAndDelete(input, Request);
+                    file = Request.Form.Files[0];
+                }
+                OfficeOutput output = new OfficeOutput();
+                if (file != null)
+                {
+                    if (file.Length > 0)
+                    {
+                        var settings = scope.ServiceProvider.GetService<IOptions<Settings>>().Value;
+                        if (file.Length >= settings.MaxLength)
+                        {
+                            string msg = "上传文件的大小超过了最大限制" + settings.MaxLength / 1024 / 1024 + "M";
+                            return BadRequest("Office文件上传失败！原因：" + msg);
+                        }
 
-                    return Ok(output);
+                        //验证是否是Office文件
+                        if (OfficeValidation.IsCheck(file))
+                        {
+                            OfficeInput input = new OfficeInput();
+                            input.File = file;
+                            input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
+                            input.Tags = tags;
+                            OfficeHandleService handleService = new OfficeHandleService();
+                            //处理office文件
+                            output = await handleService.SaveAndDelete(input, Request);
+
+                            return Ok(output);
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("office文件上传失败！原因：文件大小为0");
+                    }
                 }
             }
             return BadRequest("office文件上传失败！");
         }
 
+
         /// <summary>
-        /// office文件上传打印
+        /// 多office文件上传
         /// </summary>
-        /// <param name="file">office文件</param>
-        /// <param name="name">自定义名称</param>
-        /// <param name="file">自定义Tag</param>
+        /// <param name="files">多个图片</param>
         /// <returns></returns>
-        [HttpPost("UploadPrint")]
-        public async Task<IActionResult> UploadPrint(IFormFile file, [FromForm]string name, [FromForm]string tags)
+        [HttpPost("MultipartUpload")]
+        public async Task<IActionResult> MultipartUpload(List<IFormFile> files)
         {
-            if (file == null)
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                file = Request.Form.Files[0];
-            }
-            OfficeOutput output = new OfficeOutput();
-            if (file != null)
-            {
-                if (file.Length > 0)
+                if (files.Count == 0)
                 {
-                    OfficeInput input = new OfficeInput();
-                    input.File = file;
-                    input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
-                    input.Tags = tags;
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        foreach (var item in Request.Form.Files)
+                        {
+                            files.Add(item);
+                        }
+                    }
+                }
+                if (files.Count > 0)
+                {
+                    var settings = scope.ServiceProvider.GetService<IOptions<Settings>>().Value;
+                    if (files.Sum(b => b.Length) >= settings.MaxLength)
+                    {
+                        string msg = "上传文件的总大小超过了最大限制" + settings.MaxLength / 1024 / 1024 + "M";
+                        return BadRequest("Office文件上传失败！原因：" + msg);
+                    }
+
+
+                    List<OfficeInput> inputs = new List<OfficeInput>();
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            //验证是否是Office文件
+                            if (OfficeValidation.IsCheck(file))
+                            {
+                                OfficeInput input = new OfficeInput();
+                                input.File = file;
+                                input.Name = file.FileName;
+                                inputs.Add(input);
+                            }
+                        }
+                    }
+
                     OfficeHandleService handleService = new OfficeHandleService();
                     //处理office文件
-                    output = await handleService.SaveAndJob(input, Request);
+                    var output = await handleService.MultiSaveAndDelete(inputs, Request);
 
                     return Ok(output);
                 }
             }
-            return BadRequest("office文件上传失败！");
+            return BadRequest("Office文件上传失败！");
         }
-        /// <summary>
-        /// 根据路径打印
-        /// </summary>
-        /// <param name="file">office文件</param>
-        /// <returns></returns>
-        [HttpPost("Print")]
-        public IActionResult Print(string path)
-        {
-            OfficeHandleService handleService = new OfficeHandleService();
-            //打印office文件
-            if (handleService.PrintByPath(path))
-            {
-                return Ok(true);
-            }
-            return BadRequest("office打印失败！");
-        }
+
     }
 }

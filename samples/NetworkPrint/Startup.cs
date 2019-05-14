@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using NBeeNET.Mjolnir.Storage.Local;
+using NBeeNET.Mjolnir.Storage.Office;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +39,11 @@ namespace NetworkPrint
                 .AddCheck<RandomHealthCheck>("random")
                 .AddVirtualMemorySizeHealthCheck(10);
             services.AddHealthChecksUI();
+
+            //添加Office存储服务
+            services.AddStorageOffice();
+            //添加本地存储服务
+            services.AddStorageLocal();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -71,7 +78,7 @@ namespace NetworkPrint
 
             app.UseMvc();
 
-            NBeeNET.Mjolnir.Storage.Register.AddStorage(new NBeeNET.Mjolnir.Storage.Local.StorageService() { });
+          
         }
 
         public class RandomHealthCheck

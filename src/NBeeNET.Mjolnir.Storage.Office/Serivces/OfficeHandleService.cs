@@ -2,7 +2,6 @@
 using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
-using NBeeNET.Mjolnir.Storage.Office.Jobs;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
@@ -19,13 +18,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
         public OfficeHandleService()
         {
-            jobList.Add(new TransfPDFJob());
-            jobList.Add(new PrintJob());
+          
         }
-        /// <summary>
-        /// 执行job列表
-        /// </summary>
-        public List<IJob> jobList = new List<IJob>();
 
         /// <summary>
         /// 执行保存和删除临时文件
@@ -41,30 +35,25 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             DeleteTempFile(tempFilePath);
             return officeOutput;
         }
+
         /// <summary>
-        /// 执行保存和job
+        /// 多文件 执行保存和删除
         /// </summary>
-        /// <param name="OfficeInput"></param>
+        /// <param name="inputs"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<OfficeOutput> SaveAndJob(OfficeInput OfficeInput, HttpRequest request)
+        public async Task<List<OfficeOutput>> MultiSaveAndDelete(List<OfficeInput> inputs, HttpRequest request)
         {
-            TempStorageOperation tempStorage = new TempStorageOperation();
-            OfficeOutput officeOutput = await Save(OfficeInput, request);
-            string tempFilePath = Path.Combine(tempStorage.GetTempPath(officeOutput.Id), officeOutput.FileName);
-            StartJob(officeOutput, tempFilePath);
-            return officeOutput;
+            List<OfficeOutput> output = new List<OfficeOutput>();
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                var result = await SaveAndDelete(inputs[i], request);
+                output.Add(result);
+            }
+            return output;
         }
-        /// <summary>
-        /// 根据路径打印文件
-        /// </summary>
-        /// <param name="path"></param>
-        public bool PrintByPath(string path)
-        {
-            PrintJob printJob = new PrintJob();
-            JsonFileValues jsonFileValues = printJob.Run(path);
-            return true;
-        }
+
+
         /// <summary>
         /// 保存office文件
         /// </summary>
@@ -102,44 +91,12 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
             }
 
-            //开始处理任务
-            //StartJob(OfficeOutput, tempFilePath);
-
+            
             Console.WriteLine("return:" + DateTime.Now.ToString());
             //返回结果
             return OfficeOutput;
         }
-        /// <summary>
-        /// 开始处理任务
-        /// </summary>
-        /// <returns></returns>
-        private async void StartJob(OfficeOutput OfficeOutput, string tempFilePath)
-        {
-            TempStorageOperation tempStorage = new TempStorageOperation();
-            //保存Json文件
-            JsonFile jsonFile = new JsonFile();
-            jsonFile.Id = OfficeOutput.Id;
-            jsonFile.CreateTime = DateTime.Now;
-            jsonFile.Name = OfficeOutput.Name;
-            jsonFile.Tags = OfficeOutput.Tags;
-            jsonFile.Url = OfficeOutput.Url;
-            jsonFile.FileName = OfficeOutput.FileName;
-            jsonFile.Values = new List<JsonFileValues>();
-            await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
-            //执行job
-            for (int i = 0; i < jobList.Count; i++)
-            {
-                jsonFile.Values.Add(jobList[i].Run(tempFilePath));
-            }
-            string dir = tempStorage.GetTempPath(OfficeOutput.Id);
-            //复制目录
-            foreach (var storageService in Register._IStorageService)
-            {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
-            }
-            //job执行完删除临时文件
-            Directory.Delete(dir, true);
-        }
+        
         /// <summary>
         /// 删除文件
         /// </summary>

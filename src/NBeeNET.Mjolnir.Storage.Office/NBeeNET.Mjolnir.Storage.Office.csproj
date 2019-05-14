@@ -5,19 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Jobs\**" />
+    <EmbeddedResource Remove="Jobs\**" />
+    <None Remove="Jobs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="PDFtoPrinter.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
-    <PackageReference Include="NetOffice.Excel" Version="1.7.4.4" />
-    <PackageReference Include="NetOffice.Word" Version="1.7.4.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="PDFtoPrinter.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
