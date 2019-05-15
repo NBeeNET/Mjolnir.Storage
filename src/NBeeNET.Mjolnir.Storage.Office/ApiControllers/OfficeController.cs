@@ -59,7 +59,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             input.Tags = tags;
                             OfficeHandleService handleService = new OfficeHandleService();
                             //处理office文件
-                            output = await handleService.SaveAndDelete(input, Request);
+                            output = await handleService.SaveOfficeFile(input, Request);
 
                             return Ok(output);
                         }
@@ -122,7 +122,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 
                     OfficeHandleService handleService = new OfficeHandleService();
                     //处理office文件
-                    var output = await handleService.MultiSaveAndDelete(inputs, Request);
+                    var output = await handleService.MultiSaveOfficeFile(inputs, Request);
 
                     return Ok(output);
                 }

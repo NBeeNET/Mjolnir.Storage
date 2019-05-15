@@ -55,7 +55,8 @@
                         $("#comment").text(JSON.stringify(returndata));
                     },
                     error: function (returndata) {
-                        alert(returndata);
+                        
+                        alert(JSON.stringify(returndata));
                     }
                 });
 

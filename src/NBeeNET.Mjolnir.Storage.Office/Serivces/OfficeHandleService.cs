@@ -22,32 +22,30 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         }
 
         /// <summary>
-        /// 执行保存和删除临时文件
+        /// 文件保存
         /// </summary>
         /// <param name="OfficeInput"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<OfficeOutput> SaveAndDelete(OfficeInput OfficeInput, HttpRequest request)
+        public async Task<OfficeOutput> SaveOfficeFile(OfficeInput OfficeInput, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
             OfficeOutput officeOutput = await Save(OfficeInput, request);
-            string tempFilePath = Path.Combine(tempStorage.GetTempPath(officeOutput.Id), officeOutput.FileName);
-            DeleteTempFile(tempFilePath);
             return officeOutput;
         }
 
         /// <summary>
-        /// 多文件 执行保存和删除
+        /// 多文件保存
         /// </summary>
         /// <param name="inputs"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<OfficeOutput>> MultiSaveAndDelete(List<OfficeInput> inputs, HttpRequest request)
+        public async Task<List<OfficeOutput>> MultiSaveOfficeFile(List<OfficeInput> inputs, HttpRequest request)
         {
             List<OfficeOutput> output = new List<OfficeOutput>();
             for (int i = 0; i < inputs.Count; i++)
             {
-                var result = await SaveAndDelete(inputs[i], request);
+                var result = await SaveOfficeFile(inputs[i], request);
                 output.Add(result);
             }
             return output;
@@ -91,20 +89,25 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
             }
 
-            
+
+            //保存Json文件
+            JsonFile jsonFile = new JsonFile();
+            jsonFile.Id = OfficeOutput.Id;
+            jsonFile.CreateTime = DateTime.Now;
+            jsonFile.Name = OfficeOutput.Name;
+            jsonFile.Tags = OfficeOutput.Tags;
+            jsonFile.Url = OfficeOutput.Url;
+            jsonFile.FileName = OfficeOutput.FileName;
+       
+            await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
+
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
             Console.WriteLine("return:" + DateTime.Now.ToString());
             //返回结果
             return OfficeOutput;
         }
         
-        /// <summary>
-        /// 删除文件
-        /// </summary>
-        /// <param name="tempFilePath"></param>
-        /// <returns></returns>
-        private void DeleteTempFile(string tempFilePath)
-        {
-            File.Delete(tempFilePath);
-        }
+
     }
 }

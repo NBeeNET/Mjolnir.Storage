@@ -102,9 +102,9 @@ namespace NBeeNET.Mjolnir.Storage.Core
                 string tempDirectory = GetTempPath(id);
                 System.IO.Directory.Delete(tempDirectory, true);
             }
-            catch
+            catch(Exception ex)
             {
-                return;
+                throw ex;
             }
         }
 

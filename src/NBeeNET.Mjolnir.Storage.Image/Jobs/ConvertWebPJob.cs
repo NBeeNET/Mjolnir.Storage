@@ -24,24 +24,35 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
             job.Value = Core.StorageOperation.GetUrl(webPName);
             job.CreateTime = DateTime.Now;
 
-           
             System.Drawing.Image originalImage = System.Drawing.Image.FromFile(tempFilePath);
-            using (var bmp = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+
+            try
             {
-                // 将图片重绘到新画布
-                using (var g = System.Drawing.Graphics.FromImage(bmp))
+              
+                using (var bmp = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
                 {
-                    g.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+                    // 将图片重绘到新画布
+                    using (var g = System.Drawing.Graphics.FromImage(bmp))
+                    {
+                        g.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+                    }
+
+                    //转码并保存文件
+                    using (var fs = System.IO.File.Create(webPPath))
+                    {
+                        Imazen.WebP.SimpleEncoder.Encode(bmp, fs, 100);
+                    }
                 }
 
-                //转码并保存文件
-                using (var fs = System.IO.File.Create(webPPath))
-                {
-                    Imazen.WebP.SimpleEncoder.Encode(bmp, fs, 100);
-                }
             }
-
-            originalImage.Dispose();
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                originalImage.Dispose();
+            }
 
             return job;
         }
