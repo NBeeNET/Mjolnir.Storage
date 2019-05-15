@@ -35,3 +35,4 @@
 /samples/NetworkPrint/wwwroot/NBeeNET_Mjolnir
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/wwwroot
 /tests/NBeeNET.Mjolnir.Storage.NetCoreTests/Properties
+/samples/NetworkPrint/healthchecksdb
