@@ -60,7 +60,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             input.Tags = tags;
                             ImageHandleService handleService = new ImageHandleService();
                             //处理图片
-                            output = await handleService.Processing(input, Request);
+                            output = await handleService.Save(input, Request);
 
                             return Ok(output);
                         }
@@ -121,11 +121,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 
                     ImageHandleService handleService = new ImageHandleService();
                     //处理图片
-                    var output = await handleService.ProcessingImages(imageInputs, Request);
+                    var output = await handleService.MultiSave(imageInputs, Request);
                     return Ok(output);
                 }
             }
-            return BadRequest("图片上传失败！");
+            return BadRequest("上传失败！");
         }
 
     }

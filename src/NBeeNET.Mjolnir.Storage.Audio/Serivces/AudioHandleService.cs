@@ -25,7 +25,7 @@ namespace NBeeNET.Mjolnir.Storage.Audio.Serivces
         /// </summary>
         /// <param name="imageInput"></param>
         /// <returns></returns>
-        public async Task<AudioOutput> Processing(AudioInput input, HttpRequest request)
+        public async Task<AudioOutput> Save(AudioInput input, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
             //IStorageService _StorageService = new LocalStorageService();
@@ -86,12 +86,12 @@ namespace NBeeNET.Mjolnir.Storage.Audio.Serivces
         /// <param name="imageInput"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<AudioOutput>> ProcessingImages(List<AudioInput> inputs, HttpRequest request)
+        public async Task<List<AudioOutput>> MultiSave(List<AudioInput> inputs, HttpRequest request)
         {
             List<AudioOutput> output = new List<AudioOutput>();
             for (int i = 0; i < inputs.Count; i++)
             {
-                var result = await Processing(inputs[i], request);
+                var result = await Save(inputs[i], request);
                 output.Add(result);
             }
             return output;

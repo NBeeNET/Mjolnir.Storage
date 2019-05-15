@@ -26,7 +26,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// </summary>
         /// <param name="imageInput"></param>
         /// <returns></returns>
-        public async Task<ImageOutput> Processing(ImageInput imageInput, HttpRequest request)
+        public async Task<ImageOutput> Save(ImageInput imageInput, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
             //IStorageService _StorageService = new LocalStorageService();
@@ -61,7 +61,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id));
             }
 
-
+            #region 生成Json
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
             jsonFile.Id = imageOutput.Id;
@@ -88,14 +88,20 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
+            #endregion
+
             //开始处理任务
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":任务处理开始...");
             StartJob(jsonFile, tempFilePath);
 
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
+
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":上传图片结束...");
+            Console.WriteLine(DateTime.Now + ":上传结束...");
             //返回结果
+
             return imageOutput;
         }
 
@@ -105,12 +111,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <param name="imageInput"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<ImageOutput>> ProcessingImages(List<ImageInput> imageInput, HttpRequest request)
+        public async Task<List<ImageOutput>> MultiSave(List<ImageInput> imageInput, HttpRequest request)
         {
             List<ImageOutput> output = new List<ImageOutput>();
             for (int i = 0; i < imageInput.Count; i++)
             {
-                var result = await Processing(imageInput[i], request);
+                var result = await Save(imageInput[i], request);
                 output.Add(result);
             }
             return output;
@@ -122,11 +128,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         /// <returns></returns>
         public async void StartJob(JsonFile jsonFile, string tempFilePath)
         {
-
-            if (jsonFile.Values.Count > 0)
+            StorageOperation storage = new StorageOperation();
+            TempStorageOperation tempStorage = new TempStorageOperation();
+            if (jsonFile.Values?.Count > 0)
             {
-                StorageOperation storage = new StorageOperation();
-                TempStorageOperation tempStorage = new TempStorageOperation();
+                
                 Queue<JsonFileValues> queues = new Queue<JsonFileValues>();
                 for (int i = 0; i < jsonFile.Values.Count; i++)
                 {
@@ -171,17 +177,15 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine(DateTime.Now + ":任务处理完成...");
 
-                Console.WriteLine(DateTime.Now + ":再次复制目录...");
-                //复制目录
-                foreach (var storageService in Register._IStorageService)
-                {
-                    await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
-                }
-
-                //删除临时目录
-                tempStorage.Delete(jsonFile.Id);
+                Console.WriteLine(DateTime.Now + ":再次复制目录...");            
 
             }
+            //复制目录
+            foreach (var storageService in Register._IStorageService)
+            {
+                await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
+            }
+
         }
     }
 }
