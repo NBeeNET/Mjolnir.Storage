@@ -1,0 +1,70 @@
+﻿@page
+@model NetworkStorage.Pages.ImageModel
+@{
+    ViewData["Title"] = "Image";
+}
+
+
+<div class="text-center">
+    <div class="card">
+        <div class="card-header">上传Image</div>
+        <div class="card-body">
+
+            <form method="post" id="imageForm">
+                <div class="form-group">
+                    <div class="col-md-10" style="text-align:left">
+                        <p>请选择一个Image文件:</p>
+                        <input class="file" type="file" name="file" accept=".jpg,.gif,.png" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="text-align:left" id="btn_group">
+
+                        <button id="btnUpload1" type="button" class="btn btn-primary">上传</button>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="comment">返回结果:</label>
+                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div>
+
+            </form>
+
+            <img src="" />
+
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnUpload1").click(function () {
+
+            var formData = new FormData($('#imageForm')[0]);
+
+            $.ajax({
+                url: '/StorageApi/Image/Upload',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $("#comment").text(JSON.stringify(returndata));
+                },
+                error: function (returndata) {
+                    alert(returndata);
+                }
+            });
+
+        });
+
+
+    });
+</script>
+
