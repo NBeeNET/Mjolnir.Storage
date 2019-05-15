@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NBeeNET.Mjolnir.Storage.Local;
+using NBeeNET.Mjolnir.Storage.Office;
 
 namespace NetworkStorage
 {
@@ -30,6 +32,10 @@ namespace NetworkStorage
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //添加 NBeeNET.Mjolnir.Storage.Office 上传及作业处理服务
+            services.AddStorageOffice();
+            //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
+            services.AddStorageLocal();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
