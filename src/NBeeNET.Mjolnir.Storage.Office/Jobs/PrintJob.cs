@@ -21,106 +21,119 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     {
 
 
-        public JsonFileValues Run(string tempFilePath)
+        public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
             Console.WriteLine("开始打印");
             Console.WriteLine("打印文件路径:" + tempFilePath);
-            JsonFileValues job = new JsonFileValues();
             FileInfo fileInfo = new FileInfo(tempFilePath);
-            try
+            switch (fileInfo.Extension)
             {
-                //var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-                switch (fileInfo.Extension)
-                {
-                    case ".xls":
-                    case ".xlsx":
-                        PrintExcel(tempFilePath);
-                        break;
-                    case ".doc":
-                    case ".docx":
-                        PrintDoc(tempFilePath);
-                        break;
-                    case ".pdf":
-                        Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
-                        break;
-                }
+                case ".xls":
+                case ".xlsx":
+                    //PrintExcel(tempFilePath);
+                    break;
+                case ".doc":
+                case ".docx":
+                    PrintDoc(tempFilePath, job);
+                    break;
+                case ".pdf":
+                    //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
+                    break;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            job.Key = "Print";
-            job.Param = "";
-            job.Status = "1";
-            job.Value = Core.StorageOperation.GetUrl(fileInfo.Name);
-            job.CreateTime = DateTime.Now;
-            Console.WriteLine("结束打印");
+            
             return job;
         }
-        /// <summary>
-        /// 打印excel
-        /// </summary>
-        /// <param name="filePath"></param>
-        public bool PrintExcel(string filePath)
+
+        private JsonFileValues PrintDoc(string tempFilePath, JsonFileValues job)
         {
-            if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-                return false;
-            // start excel and turn off msg boxes
-            NetOffice.ExcelApi.Application excelApp = new NetOffice.ExcelApi.Application();
-            excelApp.DisplayAlerts = false;
+            FileInfo fileInfo = new FileInfo(tempFilePath);
+            var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+            
+            Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
+            Microsoft.Office.Interop.Word.Document document = null;
 
-            // create a utils instance, not need for but helpful to keep the lines of code low
-            NetOffice.ExcelApi.Tools.CommonUtils utils = new NetOffice.ExcelApi.Tools.CommonUtils(excelApp);
-            try
-            {
-                NetOffice.ExcelApi.Workbook workBook = excelApp.Workbooks.Add();
-                //NetOffice.ExcelApi.Workbook workBook = excelApp.Workbooks.Open(filePath);
-                var data = workBook.Worksheets[1];
-                NetOffice.ExcelApi.Worksheet workSheet = (NetOffice.ExcelApi.Worksheet)workBook.Worksheets[1];
+            application.Visible = false;
+            document = application.Documents.Open(tempFilePath);
 
-                workSheet.PrintOut();
-                string PDFPath = filePath.Replace(".xlsx", ".pdf");
-                workBook.ExportAsFixedFormat(NetOffice.ExcelApi.Enums.XlFixedFormatType.xlTypePDF, PDFPath);
-                excelApp.Workbooks.Close();
-                excelApp.Quit();
-                excelApp.Dispose();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                excelApp.Workbooks.Close();
-                excelApp.Quit();
-                excelApp.Dispose();
-                return false;
-            }
+            object missing = System.Reflection.Missing.Value;
+            document.PrintOut(ref missing, ref missing, ref missing, ref missing,
+                     ref missing, ref missing, ref missing, ref missing, ref missing,
+                     ref missing, ref missing, ref missing, ref missing, ref missing,
+                     ref missing, ref missing, ref missing, ref missing);
+
+            document.Close();
+            application.Quit();
+
+            job.Status = "1";
+            job.Value = "打印完成";
+            job.CreateTime = DateTime.Now;
+
+            return job;
         }
-        /// <summary>
-        /// 打印word
-        /// </summary>
-        /// <param name="filePath"></param>
-        public bool PrintDoc(string filePath)
-        {
-            // start word and turn off msg boxes
-            NetOffice.WordApi.Application wordApplication = new NetOffice.WordApi.Application();
-            wordApplication.DisplayAlerts = NetOffice.WordApi.Enums.WdAlertLevel.wdAlertsNone;
+        ///// <summary>
+        ///// 打印excel
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        //public bool PrintExcel(string filePath)
+        //{
+        //    if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+        //        return false;
+        //    // start excel and turn off msg boxes
+        //    NetOffice.ExcelApi.Application excelApp = new NetOffice.ExcelApi.Application();
+        //    excelApp.DisplayAlerts = false;
 
-            // create a utils instance, not need for but helpful to keep the lines of code low
-            NetOffice.WordApi.Tools.CommonUtils utils = new NetOffice.WordApi.Tools.CommonUtils(wordApplication);
+        //    // create a utils instance, not need for but helpful to keep the lines of code low
+        //    NetOffice.ExcelApi.Tools.CommonUtils utils = new NetOffice.ExcelApi.Tools.CommonUtils(excelApp);
+        //    try
+        //    {
+        //        NetOffice.ExcelApi.Workbook workBook = excelApp.Workbooks.Add();
+        //        //NetOffice.ExcelApi.Workbook workBook = excelApp.Workbooks.Open(filePath);
+        //        var data = workBook.Worksheets[1];
+        //        NetOffice.ExcelApi.Worksheet workSheet = (NetOffice.ExcelApi.Worksheet)workBook.Worksheets[1];
 
-            // add a new document
-            NetOffice.WordApi.Document newDocument = wordApplication.Documents.Open(filePath);
+        //        workSheet.PrintOut();
+        //        string PDFPath = filePath.Replace(".xlsx", ".pdf");
+        //        workBook.ExportAsFixedFormat(NetOffice.ExcelApi.Enums.XlFixedFormatType.xlTypePDF, PDFPath);
+        //        excelApp.Workbooks.Close();
+        //        excelApp.Quit();
+        //        excelApp.Dispose();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        excelApp.Workbooks.Close();
+        //        excelApp.Quit();
+        //        excelApp.Dispose();
+        //        return false;
+        //    }
+        //}
+        ///// <summary>
+        ///// 打印word
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        //public bool PrintDoc(string filePath)
+        //{
+        //    // start word and turn off msg boxes
+        //    NetOffice.WordApi.Application wordApplication = new NetOffice.WordApi.Application();
+        //    wordApplication.DisplayAlerts = NetOffice.WordApi.Enums.WdAlertLevel.wdAlertsNone;
 
-            //newDocument.PrintOut();
-            string PDFPath = filePath.Replace(".docx", ".pdf");
-            newDocument.ExportAsFixedFormat(PDFPath, NetOffice.WordApi.Enums.WdExportFormat.wdExportFormatPDF);
-            // close word and dispose reference
-            newDocument.Close();
-            wordApplication.Quit();
-            wordApplication.Dispose();
-            return true;
-            // show dialog for the user(you!)
-            //HostApplication.ShowFinishDialog(null, documentFile);
-        }
+        //    // create a utils instance, not need for but helpful to keep the lines of code low
+        //    NetOffice.WordApi.Tools.CommonUtils utils = new NetOffice.WordApi.Tools.CommonUtils(wordApplication);
+
+        //    // add a new document
+        //    NetOffice.WordApi.Document newDocument = wordApplication.Documents.Open(filePath);
+
+        //    //newDocument.PrintOut();
+        //    string PDFPath = filePath.Replace(".docx", ".pdf");
+        //    newDocument.ExportAsFixedFormat(PDFPath, NetOffice.WordApi.Enums.WdExportFormat.wdExportFormatPDF);
+        //    // close word and dispose reference
+        //    newDocument.Close();
+        //    wordApplication.Quit();
+        //    wordApplication.Dispose();
+        //    return true;
+        //    // show dialog for the user(you!)
+        //    //HostApplication.ShowFinishDialog(null, documentFile);
+        //}
         /// <summary>
         /// 打印pdf
         /// </summary>

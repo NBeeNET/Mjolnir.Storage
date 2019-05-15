@@ -37,7 +37,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
             Microsoft.Office.Interop.Word.Document document = null;
 
-            //application.Visible = false;
+            application.Visible = false;
             document = application.Documents.Open(tempFilePath);
             if (!File.Exists(pdfPath))
                 document.ExportAsFixedFormat(pdfPath, Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);

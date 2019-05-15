@@ -76,6 +76,9 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             {
                 //转换PDF
                 task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
+
+                //转换PDF
+                task.Add(new JsonFileValues() { Key = "Print", Status = "0", Value = "" });
             }
 
             jsonFile.Values = task;
@@ -143,12 +146,18 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                         Console.WriteLine("正在处理:" + job.Key);
                         try
                         {
-                            //预览图处理
+                            //PDF
                             if (job.Key == "ConvertPDF")
                             {
                                 jsonFile.Values.Add(new Jobs.ConvertPDFJob().Run(tempFilePath, job));
                             }
-                            
+
+                            //Print
+                            if (job.Key == "Print")
+                            {
+                                jsonFile.Values.Add(new Jobs.PrintJob().Run(tempFilePath, job));
+                            }
+
                         }
                         catch (Exception ex)
                         {
