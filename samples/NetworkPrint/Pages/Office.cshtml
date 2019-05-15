@@ -37,7 +37,7 @@
     </div>
 </div>
 
-
+@section Scripts{
 <script type="text/javascript">
     $(function () {
         $("#btnUpload1").click(function () {
@@ -55,7 +55,7 @@
                 success: function (returndata) {
                     $("#comment").text(JSON.stringify(returndata));
 
-                    
+
                 },
                 error: function (returndata) {
                     alert(returndata);
@@ -64,6 +64,7 @@
 
         });
 
-       
+
     });
 </script>
+}

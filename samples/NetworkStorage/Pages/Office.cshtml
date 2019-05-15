@@ -36,32 +36,33 @@
     </div>
 </div>
 
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#btnUpload1").click(function () {
 
-<script type="text/javascript">
-    $(function () {
-        $("#btnUpload1").click(function () {
+                var formData = new FormData($('#imageForm')[0]);
 
-            var formData = new FormData($('#imageForm')[0]);
+                $.ajax({
+                    url: '/StorageApi/Office/Upload',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+                        $("#comment").text(JSON.stringify(returndata));
+                    },
+                    error: function (returndata) {
+                        alert(returndata);
+                    }
+                });
 
-            $.ajax({
-                url: '/StorageApi/Office/Upload',
-                type: 'POST',
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (returndata) {
-                    $("#comment").text(JSON.stringify(returndata));
-                },
-                error: function (returndata) {
-                    alert(returndata);
-                }
             });
 
+
         });
-
-
-    });
-</script>
+    </script>
+}
 
