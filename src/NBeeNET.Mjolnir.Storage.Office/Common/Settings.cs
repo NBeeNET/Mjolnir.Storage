@@ -9,6 +9,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Common
         /// <summary>
         /// 单次上传文件总大小最大值，默认30M
         /// </summary>
-        public int MaxLength { get; set; } = 1024 * 1024 * 30;
+        public int MaxLength { get; set; } = 1024 * 1024 * 10;
     }
 }
