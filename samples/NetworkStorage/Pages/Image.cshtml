@@ -31,40 +31,52 @@
                 </div>
 
             </form>
-
-            <img src="" />
-
-
         </div>
     </div>
 </div>
+<div>
 
+    缩略图(100*100)<br />
+    <img id="image_Small" src="" /><br />
+    预览图(200*200)<br />
+    <img id="image_Medium" src="" /><br />
+    原图<br />
+    <img id="image" src="" width="400" />
+</div>
 
-<script type="text/javascript">
-    $(function () {
-        $("#btnUpload1").click(function () {
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#btnUpload1").click(function () {
 
-            var formData = new FormData($('#imageForm')[0]);
+                var formData = new FormData($('#imageForm')[0]);
 
-            $.ajax({
-                url: '/StorageApi/Image/Upload',
-                type: 'POST',
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (returndata) {
-                    $("#comment").text(JSON.stringify(returndata));
-                },
-                error: function (returndata) {
-                    alert(returndata);
-                }
+                $.ajax({
+                    url: '/StorageApi/Image/Upload',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+                        $('#image').attr("src", "/" + returndata.url);
+                        
+                        $("#comment").text(JSON.stringify(returndata));
+
+                        setTimeout(function () {
+                            $('#image_Small').attr("src", "/" + returndata.path + "/" + returndata.id + "_Small." + returndata.type);
+                            $('#image_Medium').attr("src", "/" + returndata.path + "/" + returndata.id + "_Medium." + returndata.type);
+                        }, 2000) 
+                    },
+                    error: function (returndata) {
+                        alert(returndata);
+                    }
+                });
+
             });
 
+
         });
-
-
-    });
-</script>
-
+    </script>
+}

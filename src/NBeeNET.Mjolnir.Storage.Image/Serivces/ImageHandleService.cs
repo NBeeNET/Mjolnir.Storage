@@ -39,8 +39,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             imageOutput.Name = imageInput.Name;
             imageOutput.Tags = imageInput.Tags;
             imageOutput.Length = imageInput.File.Length;
-            imageOutput.Type = imageInput.File.ContentType;
-            imageOutput.FileName = imageOutput.Id + "." + imageInput.File.ContentType.Split("/")[1];
+            imageOutput.Type = imageInput.File.FileName.Split('.')[imageInput.File.FileName.Split('.').Length - 1];
+            imageOutput.FileName = imageOutput.Id + "." + imageOutput.Type;
             imageOutput.Url = StorageOperation.GetUrl(imageOutput.FileName);
             imageOutput.Path = StorageOperation.GetPath();
 
