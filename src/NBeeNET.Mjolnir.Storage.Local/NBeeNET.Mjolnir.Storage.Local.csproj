@@ -7,6 +7,7 @@
     <Product>NBeeNET.Mjolnir.Storage</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>NBeeNET.Mjolnir is Object storage agent job service.</Description>
+    <PackageReleaseNotes>NBeeNET.Mjolnir is Object storage agent job service.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
