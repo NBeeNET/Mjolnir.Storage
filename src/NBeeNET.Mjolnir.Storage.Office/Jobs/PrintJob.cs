@@ -1,4 +1,5 @@
-﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
+﻿using Microsoft.AspNetCore.Hosting;
+using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Office.Jobs
 {
@@ -17,6 +19,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     /// </summary>
     public class PrintJob : IJob
     {
+
+
         public JsonFileValues Run(string tempFilePath)
         {
             Console.WriteLine("开始打印");
@@ -37,7 +41,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                         PrintDoc(tempFilePath);
                         break;
                     case ".pdf":
-                        PrintPDF(tempFilePath);
+                        Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
                         break;
                 }
             }
@@ -129,19 +133,37 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             //doc.LoadFromFile(filePath);
             //doc.Print();
             //doc.Close();
-            using (var proc = CreateProcess(filePath))
+
+            //PDFtoPrinter.exe打印
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            string webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            string fullFilePath = webRootPath + "\\" + filePath;
+            startInfo.FileName = GetUtilPath();
+            startInfo.Arguments = " " + fullFilePath; //设定参数
+            startInfo.UseShellExecute = false; //不使用系统外壳程序启动
+            startInfo.RedirectStandardInput = false; //不重定向输入
+            startInfo.RedirectStandardOutput = true; //重定向输出
+            startInfo.CreateNoWindow = true; //不创建窗口
+            //startInfo.WorkingDirectory = wrokDirectory;
+            process.StartInfo = startInfo;
+
+            try
             {
-                proc.Start();
-                bool result = proc.WaitForExit(30000);
-                //if (!result)
-                //{
-                //    proc.Kill();
-                //}
+                if (process.Start()) //开始进程
+                {
+                    process.StandardOutput.ReadToEnd(); //读取输出流释放缓冲,  不加这一句，进程会一直无限等待
+                    process.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception :" + ex.Message);
             }
         }
 
         private static readonly string utilPath = GetUtilPath();
-        
+
         private static Process CreateProcess(string filePath)
         {
             return new Process

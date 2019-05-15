@@ -1,0 +1,117 @@
+﻿@page
+@model PdfModel
+@{
+    ViewData["Title"] = "上传PDF";
+}
+
+<!-- Flipbook StyleSheet -->
+<link href="~/css/dflip.css" rel="stylesheet" type="text/css">
+
+<!-- Icons Stylesheet -->
+<link href="~/css/themify-icons.css" rel="stylesheet" type="text/css">
+<style>
+    #df_manual_button {
+        color: #fff !important;
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+        font-size: 1rem !important;
+        height: 38px;
+    }
+</style>
+<div class="text-center">
+    <div class="card">
+        <div class="card-header">上传PDF</div>
+        <div class="card-body">
+
+            <form method="post" id="imageForm">
+                <div class="form-group">
+                    <div class="col-md-10" style="text-align:left">
+                        <p>请选择一个PDF文件:</p>
+                        <input class="file" type="file" name="file" accept=".pdf" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="text-align:left" id="btn_group">
+
+                        <button id="btnUpload1" type="button" class="btn btn-primary">上传</button>
+                        <button id="btnPreview1" type="button" class="btn btn-primary">预览(pdf.js)</button>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="comment">返回结果:</label>
+                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="flipbookContainer"></div>
+
+<!-- Jquery main Js file -->
+<script src="~/js/jquery.min.js" type="text/javascript"></script>
+
+<!-- Flipbook main Js file -->
+<script src="~/js/dflip.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnUpload1").click(function () {
+
+            var formData = new FormData($('#imageForm')[0]);
+
+            $.ajax({
+                url: '/StorageApi/Office/Upload',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $("#comment").text(JSON.stringify(returndata));
+
+                    var reg = new RegExp('\\\\', "g");
+
+                    var pdfUrl = "/" + returndata.url.replace(reg, "/");
+
+                    var html = '<div class="_df_button"source = "' + pdfUrl + '" id = "df_manual_button" >预览(dflip)</div >';
+                    $("#btn_group").append(html);
+                },
+                error: function (returndata) {
+                    alert(returndata);
+                }
+            });
+
+        });
+
+        $("#btnPreview1").click(function () {
+
+
+            var jsonModel = JSON.parse($("#comment").text());
+            if (jsonModel == null || jsonModel.url == null) {
+                alert("请先上传文件");
+            }
+
+            if (jsonModel.type != "pdf") {
+                alert("请先上传PDF文件");
+            }
+
+            var reg = new RegExp('\\\\', "g");
+
+            var pdfUrl = "/" +jsonModel.url.replace(reg, "/");
+
+            var url = "/web/viewer.html?file=" + pdfUrl;
+            window.open(url, "_blank");
+
+        });
+
+
+       
+    });
+</script>

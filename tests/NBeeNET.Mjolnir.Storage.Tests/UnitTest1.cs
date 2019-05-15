@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NBeeNET.Mjolnir.Storage.Office.Common;
 
 namespace NBeeNET.Mjolnir.Storage.Tests
 {
@@ -8,7 +9,7 @@ namespace NBeeNET.Mjolnir.Storage.Tests
         [TestMethod]
         public void TestMethod1()
         {
-
+            PrinterHelper.GetPrinterStatus("Microsoft Print to PDF");
         }
     }
 }
