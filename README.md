@@ -34,6 +34,7 @@
 | **NBeeNET.Mjolnir.Storage.Image** | 实现图片上传接口及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Video** | 实现视频上传接口及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Audio** | 实现音频上传接口及作业处理 |
+| **NBeeNET.Mjolnir.Storage.Office** | 实现文档上传接口及作业处理 |
 | **NBeeNET.Mjolnir.Storage.File** | 实现文件上传接口及作业处理 |
 | **NBeeNET.Mjolnir.Storage.Local** | 实现本地存储 |
 | **NBeeNET.Mjolnir.Storage.AzureBlob** | 实现Azure Blob存储 |
@@ -47,9 +48,11 @@
 #### 作业处理
 - 生成缩略图 
 - 生成预览图 
-- WebP 格式转码 
+- WebP 格式转码 （支持Windows）
 #### 存储方式
 - 本地存储 
+- Azure-Blob
+- AWS-S3
 
 <!-- ## 支持存储
 
