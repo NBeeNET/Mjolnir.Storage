@@ -9,7 +9,7 @@ namespace NBeeNET.Mjolnir.Storage.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            PrinterHelper.GetPrinterStatus("Microsoft Print to PDF");
+            //PrinterHelper.GetPrinterStatus("Microsoft Print to PDF");
         }
     }
 }

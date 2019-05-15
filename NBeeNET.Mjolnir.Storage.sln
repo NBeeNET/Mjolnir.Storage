@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Aud
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Video", "src\NBeeNET.Mjolnir.Storage.Video\NBeeNET.Mjolnir.Storage.Video.csproj", "{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkPrint", "samples\NetworkPrint\NetworkPrint.csproj", "{CC649602-4846-435B-8456-BA087CF52943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkPrint", "samples\NetworkPrint\NetworkPrint.csproj", "{CC649602-4846-435B-8456-BA087CF52943}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkStorage", "samples\NetworkStorage\NetworkStorage.csproj", "{53925B23-A1EA-4474-96B2-EC7DAB7341D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{CC649602-4846-435B-8456-BA087CF52943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC649602-4846-435B-8456-BA087CF52943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC649602-4846-435B-8456-BA087CF52943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{5C5E3E48-C205-48C5-8EE2-A564597711EB} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{CC649602-4846-435B-8456-BA087CF52943} = {8BED08BA-CDBA-4B9C-BB94-C0755F8A5C03}
+		{53925B23-A1EA-4474-96B2-EC7DAB7341D1} = {8BED08BA-CDBA-4B9C-BB94-C0755F8A5C03}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}
