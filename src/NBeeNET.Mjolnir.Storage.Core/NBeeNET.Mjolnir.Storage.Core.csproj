@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>0.0.1</Version>
+    <Version>0.0.2.1</Version>
+    <Authors>NBeeNET</Authors>
+    <Product>NBeeNET.Mjolnir.Storage</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <NeutralLanguage>guz-KE</NeutralLanguage>
+    <Description>对象存储代理作业服务。</Description>
   </PropertyGroup>
 
   <ItemGroup>
