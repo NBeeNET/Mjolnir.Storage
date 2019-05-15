@@ -14,13 +14,13 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
-    <PackageReference Include="NBeeNET.Mjolnir.Storage.Local" Version="0.0.2.1" />
-    <PackageReference Include="NBeeNET.Mjolnir.Storage.Office" Version="0.0.2.1" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Office\NBeeNET.Mjolnir.Storage.Office.csproj" />
   </ItemGroup>
 
 </Project>
