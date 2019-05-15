@@ -6,6 +6,7 @@ using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Office.Serivces
@@ -67,6 +68,17 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.Url = OfficeOutput.Url;
             jsonFile.FileName = OfficeOutput.FileName;
 
+            //创建处理作业
+            var task = new List<JsonFileValues>();
+
+            //目前仅支持在Windows
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                //转换PDF
+                task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
+            }
+
+            jsonFile.Values = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             #endregion
@@ -77,7 +89,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             StartJob(jsonFile, tempFilePath);
 
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
+            //tempStorage.Delete(jsonFile.Id);
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":上传结束...");
@@ -126,33 +138,24 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 if (queues.Count > 0)
                 {
                     JsonFileValues job = null;
-                    //while (queues.TryDequeue(out job))
-                    //{
-                    //    Console.WriteLine("正在处理图片:" + job.Key);
-                    //    try
-                    //    {
-                    //        //预览图处理
-                    //        if (job.Key == "Medium")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
-                    //        }
-                    //        //缩略图处理
-                    //        if (job.Key == "Small")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
-                    //        }
-                    //        //WebP格式转换
-                    //        if (job.Key == "WebP")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(ex.ToString());
-                    //    }
-                    //    Console.WriteLine("处理图片结束:" + job.Key);
-                    //}
+                    while (queues.TryDequeue(out job))
+                    {
+                        Console.WriteLine("正在处理:" + job.Key);
+                        try
+                        {
+                            //预览图处理
+                            if (job.Key == "ConvertPDF")
+                            {
+                                jsonFile.Values.Add(new Jobs.ConvertPDFJob().Run(tempFilePath, job));
+                            }
+                            
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        Console.WriteLine("处理结束:" + job.Key);
+                    }
                 }
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
@@ -168,6 +171,9 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
+
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
         }
 
 

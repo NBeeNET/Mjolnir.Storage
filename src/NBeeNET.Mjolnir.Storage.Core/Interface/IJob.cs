@@ -6,11 +6,11 @@ using System.Text;
 namespace NBeeNET.Mjolnir.Storage.Core.Interface
 {
     /// <summary>
-    /// job接口
+    /// Job接口
     /// </summary>
     public interface IJob
     {
 
-        JsonFileValues Run(string tempFilePath);
+        JsonFileValues Run(string tempFilePath, JsonFileValues job);
     }
 }

@@ -11,9 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Jobs\**" />
-    <EmbeddedResource Remove="Jobs\**" />
-    <None Remove="Jobs\**" />
+    <Compile Remove="Jobs\PrintJob.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
   </ItemGroup>
 
   <ItemGroup>

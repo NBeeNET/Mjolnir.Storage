@@ -96,7 +96,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             StartJob(jsonFile, tempFilePath);
 
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
+            //tempStorage.Delete(jsonFile.Id);
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":上传结束...");
@@ -185,7 +185,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
-
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
         }
     }
 }
