@@ -10,7 +10,7 @@ namespace NBeeNET.Mjolnir.Storage.Office
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// 添加Office存储服务
+        /// 添加 Office 上传作业服务
         /// </summary>
         /// <param name="services"></param>
         /// <param name="maxLength">设置文件上传最大限制（单位：字节,默认最大为10M）</param>

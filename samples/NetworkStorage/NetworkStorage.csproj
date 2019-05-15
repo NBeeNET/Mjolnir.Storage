@@ -18,4 +18,9 @@
     <PackageReference Include="NBeeNET.Mjolnir.Storage.Office" Version="0.0.2.1" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Image\NBeeNET.Mjolnir.Storage.Image.csproj" />
+  </ItemGroup>
+
 </Project>
