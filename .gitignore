@@ -38,3 +38,7 @@
 /samples/NetworkPrint/healthchecksdb
 /samples/NetworkStorage/bin
 /samples/NetworkStorage/obj
+/src/NBeeNET.Mjolnir.Storage.Print/obj
+/src/NBeeNET.Mjolnir.Storage.Print/bin
+/src/NBeeNET.Mjolnir.Storage.Job/bin
+/src/NBeeNET.Mjolnir.Storage.Job/obj
