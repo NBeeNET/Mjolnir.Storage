@@ -9,7 +9,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
 
     public class ConvertWebPJob
     {
-        public JsonFileValues Run(string tempFilePath, JsonFileValues job)
+        public JsonFileDetail Run(string tempFilePath, JsonFileDetail job)
         {
 
             FileInfo fileInfo = new FileInfo(tempFilePath);
@@ -20,7 +20,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
 
 
             job.Param = "webP";
-            job.Status = "1";
+            job.State = "1";
             job.Value = Core.StorageOperation.GetUrl(webPName);
             job.CreateTime = DateTime.Now;
 

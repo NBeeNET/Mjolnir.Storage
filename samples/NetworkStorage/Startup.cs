@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Image;
 using NBeeNET.Mjolnir.Storage.Local;
 using NBeeNET.Mjolnir.Storage.Office;

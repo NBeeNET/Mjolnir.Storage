@@ -11,7 +11,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
     /// </summary>
     public class CreateSmallJob
     {
-        public JsonFileValues Run(string tempFilePath, JsonFileValues job)
+        public JsonFileDetail Run(string tempFilePath, JsonFileDetail job)
         {
             FileInfo fileInfo = new FileInfo(tempFilePath);
             var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
@@ -21,7 +21,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Jobs
 
             ThumbnailClass.MakeThumbnail(tempFilePath, thumbnailPath, 100, 100, "Cut");
             job.Param = "100x100";
-            job.Status = "1";
+            job.State = "1";
             job.Value = Core.StorageOperation.GetUrl(thumbnailName);
             job.CreateTime = DateTime.Now;
 

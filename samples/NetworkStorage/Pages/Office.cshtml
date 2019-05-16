@@ -4,9 +4,9 @@
     ViewData["Title"] = "Office";
 }
 
-<div class="text-center">
+<div>
     <div class="card">
-        <div class="card-header">上传Office文档</div>
+        <div class="card-header text-center">上传Office文档</div>
         <div class="card-body">
 
             <form method="post" id="imageForm">
@@ -34,6 +34,69 @@
 
         </div>
     </div>
+    <br /> <br />
+    <div class="card">
+        <div class="card-header text-center">Job信息</div>
+        <div class="card-body">
+            <h3>获取Job信息</h3>
+            <div class="row">
+                <div class="col-md-4" style="text-align:left">
+                    <div class="form-group">
+                        <label for="fileId">File Id</label>
+                        <input type="text" class="form-control" name="id" id="fileId">
+                    </div>
+                </div>
+                <div class="col-md-4" style="text-align:left">
+                    <div class="form-group">
+                        <label for="jobKey">Key</label>
+                        <input type="text" class="form-control" name="id" id="jobKey">
+                    </div>
+                </div>
+                <div class="col-md-4" style="text-align:left">
+                    <div class="form-group">
+                        <label for="jobState">State</label>
+                        <input type="text" class="form-control" name="id" id="jobState">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12" style="text-align:left">
+                    <button id="btnGetJob" type="button" class="btn btn-primary">获取Job</button>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="comment">返回结果:</label>
+                <textarea class="form-control" rows="5" id="comment2"></textarea>
+            </div>
+
+            <h3>设置Job信息</h3>
+            <form method="post" id="jobForm">
+
+                <div class="form-group">
+                    <label for="comment">设置信息:</label>
+                    <textarea class="form-control" rows="5" id="jobStr" name="jobStr"></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-10" style="text-align:left">
+                        <p>可选择多个Office文件:</p>
+                        <input id="jobFiles" class="file" type="file" name="files" multiple accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12" style="text-align:left">
+                        <button id="btnSetJob" type="button" class="btn btn-primary">设置Job</button>
+                    </div>
+
+                </div>
+            </form>
+
+
+        </div>
+    </div>
 </div>
 
 @section Scripts{
@@ -55,13 +118,69 @@
                         $("#comment").text(JSON.stringify(returndata));
                     },
                     error: function (returndata) {
-                        
+
                         alert(JSON.stringify(returndata));
                     }
                 });
 
             });
 
+
+            $("#btnGetJob").click(function () {
+
+                var url = '/StorageApi/Job';
+                if ($("#fileId").val() != "") {
+                    url = url + "?id=" + $("#fileId").val();
+                }
+
+                if ($("#jobKey").val() != "") {
+                    if (url.indexOf("?") > -1) {
+                        url = url + "&key=" + $("#jobKey").val();
+                    }
+                    else {
+                        url = url + "?key=" + $("#jobKey").val();
+                    }
+                }
+
+                if ($("#jobState").val() != "") {
+                    if (url.indexOf("?") > -1) {
+                        url = url + "&state=" + $("#jobState").val();
+                    }
+                    else {
+                        url = url + "?state=" + $("#jobState").val();
+                    }
+                }
+
+                $.get(url, function (data) {
+                    $("#comment2").text(JSON.stringify(data));
+                });
+
+            });
+
+
+            $("#btnSetJob").click(function () {
+
+                var formData = new FormData($('#jobForm')[0]);
+                $.ajax({
+                    url: '/StorageApi/Job',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+                        if (returndata) {
+                            alert("设置Job成功！");
+                        }
+                    },
+                    error: function (returndata) {
+
+                        alert(JSON.stringify(returndata));
+                    }
+                });
+
+            });
 
         });
     </script>

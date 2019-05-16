@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Models
 {
+    /// <summary>
+    /// Json文件对象
+    /// </summary>
     public class JsonFile
     {
-
-        public JsonFile()
-        {
-           
-        }
 
         /// <summary>
         /// Guid
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 
+        /// 文件名称
         /// </summary>
         public string FileName { get; set; }
 
@@ -41,9 +39,9 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// </summary>
         public DateTime CreateTime { get; set; }
         /// <summary>
-        /// 子文件
+        /// 详细信息
         /// </summary>
-        public List<JsonFileValues> Values { get; set; }
+        public List<JsonFileDetail> Details { get; set; }
 
         /// <summary>
         /// 保存Json
@@ -63,9 +61,9 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <param name="entity"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public async Task<JsonFile> ReadFrom( string filePath)
+        public static JsonFile ReadFrom(string filePath)
         {
-            string jsonStr = await System.IO.File.ReadAllTextAsync(filePath);
+            string jsonStr = System.IO.File.ReadAllText(filePath);
             return JsonConvert.DeserializeObject<JsonFile>(jsonStr);
         }
         
@@ -81,7 +79,10 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         //}
     }
 
-    public class JsonFileValues
+    /// <summary>
+    /// Json文件Job信息
+    /// </summary>
+    public class JsonFileDetail
     {
         /// <summary>
         /// 子文件类型Key
@@ -94,7 +95,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <summary>
         /// 子文件处理状态
         /// </summary>
-        public string Status { get; set; }
+        public string State { get; set; }
         /// <summary>
         /// 子文件返回值
         /// </summary>

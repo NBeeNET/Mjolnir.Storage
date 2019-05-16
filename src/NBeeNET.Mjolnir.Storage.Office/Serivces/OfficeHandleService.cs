@@ -18,7 +18,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
         public OfficeHandleService()
         {
-          
+
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         public async Task<OfficeOutput> Save(OfficeInput OfficeInput, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
-            
+
             //输出结果对象
             OfficeOutput OfficeOutput = new OfficeOutput();
 
@@ -51,12 +51,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 throw new Exception("必须添加存储服务");
             }
 
-            //复制目录
-            foreach (var storageService in Register._IStorageService)
-            {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
-            }
-
             #region 生成Json
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
@@ -67,17 +61,28 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.Url = OfficeOutput.Url;
             jsonFile.FileName = OfficeOutput.FileName;
 
+            //创建处理作业
+            var jobs = new List<JsonFileDetail>();
+            //预览图
+            jobs.Add(new JsonFileDetail() { Key = "PrintDocument", State = "0", Value = "", Param = "", CreateTime = DateTime.Now });
+            jsonFile.Details = jobs;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             #endregion
 
+            //复制目录
+            foreach (var storageService in Register._IStorageService)
+            {
+                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
+            }
+
             //开始处理任务
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":任务处理开始...");
-            StartJob(jsonFile, tempFilePath);
+            //Console.ForegroundColor = ConsoleColor.DarkYellow;
+            //Console.WriteLine(DateTime.Now + ":任务处理开始...");
+            //StartJob(jsonFile, tempFilePath);
 
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
+            //tempStorage.Delete(jsonFile.Id);
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":上传结束...");
@@ -113,19 +118,19 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
 
-            if (jsonFile.Values?.Count > 0)
+            if (jsonFile.Details?.Count > 0)
             {
-               
-                Queue<JsonFileValues> queues = new Queue<JsonFileValues>();
-                for (int i = 0; i < jsonFile.Values.Count; i++)
+
+                Queue<JsonFileDetail> queues = new Queue<JsonFileDetail>();
+                for (int i = 0; i < jsonFile.Details.Count; i++)
                 {
-                    queues.Enqueue(jsonFile.Values[i]);
+                    queues.Enqueue(jsonFile.Details[i]);
                 }
 
-                jsonFile.Values.Clear();
+                jsonFile.Details.Clear();
                 if (queues.Count > 0)
                 {
-                    JsonFileValues job = null;
+                    JsonFileDetail job = null;
                     //while (queues.TryDequeue(out job))
                     //{
                     //    Console.WriteLine("正在处理图片:" + job.Key);
@@ -141,17 +146,12 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                     //        {
                     //            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
                     //        }
-                    //        //WebP格式转换
-                    //        if (job.Key == "WebP")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                    //        }
                     //    }
                     //    catch (Exception ex)
                     //    {
                     //        Console.WriteLine(ex.ToString());
                     //    }
-                    //    Console.WriteLine("处理图片结束:" + job.Key);
+                    //    Console.WriteLine("处理结束:" + job.Key);
                     //}
                 }
                 //保存Json文件
@@ -160,9 +160,10 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine(DateTime.Now + ":任务处理完成...");
 
-                Console.WriteLine(DateTime.Now + ":再次复制目录..."); 
+
 
             }
+            Console.WriteLine(DateTime.Now + ":再次复制目录...");
             //复制目录
             foreach (var storageService in Register._IStorageService)
             {

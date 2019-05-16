@@ -11,6 +11,6 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
     public interface IJob
     {
 
-        JsonFileValues Run(string tempFilePath);
+        JsonFileDetail Run(string tempFilePath);
     }
 }

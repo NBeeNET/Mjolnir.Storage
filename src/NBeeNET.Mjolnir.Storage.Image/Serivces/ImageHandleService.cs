@@ -72,20 +72,20 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             jsonFile.FileName = imageOutput.FileName;
 
             //创建处理作业
-            var task = new List<JsonFileValues>();
+            var task = new List<JsonFileDetail>();
             //预览图
-            task.Add(new JsonFileValues() { Key = "Medium", Status = "0", Value = "" });
+            task.Add(new JsonFileDetail() { Key = "Medium", State = "0", Value = "" });
             //缩略图
-            task.Add(new JsonFileValues() { Key = "Small", Status = "0", Value = "" });
+            task.Add(new JsonFileDetail() { Key = "Small", State = "0", Value = "" });
 
             //.Net Core生成 WebP格式,目前仅支持在Windows
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 //WebP格式
-                task.Add(new JsonFileValues() { Key = "WebP", Status = "0", Value = "" });
+                task.Add(new JsonFileDetail() { Key = "WebP", State = "0", Value = "" });
             }
 
-            jsonFile.Values = task;
+            jsonFile.Details = task;
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             #endregion
@@ -130,19 +130,19 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
         {
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
-            if (jsonFile.Values?.Count > 0)
+            if (jsonFile.Details?.Count > 0)
             {
                 
-                Queue<JsonFileValues> queues = new Queue<JsonFileValues>();
-                for (int i = 0; i < jsonFile.Values.Count; i++)
+                Queue<JsonFileDetail> queues = new Queue<JsonFileDetail>();
+                for (int i = 0; i < jsonFile.Details.Count; i++)
                 {
-                    queues.Enqueue(jsonFile.Values[i]);
+                    queues.Enqueue(jsonFile.Details[i]);
                 }
 
-                jsonFile.Values.Clear();
+                jsonFile.Details.Clear();
                 if (queues.Count > 0)
                 {
-                    JsonFileValues job = null;
+                    JsonFileDetail job = null;
                     while (queues.TryDequeue(out job))
                     {
                         Console.WriteLine("正在处理图片:" + job.Key);
@@ -151,17 +151,17 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
                             //预览图处理
                             if (job.Key == "Medium")
                             {
-                                jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
+                                jsonFile.Details.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
                             }
                             //缩略图处理
                             if (job.Key == "Small")
                             {
-                                jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
+                                jsonFile.Details.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
                             }
                             //WebP格式转换
                             if (job.Key == "WebP")
                             {
-                                jsonFile.Values.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
+                                jsonFile.Details.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
                             }
                         }
                         catch (Exception ex)
