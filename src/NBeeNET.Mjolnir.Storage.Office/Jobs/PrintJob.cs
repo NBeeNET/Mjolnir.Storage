@@ -24,8 +24,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Console.WriteLine("开始打印");
-                Console.WriteLine("打印文件路径:" + tempFilePath);
+                //Console.WriteLine("开始打印");
+                //Console.WriteLine("打印文件路径:" + tempFilePath);
                 FileInfo fileInfo = new FileInfo(tempFilePath);
                 switch (fileInfo.Extension.ToUpper())
                 {
@@ -40,6 +40,10 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                         break;
                     case ".PDF":
                         //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
+                        break;
+                    default:
+                        job.Status = "-1";
+                        job.Value = "当前不支持！";
                         break;
                 }
             }
