@@ -140,9 +140,9 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                         try
                         {
                             //PDF
-                            if (job.Key == "ConvertPDF")
+                            if (job.Key == "CreatePDF")
                             {
-                                jsonFile.Values[i] = await Task.Run(() => new Jobs.ConvertPDFJob().Run(tempFilePath, job));
+                                jsonFile.Values[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
                             }
 
                             //Print
