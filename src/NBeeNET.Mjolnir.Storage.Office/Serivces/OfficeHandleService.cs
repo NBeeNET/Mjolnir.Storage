@@ -70,20 +70,20 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.FileName = OfficeOutput.FileName;
 
             #region 创建处理作业
-            jsonFile.Values = OfficeInput.Jobs;
-            //var task = new List<JsonFileValues>();
+         
+            var jobs = new List<JsonFileDetail>();
 
-            ////目前仅支持在Windows
-            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            //{
-            //    //转换PDF
-            //    task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
+            //目前仅支持在Windows
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                //转换PDF
+                jobs.Add(new JsonFileDetail() { Key = "ConvertPDF", State = "0", Value = "" });
 
-            //    //转换PDF
-            //    task.Add(new JsonFileValues() { Key = "Print", Status = "0", Value = "" });
-            //}
+                //打印
+                jobs.Add(new JsonFileDetail() { Key = "Print", State = "0", Value = "" });
+            }
 
-            //jsonFile.Values = task;
+            jsonFile.Details = jobs;
             #endregion
 
             //保存Json
@@ -94,8 +94,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             //开始处理任务
             StartJob(jsonFile, tempFilePath);
             
-            //删除临时目录
-            //tempStorage.Delete(jsonFile.Id);
             
             return OfficeOutput;
         }
@@ -128,26 +126,26 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             
             DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
 
-            if (jsonFile.Values?.Count > 0)
+            if (jsonFile.Details?.Count > 0)
             {
-                if (jsonFile.Values.Count > 0)
+                if (jsonFile.Details.Count > 0)
                 {
-                    for (int i = 0; i < jsonFile.Values.Count; i++)
+                    for (int i = 0; i < jsonFile.Details.Count; i++)
                     {
-                        JsonFileValues job = jsonFile.Values[i];
+                        JsonFileDetail job = jsonFile.Details[i];
                         DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
                         try
                         {
                             //PDF
                             if (job.Key == "CreatePDF")
                             {
-                                jsonFile.Values[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
+                                jsonFile.Details[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
                             }
 
                             //Print
                             if (job.Key == "Print")
                             {
-                                jsonFile.Values[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
+                                jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
                             }
                         }
                         catch (Exception ex)

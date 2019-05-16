@@ -11,7 +11,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
 {
     public class CreatePDFJob
     {
-        public JsonFileValues Run(string tempFilePath, JsonFileValues job)
+        public JsonFileDetail Run(string tempFilePath, JsonFileDetail job)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -42,7 +42,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             return job;
         }
 
-        private static JsonFileValues WordToPDF(string tempFilePath, JsonFileValues job)
+        private static JsonFileDetail WordToPDF(string tempFilePath, JsonFileDetail job)
         {
             Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
             Microsoft.Office.Interop.Word.Document document = null;
@@ -59,13 +59,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                 if (!File.Exists(pdfPath))
                     document.ExportAsFixedFormat(pdfPath, Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);
 
-                job.Status = "1";
+                job.State = "1";
                 job.Value = Core.StorageOperation.GetUrl(pdfName);
                 job.CreateTime = DateTime.Now;
             }
             catch (Exception)
             {
-                job.Status = "-1";
+                job.State = "-1";
                 job.Value = "生成失败";
                 job.CreateTime = DateTime.Now;
             }
