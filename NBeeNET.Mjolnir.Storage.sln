@@ -31,7 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Vid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkPrint", "samples\NetworkPrint\NetworkPrint.csproj", "{CC649602-4846-435B-8456-BA087CF52943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkStorage", "samples\NetworkStorage\NetworkStorage.csproj", "{53925B23-A1EA-4474-96B2-EC7DAB7341D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkStorage", "samples\NetworkStorage\NetworkStorage.csproj", "{53925B23-A1EA-4474-96B2-EC7DAB7341D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Print", "src\NBeeNET.Mjolnir.Storage.Print\NBeeNET.Mjolnir.Storage.Print.csproj", "{E5BBD8B2-72CE-40A8-A420-37BC4183AD61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Job", "src\NBeeNET.Mjolnir.Storage.Job\NBeeNET.Mjolnir.Storage.Job.csproj", "{52BB6AD4-A003-4478-B49C-16A7B09F01CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +91,14 @@ Global
 		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53925B23-A1EA-4474-96B2-EC7DAB7341D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5BBD8B2-72CE-40A8-A420-37BC4183AD61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5BBD8B2-72CE-40A8-A420-37BC4183AD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5BBD8B2-72CE-40A8-A420-37BC4183AD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5BBD8B2-72CE-40A8-A420-37BC4183AD61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52BB6AD4-A003-4478-B49C-16A7B09F01CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52BB6AD4-A003-4478-B49C-16A7B09F01CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52BB6AD4-A003-4478-B49C-16A7B09F01CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52BB6AD4-A003-4478-B49C-16A7B09F01CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +116,8 @@ Global
 		{E17EAE45-8C68-4D03-B61B-EBD1A5678D7E} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{CC649602-4846-435B-8456-BA087CF52943} = {8BED08BA-CDBA-4B9C-BB94-C0755F8A5C03}
 		{53925B23-A1EA-4474-96B2-EC7DAB7341D1} = {8BED08BA-CDBA-4B9C-BB94-C0755F8A5C03}
+		{E5BBD8B2-72CE-40A8-A420-37BC4183AD61} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
+		{52BB6AD4-A003-4478-B49C-16A7B09F01CB} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}
