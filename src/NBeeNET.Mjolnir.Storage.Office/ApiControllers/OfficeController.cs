@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using NBeeNET.Mjolnir.Storage.Office.Common;
 using NBeeNET.Mjolnir.Storage.Office.Serivces;
@@ -65,8 +66,8 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             OfficeOutput output = await handleService.Save(input);
 
                             //返回结果
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.WriteLine(DateTime.Now + ":接口返回 - Ok");
+                            DebugConsole.WriteLine(output.Id + " | 接口返回");
+
                             return Ok(output);
                         }
                     }

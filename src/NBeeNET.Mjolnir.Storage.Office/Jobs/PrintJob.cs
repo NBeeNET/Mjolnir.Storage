@@ -35,6 +35,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                         break;
                     case ".DOC":
                     case ".DOCX":
+                    case ".TXT":
                         job = PrintWord(tempFilePath, job);
                         break;
                     case ".PDF":

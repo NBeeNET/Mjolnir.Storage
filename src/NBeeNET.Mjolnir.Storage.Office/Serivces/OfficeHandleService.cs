@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
@@ -122,13 +123,10 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// <returns></returns>
         public async void StartJob(JsonFile jsonFile, string tempFilePath)
         {
-            //Thread.Sleep(2000); //挂起1秒钟
-
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
-
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":开始处理任务...");
+            
+            DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
 
             if (jsonFile.Values?.Count > 0)
             {
@@ -137,7 +135,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                     for (int i = 0; i < jsonFile.Values.Count; i++)
                     {
                         JsonFileValues job = jsonFile.Values[i];
-                        Console.WriteLine(DateTime.Now + ":正在处理任务:" + job.Key);
+                        DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
                         try
                         {
                             //PDF
@@ -156,13 +154,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                         {
                             Console.WriteLine(ex.ToString());
                         }
-                        Console.WriteLine(DateTime.Now + ":完成处理任务:" + job.Key);
+                        DebugConsole.WriteLine(jsonFile.Id + " | 完成处理任务:" + job.Key);
                     }
                 }
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(DateTime.Now + ":结束任务处理...");
+
+                DebugConsole.WriteLine(jsonFile.Id + " | 结束任务处理...");
             }
             
             //复制目录
@@ -170,13 +168,11 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":存档临时目录");
+            DebugConsole.WriteLine(jsonFile.Id + " | 存档临时目录...");
             
             //删除临时目录
             tempStorage.Delete(jsonFile.Id);
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":删除临时目录");
+            DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
         }
         
     }
