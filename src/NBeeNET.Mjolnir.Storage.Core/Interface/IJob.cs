@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Interface
 {
@@ -11,6 +12,6 @@ namespace NBeeNET.Mjolnir.Storage.Core.Interface
     public interface IJob
     {
 
-        JsonFileValues Run(string tempFilePath, JsonFileValues job);
+        Task<JsonFileValues> Run(string tempFilePath, JsonFileValues job);
     }
 }

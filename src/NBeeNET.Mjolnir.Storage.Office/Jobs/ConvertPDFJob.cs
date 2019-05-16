@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Office.Jobs
 {
-    public class ConvertPDFJob : IJob
+    public class ConvertPDFJob
     {
         public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
@@ -20,14 +20,15 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                     break;
                 case ".DOC":
                 case ".DOCX":
-                    return WordToPDF(tempFilePath, job);
+                    job = WordToPDF(tempFilePath, job);
+                    break;
                 case ".pdf":
                     break;
             }
             return job;
         }
 
-        private JsonFileValues WordToPDF(string tempFilePath, JsonFileValues job)
+        private static JsonFileValues WordToPDF(string tempFilePath, JsonFileValues job)
         {
             FileInfo fileInfo = new FileInfo(tempFilePath);
             var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");

@@ -17,10 +17,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     /// <summary>
     /// 打印job
     /// </summary>
-    public class PrintJob : IJob
+    public class PrintJob
     {
-
-
         public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
             Console.WriteLine("开始打印");
@@ -34,9 +32,10 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                     break;
                 case ".doc":
                 case ".docx":
-                    PrintDoc(tempFilePath, job);
+                    job = PrintWord(tempFilePath, job);
                     break;
                 case ".pdf":
+                    job = PrintWord(tempFilePath, job);
                     //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
                     break;
             }
@@ -44,32 +43,49 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             return job;
         }
 
-        private JsonFileValues PrintDoc(string tempFilePath, JsonFileValues job)
+        /// <summary>
+        /// 打印 Word
+        /// </summary>
+        /// <param name="tempFilePath"></param>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        private JsonFileValues PrintWord(string tempFilePath, JsonFileValues job)
         {
-            FileInfo fileInfo = new FileInfo(tempFilePath);
-            var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-            
             Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
             Microsoft.Office.Interop.Word.Document document = null;
 
-            application.Visible = false;
-            document = application.Documents.Open(tempFilePath);
+            try
+            {
+                FileInfo fileInfo = new FileInfo(tempFilePath);
+                var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+                
+                application.Visible = false;
+                document = application.Documents.Open(tempFilePath);
 
-            object missing = System.Reflection.Missing.Value;
-            document.PrintOut(ref missing, ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing, ref missing);
-
-            document.Close();
-            application.Quit();
-
-            job.Status = "1";
-            job.Value = "打印完成";
-            job.CreateTime = DateTime.Now;
-
+                object missing = System.Reflection.Missing.Value;
+                document.PrintOut(ref missing, ref missing, ref missing, ref missing,
+                         ref missing, ref missing, ref missing, ref missing, ref missing,
+                         ref missing, ref missing, ref missing, ref missing, ref missing,
+                         ref missing, ref missing, ref missing, ref missing);
+                
+                job.Status = "1";
+                job.Value = "打印完成";
+                job.CreateTime = DateTime.Now;
+            }
+            catch
+            {
+                job.Status = "-1";
+                job.Value = "打印失败";
+                job.CreateTime = DateTime.Now;
+            }
+            finally {
+                document.Close();
+                application.Quit();
+            }
+            
             return job;
         }
+
         ///// <summary>
         ///// 打印excel
         ///// </summary>
