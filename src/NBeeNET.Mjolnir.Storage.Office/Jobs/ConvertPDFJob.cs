@@ -3,6 +3,7 @@ using NBeeNET.Mjolnir.Storage.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,18 +13,26 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     {
         public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
-            FileInfo fileInfo = new FileInfo(tempFilePath);
-            switch (fileInfo.Extension.ToUpper())
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                case ".xls":
-                case ".xlsx":
-                    break;
-                case ".DOC":
-                case ".DOCX":
-                    job = WordToPDF(tempFilePath, job);
-                    break;
-                case ".pdf":
-                    break;
+                FileInfo fileInfo = new FileInfo(tempFilePath);
+                switch (fileInfo.Extension.ToUpper())
+                {
+                    case ".XLS":
+                    case ".XLSX":
+                        break;
+                    case ".DOC":
+                    case ".DOCX":
+                        job = WordToPDF(tempFilePath, job);
+                        break;
+                    case ".PDF":
+                        break;
+                }
+            }
+            else
+            {
+                job.Status = "-1";
+                job.Value = "当前操作系统不支持！";
             }
             return job;
         }

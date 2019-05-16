@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,24 +22,31 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     {
         public JsonFileValues Run(string tempFilePath, JsonFileValues job)
         {
-            Console.WriteLine("开始打印");
-            Console.WriteLine("打印文件路径:" + tempFilePath);
-            FileInfo fileInfo = new FileInfo(tempFilePath);
-            switch (fileInfo.Extension.ToUpper())
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                case ".XLS":
-                case ".XLSX":
-                    //PrintExcel(tempFilePath);
-                    break;
-                case ".DOC":
-                case ".DOCX":
-                    job = PrintWord(tempFilePath, job);
-                    break;
-                case ".PDF":
-                    //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
-                    break;
+                Console.WriteLine("开始打印");
+                Console.WriteLine("打印文件路径:" + tempFilePath);
+                FileInfo fileInfo = new FileInfo(tempFilePath);
+                switch (fileInfo.Extension.ToUpper())
+                {
+                    case ".XLS":
+                    case ".XLSX":
+                        //PrintExcel(tempFilePath);
+                        break;
+                    case ".DOC":
+                    case ".DOCX":
+                        job = PrintWord(tempFilePath, job);
+                        break;
+                    case ".PDF":
+                        //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
+                        break;
+                }
             }
-            
+            else
+            {
+                job.Status = "-1";
+                job.Value = "当前操作系统不支持！";
+            }
             return job;
         }
 

@@ -94,7 +94,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <summary>
         /// 子文件处理状态
         /// </summary>
-        public string Status { get; set; }
+        public string Status { get; set; } = "0";
         /// <summary>
         /// 子文件返回值
         /// </summary>
@@ -102,6 +102,6 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

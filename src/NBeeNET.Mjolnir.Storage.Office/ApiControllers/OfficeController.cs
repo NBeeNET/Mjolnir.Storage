@@ -31,7 +31,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("Upload")]
-        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags,[FromForm]string jobs)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -58,10 +58,11 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             input.File = file;
                             input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
                             input.Tags = tags;
+                            input.Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Core.Models.JsonFileValues>>(jobs);
                             
                             //处理office文件
                             OfficeHandleService handleService = new OfficeHandleService();
-                            OfficeOutput output = await handleService.Save(input, Request);
+                            OfficeOutput output = await handleService.Save(input);
 
                             //返回结果
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -127,7 +128,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 
                     OfficeHandleService handleService = new OfficeHandleService();
                     //处理office文件
-                    var output = await handleService.MultiSave(inputs, Request);
+                    var output = await handleService.MultiSave(inputs);
 
                     return Ok(output);
                 }

@@ -28,9 +28,9 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// </summary>
         /// <param name="OfficeInput"></param>
         /// <returns></returns>
-        public async Task<OfficeOutput> Save(OfficeInput OfficeInput, HttpRequest request)
+        public async Task<OfficeOutput> Save(OfficeInput OfficeInput)
         {
-            if (Register._IStorageService.Count == 0)
+            if (Register.StorageService.Count == 0)
             {
                 throw new Exception("必须添加存储服务");
             }
@@ -52,7 +52,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             var tempFilePath = await tempStorage.Write(OfficeInput.File, OfficeOutput.Id);
             
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
             }
@@ -68,21 +68,22 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.FileName = OfficeOutput.FileName;
 
             #region 创建处理作业
-            var task = new List<JsonFileValues>();
+            jsonFile.Values = OfficeInput.Jobs;
+            //var task = new List<JsonFileValues>();
 
-            //目前仅支持在Windows
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                //转换PDF
-                task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
+            ////目前仅支持在Windows
+            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            //{
+            //    //转换PDF
+            //    task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
 
-                //转换PDF
-                task.Add(new JsonFileValues() { Key = "Print", Status = "0", Value = "" });
-            }
+            //    //转换PDF
+            //    task.Add(new JsonFileValues() { Key = "Print", Status = "0", Value = "" });
+            //}
 
-            jsonFile.Values = task;
+            //jsonFile.Values = task;
             #endregion
-            
+
             //保存Json
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
@@ -101,14 +102,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// 多文件保存
         /// </summary>
         /// <param name="inputs"></param>
-        /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<OfficeOutput>> MultiSave(List<OfficeInput> inputs, HttpRequest request)
+        public async Task<List<OfficeOutput>> MultiSave(List<OfficeInput> inputs)
         {
             List<OfficeOutput> output = new List<OfficeOutput>();
             for (int i = 0; i < inputs.Count; i++)
             {
-                var result = await Save(inputs[i], request);
+                var result = await Save(inputs[i]);
                 output.Add(result);
             }
             return output;
@@ -165,7 +165,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             }
             
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
