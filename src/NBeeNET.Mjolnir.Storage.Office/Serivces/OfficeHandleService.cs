@@ -40,12 +40,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             //输出结果对象
             OfficeOutput OfficeOutput = new OfficeOutput();
             OfficeOutput.Id = Guid.NewGuid().ToString();
+            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeOutput.Type;
             OfficeOutput.Name = OfficeInput.Name;
             OfficeOutput.Tags = OfficeInput.Tags;
             OfficeOutput.Length = OfficeInput.File.Length;
             OfficeOutput.Type = OfficeInput.File.FileName.Split('.')[OfficeInput.File.FileName.Split('.').Length - 1];
-            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeOutput.Type;
             OfficeOutput.Url = StorageOperation.GetUrl(OfficeOutput.FileName);
+            OfficeOutput.FilePath = StorageOperation.GetUrl(OfficeOutput.FileName);
             OfficeOutput.Path = StorageOperation.GetPath();
 
             //写入临时文件夹
