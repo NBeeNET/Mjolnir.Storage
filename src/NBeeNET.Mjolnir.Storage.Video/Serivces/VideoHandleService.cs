@@ -47,7 +47,7 @@ namespace NBeeNET.Mjolnir.Storage.Video.Serivces
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(input.File, output.Id);
 
-            if (Register._IStorageService.Count == 0)
+            if (Register.StorageService.Count == 0)
             {
                 throw new Exception("必须添加存储服务");
             }
@@ -55,7 +55,7 @@ namespace NBeeNET.Mjolnir.Storage.Video.Serivces
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":开始复制目录...");
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(output.Id));
             }

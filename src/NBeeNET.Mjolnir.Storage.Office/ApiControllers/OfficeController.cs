@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using NBeeNET.Mjolnir.Storage.Office.Common;
 using NBeeNET.Mjolnir.Storage.Office.Serivces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +32,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("Upload")]
-        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags,[FromForm]string jobs)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -38,7 +40,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                 {
                     file = Request.Form.Files[0];
                 }
-                OfficeOutput output = new OfficeOutput();
+                
                 if (file != null)
                 {
                     if (file.Length > 0)
@@ -57,20 +59,25 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             input.File = file;
                             input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
                             input.Tags = tags;
-                            OfficeHandleService handleService = new OfficeHandleService();
+                            input.Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Core.Models.JsonFileValues>>(jobs);
+                            
                             //处理office文件
-                            output = await handleService.Save(input, Request);
+                            OfficeHandleService handleService = new OfficeHandleService();
+                            OfficeOutput output = await handleService.Save(input);
+
+                            //返回结果
+                            DebugConsole.WriteLine(output.Id + " | 接口返回");
 
                             return Ok(output);
                         }
                     }
                     else
                     {
-                        return BadRequest("office文件上传失败！原因：文件大小为0");
+                        return BadRequest("文件上传失败！原因：文件大小为0。");
                     }
                 }
             }
-            return BadRequest("office文件上传失败！");
+            return BadRequest("文件上传失败！");
         }
 
 
@@ -122,7 +129,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
 
                     OfficeHandleService handleService = new OfficeHandleService();
                     //处理office文件
-                    var output = await handleService.MultiSave(inputs, Request);
+                    var output = await handleService.MultiSave(inputs);
 
                     return Ok(output);
                 }

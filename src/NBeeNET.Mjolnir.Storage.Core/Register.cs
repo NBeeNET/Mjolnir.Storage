@@ -14,11 +14,11 @@ namespace NBeeNET.Mjolnir.Storage
         /// <summary>
         /// 存储服务
         /// </summary>
-        public static List<Core.Interface.IStorageService> _IStorageService = new List<Core.Interface.IStorageService>();
+        public static List<Core.Interface.IStorageService> StorageService = new List<Core.Interface.IStorageService>();
 
         public static void AddStorage(Core.Interface.IStorageService storageService)
         {
-            _IStorageService.Add(storageService);
+            StorageService.Add(storageService);
         }
 
     }

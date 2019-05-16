@@ -19,6 +19,7 @@ namespace NetworkStorage
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("Http://*:5000")
                 .UseStartup<Startup>();
     }
 }

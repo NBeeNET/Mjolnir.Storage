@@ -1,24 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 {
     /// <summary>
-    /// 图片处理
+    /// Office处理
     /// </summary>
     public class OfficeHandleService
     {
 
         public OfficeHandleService()
         {
-
+          
         }
 
         /// <summary>
@@ -26,29 +29,34 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// </summary>
         /// <param name="OfficeInput"></param>
         /// <returns></returns>
-        public async Task<OfficeOutput> Save(OfficeInput OfficeInput, HttpRequest request)
+        public async Task<OfficeOutput> Save(OfficeInput OfficeInput)
         {
+            if (Register.StorageService.Count == 0)
+            {
+                throw new Exception("必须添加存储服务");
+            }
+
             TempStorageOperation tempStorage = new TempStorageOperation();
 
             //输出结果对象
             OfficeOutput OfficeOutput = new OfficeOutput();
-
             OfficeOutput.Id = Guid.NewGuid().ToString();
+            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeOutput.Type;
             OfficeOutput.Name = OfficeInput.Name;
             OfficeOutput.Tags = OfficeInput.Tags;
             OfficeOutput.Length = OfficeInput.File.Length;
             OfficeOutput.Type = OfficeInput.File.FileName.Split('.')[OfficeInput.File.FileName.Split('.').Length - 1];
-            OfficeOutput.FileName = OfficeOutput.Id + "." + OfficeOutput.Type;
             OfficeOutput.Url = StorageOperation.GetUrl(OfficeOutput.FileName);
+            OfficeOutput.FilePath = StorageOperation.GetUrl(OfficeOutput.FileName);
             OfficeOutput.Path = StorageOperation.GetPath();
-
 
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(OfficeInput.File, OfficeOutput.Id);
-
-            if (Register._IStorageService.Count == 0)
+            
+            //复制目录
+            foreach (var storageService in Register.StorageService)
             {
-                throw new Exception("必须添加存储服务");
+                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
             }
 
             #region 生成Json
@@ -61,33 +69,34 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.Url = OfficeOutput.Url;
             jsonFile.FileName = OfficeOutput.FileName;
 
-            //创建处理作业
-            var jobs = new List<JsonFileDetail>();
-            //预览图
-            jobs.Add(new JsonFileDetail() { Key = "PrintDocument", State = "0", Value = "", Param = "", CreateTime = DateTime.Now });
-            jsonFile.Details = jobs;
+            #region 创建处理作业
+            jsonFile.Values = OfficeInput.Jobs;
+            //var task = new List<JsonFileValues>();
+
+            ////目前仅支持在Windows
+            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            //{
+            //    //转换PDF
+            //    task.Add(new JsonFileValues() { Key = "ConvertPDF", Status = "0", Value = "" });
+
+            //    //转换PDF
+            //    task.Add(new JsonFileValues() { Key = "Print", Status = "0", Value = "" });
+            //}
+
+            //jsonFile.Values = task;
+            #endregion
+
+            //保存Json
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             #endregion
 
-            //复制目录
-            foreach (var storageService in Register._IStorageService)
-            {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(OfficeOutput.Id));
-            }
-
             //开始处理任务
-            //Console.ForegroundColor = ConsoleColor.DarkYellow;
-            //Console.WriteLine(DateTime.Now + ":任务处理开始...");
-            //StartJob(jsonFile, tempFilePath);
-
+            StartJob(jsonFile, tempFilePath);
+            
             //删除临时目录
             //tempStorage.Delete(jsonFile.Id);
-
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":上传结束...");
-            //返回结果
-
+            
             return OfficeOutput;
         }
 
@@ -95,14 +104,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         /// 多文件保存
         /// </summary>
         /// <param name="inputs"></param>
-        /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<OfficeOutput>> MultiSave(List<OfficeInput> inputs, HttpRequest request)
+        public async Task<List<OfficeOutput>> MultiSave(List<OfficeInput> inputs)
         {
             List<OfficeOutput> output = new List<OfficeOutput>();
             for (int i = 0; i < inputs.Count; i++)
             {
-                var result = await Save(inputs[i], request);
+                var result = await Save(inputs[i]);
                 output.Add(result);
             }
             return output;
@@ -117,60 +125,55 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         {
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
+            
+            DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
 
-            if (jsonFile.Details?.Count > 0)
+            if (jsonFile.Values?.Count > 0)
             {
-
-                Queue<JsonFileDetail> queues = new Queue<JsonFileDetail>();
-                for (int i = 0; i < jsonFile.Details.Count; i++)
+                if (jsonFile.Values.Count > 0)
                 {
-                    queues.Enqueue(jsonFile.Details[i]);
-                }
+                    for (int i = 0; i < jsonFile.Values.Count; i++)
+                    {
+                        JsonFileValues job = jsonFile.Values[i];
+                        DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
+                        try
+                        {
+                            //PDF
+                            if (job.Key == "CreatePDF")
+                            {
+                                jsonFile.Values[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
+                            }
 
-                jsonFile.Details.Clear();
-                if (queues.Count > 0)
-                {
-                    JsonFileDetail job = null;
-                    //while (queues.TryDequeue(out job))
-                    //{
-                    //    Console.WriteLine("正在处理图片:" + job.Key);
-                    //    try
-                    //    {
-                    //        //预览图处理
-                    //        if (job.Key == "Medium")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
-                    //        }
-                    //        //缩略图处理
-                    //        if (job.Key == "Small")
-                    //        {
-                    //            jsonFile.Values.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(ex.ToString());
-                    //    }
-                    //    Console.WriteLine("处理结束:" + job.Key);
-                    //}
+                            //Print
+                            if (job.Key == "Print")
+                            {
+                                jsonFile.Values[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        DebugConsole.WriteLine(jsonFile.Id + " | 完成处理任务:" + job.Key);
+                    }
                 }
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(DateTime.Now + ":任务处理完成...");
-
-
-
+                DebugConsole.WriteLine(jsonFile.Id + " | 结束任务处理...");
             }
-            Console.WriteLine(DateTime.Now + ":再次复制目录...");
+            
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
+            DebugConsole.WriteLine(jsonFile.Id + " | 存档临时目录...");
+            
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
+            DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
         }
-
-
+        
     }
 }

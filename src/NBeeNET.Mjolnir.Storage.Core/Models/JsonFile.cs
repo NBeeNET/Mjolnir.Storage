@@ -79,6 +79,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         //}
     }
 
+
     /// <summary>
     /// Json文件Job信息
     /// </summary>
@@ -103,6 +104,6 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

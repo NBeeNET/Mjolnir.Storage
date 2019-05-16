@@ -41,7 +41,7 @@ namespace NBeeNET.Mjolnir.Storage.Local
                         FileInfo fileInfo = new FileInfo(file);
                         fileInfo.CopyTo(Path.Combine(destinationDir, fileInfo.Name), true);
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("Local Url:" + Path.Combine(destinationDir, fileInfo.Name));
+                        //Console.WriteLine("Local Url:" + Path.Combine(destinationDir, fileInfo.Name));
                     }
                     foreach (string dir in Directory.GetDirectories(sourceDir))
                     {

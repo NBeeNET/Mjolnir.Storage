@@ -48,7 +48,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
 
-            if (Register._IStorageService.Count == 0)
+            if (Register.StorageService.Count == 0)
             {
                 throw new Exception("必须添加存储服务");
             }
@@ -56,7 +56,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":开始复制目录...");
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id));
             }
@@ -96,7 +96,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
             StartJob(jsonFile, tempFilePath);
 
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
+            //tempStorage.Delete(jsonFile.Id);
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(DateTime.Now + ":上传结束...");
@@ -181,11 +181,12 @@ namespace NBeeNET.Mjolnir.Storage.Image.Serivces
 
             }
             //复制目录
-            foreach (var storageService in Register._IStorageService)
+            foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
-
+            //删除临时目录
+            tempStorage.Delete(jsonFile.Id);
         }
     }
 }

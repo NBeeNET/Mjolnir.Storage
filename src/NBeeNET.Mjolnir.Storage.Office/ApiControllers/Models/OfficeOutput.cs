@@ -15,17 +15,17 @@ namespace NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// 
+        /// 文件名 1.jpg
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Name
+        /// 文件名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 表签
+        /// 标签
         /// </summary>
         public string Tags { get; set; }
 
@@ -45,7 +45,12 @@ namespace NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models
         public string Url { get; set; }
 
         /// <summary>
-        /// 相对路径(/NBeeNET/2019/01/01/)
+        /// 文件相对路径(/NBeeNET/2019/01/01/Guid.jpg)
+        /// </summary>
+        public string FilePath { get; set; }
+
+        /// <summary>
+        /// 文件夹相对路径(/NBeeNET/2019/01/01/)
         /// </summary>
         public string Path { get; set; }
     }
