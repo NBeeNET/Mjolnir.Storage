@@ -24,18 +24,17 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
             Console.WriteLine("开始打印");
             Console.WriteLine("打印文件路径:" + tempFilePath);
             FileInfo fileInfo = new FileInfo(tempFilePath);
-            switch (fileInfo.Extension)
+            switch (fileInfo.Extension.ToUpper())
             {
-                case ".xls":
-                case ".xlsx":
+                case ".XLS":
+                case ".XLSX":
                     //PrintExcel(tempFilePath);
                     break;
-                case ".doc":
-                case ".docx":
+                case ".DOC":
+                case ".DOCX":
                     job = PrintWord(tempFilePath, job);
                     break;
-                case ".pdf":
-                    job = PrintWord(tempFilePath, job);
+                case ".PDF":
                     //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
                     break;
             }
@@ -156,13 +155,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         /// <param name="filePath"></param>
         public void PrintPDF(string filePath)
         {
-            //PrintDocument    
-            //Create a pdf document.
-            //PdfDocument doc = new PdfDocument();
-            //doc.LoadFromFile(filePath);
-            //doc.Print();
-            //doc.Close();
-
             //PDFtoPrinter.exe打印
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
