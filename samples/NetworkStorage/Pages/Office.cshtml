@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="comment">返回结果:</label>
-                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                    <textarea class="form-control" rows="10" id="comment"></textarea>
                 </div>
 
             </form>
@@ -116,7 +116,9 @@
                     contentType: false,
                     processData: false,
                     success: function (returndata) {
-                        $("#comment").text(JSON.stringify(returndata));
+                        //$("#comment").text(JSON.stringify(returndata));
+                        var $output = document.getElementById('comment');
+                        $output.value = JSON.stringify(returndata, null, 2);
                     },
                     error: function (returndata) {
 

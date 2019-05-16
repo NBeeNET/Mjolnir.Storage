@@ -20,7 +20,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
     /// </summary>
     public class PrintJob
     {
-        public JsonFileValues Run(string tempFilePath, JsonFileValues job)
+        public JsonFileDetail Run(string tempFilePath, JsonFileDetail job)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -42,14 +42,14 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                         //Task.Factory.StartNew(() => { PrintPDF(tempFilePath); }, TaskCreationOptions.LongRunning);
                         break;
                     default:
-                        job.Status = "-1";
+                        job.State = "-1";
                         job.Value = "当前不支持！";
                         break;
                 }
             }
             else
             {
-                job.Status = "-1";
+                job.State = "-1";
                 job.Value = "当前操作系统不支持！";
             }
             return job;
@@ -61,7 +61,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
         /// <param name="tempFilePath"></param>
         /// <param name="job"></param>
         /// <returns></returns>
-        private JsonFileValues PrintWord(string tempFilePath, JsonFileValues job)
+        private JsonFileDetail PrintWord(string tempFilePath, JsonFileDetail job)
         {
             Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
             Microsoft.Office.Interop.Word.Document document = null;
@@ -80,13 +80,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                          ref missing, ref missing, ref missing, ref missing, ref missing,
                          ref missing, ref missing, ref missing, ref missing);
                 
-                job.Status = "1";
+                job.State = "1";
                 job.Value = "打印完成";
                 job.CreateTime = DateTime.Now;
             }
             catch
             {
-                job.Status = "-1";
+                job.State = "-1";
                 job.Value = "打印失败";
                 job.CreateTime = DateTime.Now;
             }
