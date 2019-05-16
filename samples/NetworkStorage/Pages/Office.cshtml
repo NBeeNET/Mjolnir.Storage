@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <div class="col-md-10" style="text-align:left">
                         <p>请选择一个Office文件:</p>
-                        <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" />
+                        <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" onchange="Up()" />
                         <input type="hidden" name="jobs" value="[{'Key':'CreatePDF'},{'Key':'Print'}]" />
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="comment">返回结果:</label>
-                    <textarea class="form-control" rows="10" id="comment"></textarea>
+                    <textarea class="form-control" rows="12" id="comment"></textarea>
                 </div>
 
             </form>
@@ -39,33 +39,32 @@
 
 @section Scripts{
     <script type="text/javascript">
+        function Up() {
+            var formData = new FormData($('#imageForm')[0]);
+
+            $.ajax({
+                url: '/StorageApi/Office/Upload',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    //$("#comment").text(JSON.stringify(returndata));
+                    var $output = document.getElementById('comment');
+                    $output.value = JSON.stringify(returndata, null, 2);
+                },
+                error: function (returndata) {
+
+                    alert(JSON.stringify(returndata));
+                }
+            });
+        }
         $(function () {
             $("#btnUpload1").click(function () {
-
-                var formData = new FormData($('#imageForm')[0]);
-
-                $.ajax({
-                    url: '/StorageApi/Office/Upload',
-                    type: 'POST',
-                    data: formData,
-                    async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (returndata) {
-                        //$("#comment").text(JSON.stringify(returndata));
-                        var $output = document.getElementById('comment');
-                        $output.value = JSON.stringify(returndata, null, 2);
-                    },
-                    error: function (returndata) {
-                        
-                        alert(JSON.stringify(returndata));
-                    }
-                });
-
+                Up();
             });
-
-
         });
     </script>
 }
