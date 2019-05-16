@@ -29,14 +29,14 @@ namespace NBeeNET.Mjolnir.Storage.Office.Jobs
                     case ".PDF":
                         break;
                     default:
-                        job.Status = "-1";
+                        job.State = "-1";
                         job.Value = "当前不支持！";
                         break;
                 }
             }
             else
             {
-                job.Status = "-1";
+                job.State = "-1";
                 job.Value = "当前操作系统不支持！";
             }
             return job;

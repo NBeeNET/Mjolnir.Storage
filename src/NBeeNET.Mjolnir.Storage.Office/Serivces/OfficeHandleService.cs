@@ -77,10 +77,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 //转换PDF
-                jobs.Add(new JsonFileDetail() { Key = "ConvertPDF", State = "0", Value = "" });
+                //jobs.Add(new JsonFileDetail() { Key = "ConvertPDF", State = "0", Value = "" });
 
                 //打印
-                jobs.Add(new JsonFileDetail() { Key = "Print", State = "0", Value = "" });
+                //jobs.Add(new JsonFileDetail() { Key = "Print", State = "0", Value = "" });
+
+                //客户端打印
+                jobs.Add(new JsonFileDetail() { Key = "ClientPrint", State = "0", Value = "" });
             }
 
             jsonFile.Details = jobs;
@@ -125,6 +128,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             TempStorageOperation tempStorage = new TempStorageOperation();
             
             DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
+            bool isDeleteTempDirectory = true;
 
             if (jsonFile.Details?.Count > 0)
             {
@@ -147,6 +151,11 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                             {
                                 jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
                             }
+
+                            if (job.Key == "ClientPrint")
+                            {
+                                isDeleteTempDirectory = false;
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -167,10 +176,13 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
             DebugConsole.WriteLine(jsonFile.Id + " | 存档临时目录...");
-            
+
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
-            DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
+            if (isDeleteTempDirectory)
+            {
+                tempStorage.Delete(jsonFile.Id);
+                DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
+            }
         }
         
     }

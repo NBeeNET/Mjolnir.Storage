@@ -59,7 +59,7 @@ namespace NBeeNET.Mjolnir.Storage.Image.ApiControllers
                             input.File = file;
                             input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
                             input.Tags = tags;
-                            input.Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Core.Models.JsonFileValues>>(jobs);
+                            input.Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Core.Models.JsonFileDetail>>(jobs);
                             
                             //处理office文件
                             OfficeHandleService handleService = new OfficeHandleService();

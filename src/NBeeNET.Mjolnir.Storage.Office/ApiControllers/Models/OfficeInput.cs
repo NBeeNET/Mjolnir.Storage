@@ -14,6 +14,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models
 
         public string Tags { get; set; }
 
-        public List<Core.Models.JsonFileValues> Jobs { get; set; }
+        public List<Core.Models.JsonFileDetail> Jobs { get; set; }
     }
 }

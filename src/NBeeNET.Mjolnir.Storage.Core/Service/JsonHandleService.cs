@@ -128,7 +128,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Service
                 }
 
                 //复制目录
-                foreach (var storageService in Register._IStorageService)
+                foreach (var storageService in Register.StorageService)
                 {
                     await storageService.CopyDirectory(tempStorage.GetTempPath(jobInput.Id));
                 }
