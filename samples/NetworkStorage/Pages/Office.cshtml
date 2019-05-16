@@ -14,7 +14,7 @@
                     <div class="col-md-10" style="text-align:left">
                         <p>请选择一个Office文件:</p>
                         <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" />
-                        <input type="hidden" name="jobs" value="[{'Key':'CreatePDF'},{'Key':'Print'}]" />
+                        <input type="hidden" name="jobs" value="[{'Key':'CreatePDF'},{'Key':'Print'},{'Key':'ClientPrint'}]" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="comment">返回结果:</label>
-                    <textarea class="form-control" rows="10" id="comment"></textarea>
+                    <textarea class="form-control" rows="12" id="comment"></textarea>
                 </div>
 
             </form>
@@ -68,7 +68,7 @@
             </div>
             <div class="form-group">
                 <label for="comment">返回结果:</label>
-                <textarea class="form-control" rows="5" id="comment2"></textarea>
+                <textarea class="form-control" rows="12" id="comment2"></textarea>
             </div>
 
             <h3>设置Job信息</h3>
@@ -155,7 +155,7 @@
                 }
 
                 $.get(url, function (data) {
-                    $("#comment2").text(JSON.stringify(data));
+                    $("#comment2").text(JSON.stringify(data, null, 2));
                 });
 
             });

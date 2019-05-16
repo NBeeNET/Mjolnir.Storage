@@ -70,23 +70,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
             jsonFile.FileName = OfficeOutput.FileName;
 
             #region 创建处理作业
-         
-            var jobs = new List<JsonFileDetail>();
-
-            //目前仅支持在Windows
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                //转换PDF
-                //jobs.Add(new JsonFileDetail() { Key = "ConvertPDF", State = "0", Value = "" });
-
-                //打印
-                //jobs.Add(new JsonFileDetail() { Key = "Print", State = "0", Value = "" });
-
-                //客户端打印
-                jobs.Add(new JsonFileDetail() { Key = "ClientPrint", State = "0", Value = "" });
-            }
-
-            jsonFile.Details = jobs;
+            jsonFile.Details = OfficeInput.Jobs;
             #endregion
 
             //保存Json
@@ -152,7 +136,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                                 jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
                             }
 
-                            if (job.Key == "ClientPrint")
+                            if (job.Key.Contains("Client"))
                             {
                                 isDeleteTempDirectory = false;
                             }
