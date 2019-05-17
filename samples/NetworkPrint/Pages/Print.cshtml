@@ -1,0 +1,75 @@
+﻿@page
+@model NetworkPrint.Pages.PrintModel
+@{
+    ViewData["Title"] = "Print";
+}
+
+<div>
+    <div class="card">
+        <div class="card-header text-center">文件打印</div>
+        <div class="card-body">
+
+            <form method="post" id="printForm">
+                <div class="form-group">
+                    <div class="col-md-8" style="text-align:left">
+                        <p>请选择一个需要打印的文档文件:</p>
+                        <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png" />
+                        <input type="hidden" name="jobs" value="[{'Key':'CreatePDF'},{'Key':'Print'}]" />
+                        <button id="btnUpload" type="button" class="btn btn-primary"> 上 传 </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button id="btnView" type="button" class="btn btn-primary" disabled> 预 览 </button>
+                    </div>
+                    <div class="col-md-4" style="text-align:left">
+                        
+                    </div>
+                </div>
+            </form>
+
+            <div class="form-group">
+                <div class="col-md-12" style="text-align:left">
+                    <label for="comment">返回结果:</label>
+                    <textarea class="form-control" rows="6" id="comment"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12" style="text-align:left">
+                    <label for="comment">打印状态:</label>
+                    <textarea class="form-control" rows="6" id="printstatus"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+
+            $("#btnUpload").click(function () {
+                upload();
+            });
+            
+        });
+
+        function upload() {
+            var formData = new FormData($('#printForm')[0]);
+            var $output = document.getElementById('comment');
+
+            $.ajax({
+                url: '/StorageApi/Office/Upload',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $output.value = JSON.stringify(returndata, null, 2);
+                },
+                error: function (returndata) {
+                    $output.value = JSON.stringify(returndata, null, 2);
+                }
+            });
+        }
+    </script>
+}
+

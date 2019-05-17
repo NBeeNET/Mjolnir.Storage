@@ -40,9 +40,11 @@ namespace NetworkPrint
                 .AddVirtualMemorySizeHealthCheck(10);
             services.AddHealthChecksUI();
 
-            //添加Office存储服务
+            //添加 NBeeNET.Mjolnir.Storage.Image 上传及作业处理服务
+            //services.AddStorageImage();
+            //添加 NBeeNET.Mjolnir.Storage.Office 上传及作业处理服务
             services.AddStorageOffice();
-            //添加本地存储服务
+            //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
             services.AddStorageLocal();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

@@ -4,18 +4,30 @@
     ViewData["Title"] = "Home page";
 }
 
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>
+        Mjolnir.Storage 是一个基于 .Net Core + Restful API 开发的对象存储代理作业服务。<br />
+        <a href="https://github.com/NBeeNET/Mjolnir.Storage">Github</a>
+    </p>
+</div>
+<br/><br />
 <div >
     <div class="card">
-        <div class="card-header">本实例提供一个文档上传和文档打印功能</div>
+        <div class="card-header">本实例（NetworkPrint）提供一个网络打印服务的功能</div>
         <div class="card-body">
+            支持的文档类型：<br/>
+            Word ( .doc / .docx / .txt )<br/>
+            Excel ( .xls / .xlsx )<br/>
+            PDF ( .pdf )<br/>
+            Image ( .jpg / .png)<br />
 
-            接口<br />
+            @*接口<br />
             /Office/Upload       Post   上传（上传后自动转存PDF）<br />
             /Office/UploadPrint  Post   上传后打印(上传后自动转存PDF并打印)<br />
             /Office/Print/{Url}  Post   打印<br />
-            /Office/Json/{Url}   GET    获取文件详情<br />
+            /Office/Json/{Url}   GET    获取文件详情<br />*@
 
-        
         </div>
     </div>
 </div>
