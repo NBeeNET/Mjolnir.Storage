@@ -29,10 +29,13 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
         }
 
         private static PrintHandleService _printHandleService = null;
+
         /// <summary>
         /// 打印job状态集合
         /// </summary>
-        public List<PrintJobModel> printJobModels = new List<PrintJobModel>();
+        private List<PrintJobModel> printJobModels = new List<PrintJobModel>();
+
+
         /// <summary>
         /// 根据id获取指定job状态
         /// </summary>
@@ -40,12 +43,15 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
         /// <param name="printName">打印机名称</param>
         /// <param name="isRemote">是否远端任务</param>
         /// <returns></returns>
-        public PrintJobModel GetJobById(string id,string printName = null,bool isRemote = false)
+        public List<PrintJobModel> GetJobById(string id= null,string printName = null,bool isRemote = false)
         {
             if(!isRemote)
                 UpdateJobsFromLocal(printName);
-            return printJobModels.Find(obj => obj.Document.Contains(id));
+            if (string.IsNullOrEmpty(id))
+                return printJobModels;
+            return printJobModels.FindAll(obj => obj.Document.Contains(id));
         }
+
         /// <summary>
         /// 更新或添加jobList(远端用)
         /// </summary>
@@ -66,23 +72,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
                 }
             }
         }
-        /// <summary>
-        /// 删除已完成的job(远端用)
-        /// </summary>
-        /// <param name="id"></param>
-        public void DeleteJobFromRemote(string ids)
-        {
-            List<string> idList = ids.Split(',').ToList();
-            lock (printJobModels)
-            {
-                for (int i = 0; i < idList.Count; i++)
-                {
-                    PrintJobModel data = printJobModels.Find(obj => obj.Document.Contains(idList[i]));
-                    if (data != null)
-                        printJobModels.Remove(data);
-                }
-            }
-        }
+
         /// <summary>
         /// 更新.添加.删除jobList(本地用)
         /// </summary>
@@ -92,9 +82,16 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
             {
                 try
                 {
+                    //删除1天内没更新状态的job
+                    List<PrintJobModel> _delList = printJobModels.FindAll(obj => obj.TimeSubmitted.AddDays(1) < DateTime.Now);
+                    for (int i = 0; i < _delList.Count; i++)
+                    {
+                        printJobModels.Remove(_delList[i]);
+                    }
+
                     if (string.IsNullOrEmpty(printerName))
                     {
-                        Print.Common.PrinterHelper.Printer printer = Print.Common.PrinterHelper.GetDefaultPrinter();
+                        PrinterModel printer = Print.Common.PrinterHelper.GetDefaultPrinter();
                         printerName = printer.Name;
                     }
                     List<PrintJobModel> _List = Print.Common.PrinterHelper.GetPrintJobs(printerName);
@@ -121,8 +118,8 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
                         var data = _List.Find(obj => obj.Document.Contains(printJobModel.Document));
                         if (data == null)
                         {
-                            //删除
-                            printJobModels.Remove(printJobModel);
+                            printJobModel.JobStatus = "打印完成";
+                            printJobModel.TimeSubmitted = DateTime.Now;
                         }
                     }
                 }
