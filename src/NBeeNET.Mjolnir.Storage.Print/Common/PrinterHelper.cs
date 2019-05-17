@@ -41,6 +41,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             ManagementObjectCollection printerCollection = searchPrinters.Get();
             foreach (ManagementObject printer in printerCollection)
             {
+                foreach (var item in printer.Properties)
+                {
+                    Console.WriteLine(item.Name + " : " + item.Value);
+                }
                 Printer _Printer = new Printer();
                 //judge if the current print is the default printer 
                 if ((bool)printer.GetPropertyValue("default") == true)
@@ -140,7 +144,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                 string dataType = prntJob.Properties["DataType"].Value.ToString();
                 int totalPages = Convert.ToInt32(prntJob.Properties["TotalPages"].Value);
                 int size = Convert.ToInt32(prntJob.Properties["Size"].Value);
-                int pagesPrinted = Convert.ToInt32(prntJob.Properties["PagesPrinted"].Value);
+                //int pagesPrinted = Convert.ToInt32(prntJob.Properties["PagesPrinted"].Value);
 
                 if (String.Compare(driverName, printerName, true) == 0)
                 {
@@ -154,8 +158,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                         //TimeSubmitted = TimeSubmitted,
                         DataType = dataType,
                         TotalPages = totalPages,
-                        Size = size,
-                        PagesPrinted = pagesPrinted
+                        Size = size
                     };
                     printJobList.Add(printJob);
                 }
