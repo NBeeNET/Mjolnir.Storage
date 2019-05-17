@@ -37,9 +37,13 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
         /// 根据id获取指定job状态
         /// </summary>
         /// <param name="id"></param>
-        public PrintJobModel GetJobById(string id)
+        /// <param name="printName">打印机名称</param>
+        /// <param name="isRemote">是否远端任务</param>
+        /// <returns></returns>
+        public PrintJobModel GetJobById(string id,string printName = null,bool isRemote = false)
         {
-            UpdateJobsFromLocal();
+            if(!isRemote)
+                UpdateJobsFromLocal(printName);
             return printJobModels.Find(obj => obj.Document.Contains(id));
         }
         /// <summary>
