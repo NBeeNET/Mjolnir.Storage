@@ -9,7 +9,11 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
     {
         public void CopyFrom(PrinterModel  printerModel)
         {
-
+            this.IsDefault = printerModel.IsDefault;
+            this.PrinterState = printerModel.PrinterState;
+            this.PrinterStatus = printerModel.PrinterStatus;
+            this.IsLocal = printerModel.IsLocal;
+            this.ModifyTime = DateTime.Now;
         }
         /// <summary>
         /// 打印机名称

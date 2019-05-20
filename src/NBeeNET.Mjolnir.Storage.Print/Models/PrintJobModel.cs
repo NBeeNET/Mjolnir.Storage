@@ -21,6 +21,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
             this.DataType = printJobModel.DataType;
             this.Size = printJobModel.Size;
             this.TotalPages = printJobModel.TotalPages;
+            this.ModifyTime = DateTime.Now;
         }
         /// <summary>
         /// 任务Id
@@ -62,5 +63,9 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         /// 数据来源(本地,远端)
         /// </summary>
         public string DataFrom { get; set; }
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime ModifyTime { get; set; } = DateTime.Now;
     }
 }

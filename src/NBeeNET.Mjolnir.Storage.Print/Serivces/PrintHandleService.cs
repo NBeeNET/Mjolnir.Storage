@@ -119,7 +119,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
                         if (data == null)
                         {
                             printJobModel.JobStatus = "打印完成";
-                            printJobModel.TimeSubmitted = DateTime.Now;
+                            printJobModel.ModifyTime = DateTime.Now;
                         }
                     }
                 }

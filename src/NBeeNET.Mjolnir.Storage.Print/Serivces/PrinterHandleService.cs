@@ -85,7 +85,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
                 foreach (PrinterModel printerModel in list)
                 {
                     var data = printerModels.Find(obj => obj.Name == printerModel.Name && obj.IsLocal);
-                    if (data != null)
+                    if (data == null)
                         printerModels.Add(printerModel); 
                     else
                         data.CopyFrom(printerModel);
