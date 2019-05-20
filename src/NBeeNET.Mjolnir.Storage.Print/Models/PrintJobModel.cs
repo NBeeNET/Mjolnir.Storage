@@ -14,6 +14,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         {
             this.JobId = printJobModel.JobId;
             this.Name = printJobModel.Name;
+            this.PrinterName = printJobModel.PrinterName;
             this.DriverName = printJobModel.DriverName;
             //this.Document = printJobModel.Document;
             this.JobStatus = printJobModel.JobStatus;
@@ -33,6 +34,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         public string Name { get; set; }
         /// <summary>
         /// 打印机名称
+        /// </summary>
+        public string PrinterName { get; set; }
+        /// <summary>
+        /// 驱动名称
         /// </summary>
         public string DriverName { get; set; }
         /// <summary>

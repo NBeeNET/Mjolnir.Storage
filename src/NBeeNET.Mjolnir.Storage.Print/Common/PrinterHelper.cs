@@ -105,9 +105,56 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
 
         }
 
-
         /// <summary>
-        /// 获取作业列表
+        /// 获取所有作业列表
+        /// </summary>
+        /// <param name="printerName"></param>
+        /// <returns></returns>
+        public static List<PrintJobModel> GetPrintJobs()
+        {
+            List<PrintJobModel> printJobList = new List<PrintJobModel>();
+            string searchQuery = "SELECT * FROM Win32_PrintJob";
+
+            ManagementObjectSearcher searchPrintJobs = new ManagementObjectSearcher(searchQuery);
+            ManagementObjectCollection prntJobCollection = searchPrintJobs.Get();
+            foreach (ManagementObject prntJob in prntJobCollection)
+            {
+                foreach (var item in prntJob.Properties)
+                {
+                    Console.WriteLine(item.Name + " : " + item.Value);
+                }
+
+                int jobId = Convert.ToInt32(prntJob.Properties["JobId"].Value);
+                string jobName = prntJob.Properties["Name"].Value.ToString();
+                string printerName = jobName.Split(',')[0];
+                string driverName = prntJob.Properties["DriverName"].Value.ToString();
+                string documentName = prntJob.Properties["Document"].Value.ToString();
+                string jobStatus = prntJob.Properties["JobStatus"].Value.ToString();
+                //DateTime TimeSubmitted = (DateTime)prntJob.Properties["JobStatus"].Value;
+                string dataType = prntJob.Properties["DataType"].Value.ToString();
+                int totalPages = Convert.ToInt32(prntJob.Properties["TotalPages"].Value);
+                int size = Convert.ToInt32(prntJob.Properties["Size"].Value);
+                //int pagesPrinted = Convert.ToInt32(prntJob.Properties["PagesPrinted"].Value);
+
+                var printJob = new PrintJobModel()
+                {
+                    JobId = jobId,
+                    Name = jobName,
+                    PrinterName = printerName,
+                    Document = documentName,
+                    DriverName = driverName,
+                    JobStatus = jobStatus,
+                    //TimeSubmitted = TimeSubmitted,
+                    DataType = dataType,
+                    TotalPages = totalPages,
+                    Size = size
+                };
+                printJobList.Add(printJob);
+            }
+            return printJobList;
+        }
+        /// <summary>
+        /// 获取指定打印机作业列表
         /// </summary>
         /// <param name="printerName"></param>
         /// <returns></returns>
@@ -127,6 +174,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
 
                 int jobId = Convert.ToInt32(prntJob.Properties["JobId"].Value);
                 string jobName = prntJob.Properties["Name"].Value.ToString();
+                string printer = jobName.Split(',')[0];
                 string driverName = prntJob.Properties["DriverName"].Value.ToString();
                 string documentName = prntJob.Properties["Document"].Value.ToString();
                 string jobStatus = prntJob.Properties["JobStatus"].Value.ToString();
@@ -136,12 +184,13 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                 int size = Convert.ToInt32(prntJob.Properties["Size"].Value);
                 //int pagesPrinted = Convert.ToInt32(prntJob.Properties["PagesPrinted"].Value);
 
-                if (String.Compare(driverName, printerName, true) == 0)
+                if (jobName.StartsWith(printerName + ","))
                 {
                     var printJob = new PrintJobModel()
                     {
                         JobId = jobId,
                         Name = jobName,
+                        PrinterName = printer,
                         Document = documentName,
                         DriverName = driverName,
                         JobStatus = jobStatus,
