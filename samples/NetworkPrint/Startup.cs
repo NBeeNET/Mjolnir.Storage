@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NBeeNET.Mjolnir.Storage.Local;
 using NBeeNET.Mjolnir.Storage.Office;
+using NBeeNET.Mjolnir.Storage.Print;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +47,8 @@ namespace NetworkPrint
             services.AddStorageOffice();
             //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
             services.AddStorageLocal();
-
+            //添加 NBeeNET.Mjolnir.Storage.Print 打印服务
+            services.AddStoragePrint();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
