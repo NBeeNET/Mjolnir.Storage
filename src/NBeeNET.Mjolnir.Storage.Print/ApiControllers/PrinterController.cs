@@ -13,24 +13,24 @@ namespace NBeeNET.Mjolnir.Storage.Print.ApiControllers
 {
     [Route("/StorageApi/[controller]")]
     [ApiController]
-    public class PrintController : ControllerBase
+    public class PrinterController : ControllerBase
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public PrintController(IServiceScopeFactory serviceScopeFactory)
+        public PrinterController(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
         /// <summary>
-        /// 获取所有job,可根据id筛选
+        /// 获取所有打印机
         /// </summary>
         /// <returns></returns>
         [HttpGet()]
-        public IActionResult GetJobById(string id)
+        public IActionResult GetPrinters()
         {
             try
             {
-                return Ok(PrintHandleService.GetResource().GetJobById(id));
+                return Ok(PrinterHandleService.GetResource().GetPrinters());
             }
             catch (Exception ex)
             {
@@ -38,22 +38,21 @@ namespace NBeeNET.Mjolnir.Storage.Print.ApiControllers
             }
         }
         /// <summary>
-        /// 更新打印job状态
+        /// 更新远端打印机
         /// </summary>
         /// <returns></returns>
         [HttpPost()]
-        public IActionResult UpdateJob(List<PrintJobModel> list)
+        public IActionResult SetPrinters(List<PrinterModel> list)
         {
             try
             {
-                PrintHandleService.GetResource().UpdateJobsFromRemote(list);
-                return Ok("更新成功");
+                PrinterHandleService.GetResource().UpdatePrinterFromRemote(list);
+                return Ok("更新打印机完成!");
             }
             catch (Exception ex)
             {
                 return BadRequest("更新失败！" + ex.ToString());
             }
         }
-
     }
 }

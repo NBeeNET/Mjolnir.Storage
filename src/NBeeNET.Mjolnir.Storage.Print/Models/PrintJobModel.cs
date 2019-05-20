@@ -45,7 +45,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         /// <summary>
         /// 提交时间
         /// </summary>
-        public DateTime TimeSubmitted { get; set; }
+        public DateTime TimeSubmitted { get; set; } = DateTime.Now;
         /// <summary>
         /// 文档数据类型
         /// </summary>
