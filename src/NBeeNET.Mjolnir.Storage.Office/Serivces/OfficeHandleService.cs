@@ -5,6 +5,7 @@ using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
 using NBeeNET.Mjolnir.Storage.Job;
 using NBeeNET.Mjolnir.Storage.Job.Implement;
+using NBeeNET.Mjolnir.Storage.Job.Interface;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
         public OfficeHandleService()
         {
-          
+
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
             //写入临时文件夹
             var tempFilePath = await tempStorage.Write(OfficeInput.File, OfficeOutput.Id);
-            
+
             //复制目录
             foreach (var storageService in Register.StorageService)
             {
@@ -82,8 +83,8 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
             //开始处理任务
             StartJob(jsonFile, tempFilePath);
-            
-            
+
+
             return OfficeOutput;
         }
 
@@ -112,25 +113,58 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
         {
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
-            
+
             DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
             bool isDeleteTempDirectory = true;
 
             if (jsonFile.Details?.Count > 0)
             {
-                Scheduler scheduler = new Scheduler("Test");
-
+                Scheduler scheduler = new Scheduler("OfficeHandleService");
+                RegisterJobs registerJobs = new RegisterJobs();
                 for (int i = 0; i < jsonFile.Details.Count; i++)
                 {
-                    var jobContext = JobBuilder.Create<PrintJob>()
-                         .WithName("print")
-                         .AddJobData("tempFilePath", tempFilePath)
-                         .Initialize();
-                    scheduler.AddJob(jobContext);
+                    JsonFileDetail job = jsonFile.Details[i];
+                    DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
+                    try
+                    {
+                     
+                        if (job.Key.Contains("Client"))
+                        {
+                            isDeleteTempDirectory = false;
+                            continue;
+                        }
+
+                        //判断Job类型是否有
+                        IJob outJob = null;
+                        var ret = RegisterJobs.TryGetJob(job.Key, out outJob);
+                        if (ret)
+                        {
+                            //添加Job
+                            
+                            var jobContext = JobBuilder.Create(outJob.GetType())
+                           .WithName(job.Key)
+                           .AddJobData("tempFilePath", tempFilePath)
+                           .Initialize();
+                            scheduler.AddJob(jobContext);
+
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                    DebugConsole.WriteLine(jsonFile.Id + " | 完成处理任务:" + job.Key);
                 }
+                //开始处理任务
                 await scheduler.Start();
             }
-            
+            //保存Json文件
+            await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
+
+            DebugConsole.WriteLine(jsonFile.Id + " | 结束任务处理...");
+
+
             //复制目录
             foreach (var storageService in Register.StorageService)
             {
@@ -145,6 +179,6 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                 DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
             }
         }
-        
+
     }
 }

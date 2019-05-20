@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace NBeeNET.Mjolnir.Storage.Job
 {
     /// <summary>
-    /// 生成缩略图
+    /// 转换Pdf格式
     /// </summary>
-    public class CreatePDFJob : IJob
+    public class ConvertPDFJob : IJob
     {
         public string Key { get; set; } = "CreatePDF";
 

@@ -10,6 +10,10 @@
     <PackageReleaseNotes>NBeeNET.Mjolnir is Object storage agent job service.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Interface\IJob.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />

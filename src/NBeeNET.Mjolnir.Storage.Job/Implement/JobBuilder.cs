@@ -12,7 +12,7 @@ namespace NBeeNET.Mjolnir.Storage.Job.Implement
         private string name;
         private string description;
         private Type jobType;
-     
+
 
         private Hashtable jobDataMap = new Hashtable();
 
