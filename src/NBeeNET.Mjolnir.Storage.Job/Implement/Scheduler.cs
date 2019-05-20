@@ -43,15 +43,24 @@ namespace NBeeNET.Mjolnir.Storage.Job.Implement
             return queues.ToList().Where(t => t.JobDetail.Key == matcher).Select(t => t.JobDetail.Key); 
         }
 
+        /// <summary>
+        /// Job上下文
+        /// </summary>
+        public List<IJobExecutionContext> JobContextList { get; set; } = new List<IJobExecutionContext>();
+
         public Task Start()
         {
-            IJobExecutionContext jobContext = null;
-
-            while (queues.TryDequeue(out jobContext))
+            if (queues.Count > 0)
             {
-                ((IJob)jobContext.JobInstance).Execute(jobContext);
-            }
+                IJobExecutionContext jobContext = null;
 
+                while (queues.TryDequeue(out jobContext))
+                {
+                    this.JobContextList.Add(jobContext);
+                    ((IJob)jobContext.JobInstance).Execute(jobContext);
+                }
+
+            }
             return Task.CompletedTask;
         }
     }

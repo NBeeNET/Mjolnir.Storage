@@ -1,5 +1,6 @@
 ﻿using NBeeNET.Mjolnir.Storage.Job.Common;
 using NBeeNET.Mjolnir.Storage.Job.Interface;
+using NBeeNET.Mjolnir.Storage.Print.Common;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -12,17 +13,30 @@ namespace NBeeNET.Mjolnir.Storage.Job
     /// </summary>
     public class PrintJob : IJob
     {
-        public string Key { get; set; } = "CreatePDF";
+        public string Key { get; set; } = "Print";
 
         /// <summary>
         /// Job执行函数
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-
         public async Task Execute(IJobExecutionContext context)
         {
+            try
+            {
             var tempFilePath = context.MergedJobDataMap["tempFilePath"].ToString();
+
+            if (!File.Exists(tempFilePath))
+            {
+                context.Result = new
+                {
+                    State = "-1",
+                    Value = "打印失败：文件不存在",
+                    CreateTime = DateTime.Now
+                };
+
+                return;
+            }
 
             FileInfo fileInfo = new FileInfo(tempFilePath);
             var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
@@ -33,14 +47,13 @@ namespace NBeeNET.Mjolnir.Storage.Job
                 {
                     case ".XLS":
                     case ".XLSX":
+
+                        PrintHelper.ExcelPrintAsync(tempFilePath);
                         break;
                     case ".DOC":
                     case ".DOCX":
                     case ".TXT":
-                        await Task.Factory.StartNew(() =>
-                        {
-                            PrintWord(context);
-                        });
+                        PrintHelper.WordPrintAsync(tempFilePath);
                         break;
                     case ".PDF":
                         break;
@@ -64,52 +77,21 @@ namespace NBeeNET.Mjolnir.Storage.Job
                 };
             }
 
-
-
-        }
-
-
-        private void PrintWord(IJobExecutionContext context)
-        {
-            Microsoft.Office.Interop.Word.Application application = new Microsoft.Office.Interop.Word.Application();
-            Microsoft.Office.Interop.Word.Document document = null;
-            var tempFilePath = context.MergedJobDataMap["tempFilePath"].ToString();
-            try
+            }
+            catch (Exception ex)
             {
-                FileInfo fileInfo = new FileInfo(tempFilePath);
-                var fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-
-                application.Visible = false;
-                document = application.Documents.Open(tempFilePath);
-
-                object missing = System.Reflection.Missing.Value;
-                document.PrintOut(ref missing, ref missing, ref missing, ref missing,
-                         ref missing, ref missing, ref missing, ref missing, ref missing,
-                         ref missing, ref missing, ref missing, ref missing, ref missing,
-                         ref missing, ref missing, ref missing, ref missing);
 
                 context.Result = new
                 {
                     State = "-1",
-                    Value = "打印完成",
+                    Value = "打印失败："+ex.Message,
                     CreateTime = DateTime.Now
                 };
             }
-            catch(Exception ex)
-            {
-                context.Result = new
-                {
-                    State = "-1",
-                    Value = "打印失败:"+ex.Message,
-                    CreateTime = DateTime.Now
-                };
-            }
-            finally
-            {
-                document.Close();
-                application.Quit();
-            }
+
+          
         }
+
     }
 
 }

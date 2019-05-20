@@ -13,6 +13,7 @@ namespace NBeeNET.Mjolnir.Storage.Job
     {
         public string Key { get; set; } = "CreateSmall";
 
+
         public async Task Execute(IJobExecutionContext context)
         {
             var tempFilePath = context.MergedJobDataMap["tempFilePath"].ToString();
