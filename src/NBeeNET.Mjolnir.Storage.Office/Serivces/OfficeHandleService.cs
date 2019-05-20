@@ -124,22 +124,23 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
                         DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
                         try
                         {
+
                             //PDF
-                            if (job.Key == "CreatePDF")
-                            {
-                                jsonFile.Details[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
-                            }
+                            //if (job.Key == "CreatePDF")
+                            //{
+                            //    jsonFile.Details[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
+                            //}
 
-                            //Print
-                            if (job.Key == "Print")
-                            {
-                                jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
-                            }
+                            ////Print
+                            //if (job.Key == "Print")
+                            //{
+                            //    jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
+                            //}
 
-                            if (job.Key.Contains("Client"))
-                            {
-                                isDeleteTempDirectory = false;
-                            }
+                            //if (job.Key.Contains("Client"))
+                            //{
+                            //    isDeleteTempDirectory = false;
+                            //}
                         }
                         catch (Exception ex)
                         {
