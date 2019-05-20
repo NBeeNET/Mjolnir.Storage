@@ -112,7 +112,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Serivces
                         }
                     }
                     //当前打印机缓存的job
-                    List<PrintJobModel> printerJob = printJobModels.FindAll(obj => obj.DriverName == printerName);
+                    List<PrintJobModel> printerJob = printJobModels.FindAll(obj => obj.DriverName.ToLower() == printerName.ToLower() && obj.DataFrom == "本地");
                     foreach (PrintJobModel printJobModel in printerJob)
                     {
                         var data = _List.Find(obj => obj.Document.Contains(printJobModel.Document));

@@ -3,6 +3,8 @@ using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
+using NBeeNET.Mjolnir.Storage.Job;
+using NBeeNET.Mjolnir.Storage.Job.Implement;
 using NBeeNET.Mjolnir.Storage.Office.ApiControllers.Models;
 using System;
 using System.Collections.Generic;
@@ -116,43 +118,17 @@ namespace NBeeNET.Mjolnir.Storage.Office.Serivces
 
             if (jsonFile.Details?.Count > 0)
             {
-                if (jsonFile.Details.Count > 0)
+                Scheduler scheduler = new Scheduler("Test");
+
+                for (int i = 0; i < jsonFile.Details.Count; i++)
                 {
-                    for (int i = 0; i < jsonFile.Details.Count; i++)
-                    {
-                        JsonFileDetail job = jsonFile.Details[i];
-                        DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
-                        try
-                        {
-
-                            //PDF
-                            //if (job.Key == "CreatePDF")
-                            //{
-                            //    jsonFile.Details[i] = await Task.Run(() => new Jobs.CreatePDFJob().Run(tempFilePath, job));
-                            //}
-
-                            ////Print
-                            //if (job.Key == "Print")
-                            //{
-                            //    jsonFile.Details[i] = await Task.Run(() => new Jobs.PrintJob().Run(tempFilePath, job));
-                            //}
-
-                            //if (job.Key.Contains("Client"))
-                            //{
-                            //    isDeleteTempDirectory = false;
-                            //}
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                        DebugConsole.WriteLine(jsonFile.Id + " | 完成处理任务:" + job.Key);
-                    }
+                    var jobContext = JobBuilder.Create<PrintJob>()
+                         .WithName("print")
+                         .AddJobData("tempFilePath", tempFilePath)
+                         .Initialize();
+                    scheduler.AddJob(jobContext);
                 }
-                //保存Json文件
-                await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
-
-                DebugConsole.WriteLine(jsonFile.Id + " | 结束任务处理...");
+                await scheduler.Start();
             }
             
             //复制目录
