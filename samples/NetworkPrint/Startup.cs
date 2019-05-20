@@ -10,6 +10,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NBeeNET.Mjolnir.Storage.Local;
 using NBeeNET.Mjolnir.Storage.Office;
 using NBeeNET.Mjolnir.Storage.Print;
+using NBeeNET.Mjolnir.Storage.Job;
+using NBeeNET.Mjolnir.Storage.Job.Print;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +46,9 @@ namespace NetworkPrint
             //添加 NBeeNET.Mjolnir.Storage.Image 上传及作业处理服务
             //services.AddStorageImage();
             //添加 NBeeNET.Mjolnir.Storage.Office 上传及作业处理服务
-            services.AddStorageOffice();
+            services.AddStorageOffice()
+                .AddJob(new PrintJob().GetType());
+
             //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
             services.AddStorageLocal();
             //添加 NBeeNET.Mjolnir.Storage.Print 打印服务

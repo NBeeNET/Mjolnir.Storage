@@ -22,6 +22,9 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Job.Print\NBeeNET.Mjolnir.Storage.Job.Print.csproj" />
+    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Job\NBeeNET.Mjolnir.Storage.Job.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Local\NBeeNET.Mjolnir.Storage.Local.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Office\NBeeNET.Mjolnir.Storage.Office.csproj" />
     <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Print\NBeeNET.Mjolnir.Storage.Print.csproj" />
