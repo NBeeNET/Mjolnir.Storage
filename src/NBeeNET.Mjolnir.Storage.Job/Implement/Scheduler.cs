@@ -1,9 +1,9 @@
-﻿using NBeeNET.Mjolnir.Storage.Job.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using NBeeNET.Mjolnir.Storage.Job.Interface;
 
 namespace NBeeNET.Mjolnir.Storage.Job.Implement
 {
@@ -54,7 +54,7 @@ namespace NBeeNET.Mjolnir.Storage.Job.Implement
             {
                 IJobExecutionContext jobContext = null;
 
-                while (queues.TryDequeue(out jobContext))
+                while ((jobContext = queues.Dequeue()) != null)
                 {
                     this.JobContextList.Add(jobContext);
                     ((IJob)jobContext.JobInstance).Execute(jobContext);

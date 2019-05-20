@@ -13,10 +13,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.ApiControllers
 {
     [Route("/StorageApi/[controller]")]
     [ApiController]
-    public class PrintController : ControllerBase
+    public class PrintJobController : ControllerBase
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public PrintController(IServiceScopeFactory serviceScopeFactory)
+        public PrintJobController(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }

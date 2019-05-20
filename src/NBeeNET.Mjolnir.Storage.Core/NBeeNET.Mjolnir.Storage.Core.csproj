@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.2.2</Version>
     <Authors>NBeeNET</Authors>
     <Product>NBeeNET.Mjolnir.Storage</Product>
@@ -11,12 +11,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ApiControllers\**" />
+    <Compile Remove="Service\**" />
+    <EmbeddedResource Remove="ApiControllers\**" />
+    <EmbeddedResource Remove="Service\**" />
+    <None Remove="ApiControllers\**" />
+    <None Remove="Service\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Interface\IJob.cs" />
+    <Compile Remove="Models\JobInput.cs" />
+    <Compile Remove="Models\JobOutput.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 

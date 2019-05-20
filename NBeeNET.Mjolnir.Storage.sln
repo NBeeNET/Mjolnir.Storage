@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Pri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBeeNET.Mjolnir.Storage.Tests", "tests\NBeeNET.Mjolnir.Storage.Tests\NBeeNET.Mjolnir.Storage.Tests.csproj", "{263AAD8E-2FD8-4347-8357-D44758304DCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBeeNET.Mjolnir.Storage.Job.Print", "src\NBeeNET.Mjolnir.Storage.Job.Print\NBeeNET.Mjolnir.Storage.Job.Print.csproj", "{03C8EFCB-AB09-4073-B55D-3EC36AC8663F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{263AAD8E-2FD8-4347-8357-D44758304DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{263AAD8E-2FD8-4347-8357-D44758304DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{263AAD8E-2FD8-4347-8357-D44758304DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03C8EFCB-AB09-4073-B55D-3EC36AC8663F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03C8EFCB-AB09-4073-B55D-3EC36AC8663F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03C8EFCB-AB09-4073-B55D-3EC36AC8663F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03C8EFCB-AB09-4073-B55D-3EC36AC8663F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{52BB6AD4-A003-4478-B49C-16A7B09F01CB} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{6B2CF12D-5337-43CE-A6BE-1BB58868A389} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 		{263AAD8E-2FD8-4347-8357-D44758304DCD} = {D9E837F0-2088-4ACB-B0D1-D0288578BFCA}
+		{03C8EFCB-AB09-4073-B55D-3EC36AC8663F} = {47EB6CA2-8260-40AF-B81F-66F9E7523ED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E85104EC-EE06-4F58-82A6-6BAC403404A8}

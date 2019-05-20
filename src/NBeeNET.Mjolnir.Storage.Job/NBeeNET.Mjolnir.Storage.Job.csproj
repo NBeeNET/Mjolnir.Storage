@@ -1,29 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\**" />
+    <Compile Remove="Jobs\Image\**" />
+    <Compile Remove="Jobs\Office\**" />
+    <Compile Remove="Jobs\Print\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <EmbeddedResource Remove="Jobs\Image\**" />
+    <EmbeddedResource Remove="Jobs\Office\**" />
+    <EmbeddedResource Remove="Jobs\Print\**" />
+    <None Remove="Common\**" />
+    <None Remove="Jobs\Image\**" />
+    <None Remove="Jobs\Office\**" />
+    <None Remove="Jobs\Print\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Jobs\Audio\" />
     <Folder Include="Jobs\Video\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Print\NBeeNET.Mjolnir.Storage.Print.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Imazen.WebP">
-      <HintPath>Common\Lib\Imazen.WebP.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

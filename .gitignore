@@ -42,3 +42,5 @@
 /src/NBeeNET.Mjolnir.Storage.Print/bin
 /src/NBeeNET.Mjolnir.Storage.Job/bin
 /src/NBeeNET.Mjolnir.Storage.Job/obj
+/samples/NetworkStorage/temp
+/samples/NetworkStorage/wwwroot/NBeeNET_Mjolnir

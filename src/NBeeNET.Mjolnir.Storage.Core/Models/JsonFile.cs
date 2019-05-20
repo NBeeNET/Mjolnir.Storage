@@ -52,7 +52,8 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         public async Task SaveAs(string filePath)
         {
             string jsonStr = JsonConvert.SerializeObject(this);
-            await System.IO.File.WriteAllTextAsync(filePath, jsonStr);
+            System.IO.File.WriteAllText(filePath, jsonStr);
+            //await System.IO.File.WriteAllTextAsync(filePath, jsonStr);
         }
 
         /// <summary>
