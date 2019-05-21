@@ -143,33 +143,33 @@ namespace NBeeNET.Mjolnir.Storage
                 if (queues.Count > 0)
                 {
                     JsonFileDetail job = null;
-                    while (queues.TryDequeue(out job))
-                    {
-                        Console.WriteLine("正在处理图片:" + job.Key);
-                        try
-                        {
-                            ////预览图处理
-                            //if (job.Key == "Medium")
-                            //{
-                            //    jsonFile.Details.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
-                            //}
-                            ////缩略图处理
-                            //if (job.Key == "Small")
-                            //{
-                            //    jsonFile.Details.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
-                            //}
-                            ////WebP格式转换
-                            //if (job.Key == "WebP")
-                            //{
-                            //    jsonFile.Details.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                            //}
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                        Console.WriteLine("处理图片结束:" + job.Key);
-                    }
+                    //while (queues.TryDequeue(out job))
+                    //{
+                    //    Console.WriteLine("正在处理图片:" + job.Key);
+                    //    try
+                    //    {
+                    //        ////预览图处理
+                    //        //if (job.Key == "Medium")
+                    //        //{
+                    //        //    jsonFile.Details.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
+                    //        //}
+                    //        ////缩略图处理
+                    //        //if (job.Key == "Small")
+                    //        //{
+                    //        //    jsonFile.Details.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
+                    //        //}
+                    //        ////WebP格式转换
+                    //        //if (job.Key == "WebP")
+                    //        //{
+                    //        //    jsonFile.Details.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
+                    //        //}
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        Console.WriteLine(ex.ToString());
+                    //    }
+                    //    Console.WriteLine("处理图片结束:" + job.Key);
+                    //}
                 }
                 //保存Json文件
                 await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
