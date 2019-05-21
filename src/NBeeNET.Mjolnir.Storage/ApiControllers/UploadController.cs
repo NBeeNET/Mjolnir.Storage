@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NBeeNET.Mjolnir.Storage.Serivces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
         /// <param name="file">自定义Tag</param>
         /// <returns></returns>
         [HttpPost("Upload")]
-        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags)
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm]string name, [FromForm]string tags, [FromForm]string jobs)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -49,8 +50,10 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                         input.File = file;
                         input.Name = string.IsNullOrEmpty(name) ? file.FileName : name;
                         input.Tags = tags;
+                        input.Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Core.Models.JsonFileDetail>>(jobs);
+
                         UploadHandleService handleService = new UploadHandleService();
-                        output = await handleService.Save(input, Request);
+                        output = await handleService.Save(input);
                         return Ok(output);
                     }
                 }
@@ -105,7 +108,7 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                     }
 
                     UploadHandleService handleService = new UploadHandleService();
-                    var output = await handleService.MultiSave(inputs, Request);
+                    var output = await handleService.MultiSave(inputs);
                     return Ok(output);
                 }
             }

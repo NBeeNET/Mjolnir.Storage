@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace NBeeNET.Mjolnir.Storage
 {
@@ -29,6 +30,11 @@ namespace NBeeNET.Mjolnir.Storage
         public static void AddStorageJob(Core.Interface.IJob job)
         {
             StorageJobs.Add(job);
+        }
+        public static bool TryGetJob(string key, out Core.Interface.IJob job)
+        {
+            job = StorageJobs.Where(t => t.Key == key)?.First();
+            return job == null ? false : true;
         }
 
     }

@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
-using NBeeNET.Mjolnir.Storage.Models;
 using NBeeNET.Mjolnir.Storage.Core;
+using NBeeNET.Mjolnir.Storage.Core.Common;
+using NBeeNET.Mjolnir.Storage.Core.Implement;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
 using NBeeNET.Mjolnir.Storage.Core.Models;
+using NBeeNET.Mjolnir.Storage.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace NBeeNET.Mjolnir.Storage
+namespace NBeeNET.Mjolnir.Storage.Serivces
 {
     /// <summary>
     /// 上传处理
@@ -22,105 +26,82 @@ namespace NBeeNET.Mjolnir.Storage
         }
 
         /// <summary>
-        /// 单文件上传处理
+        /// 保存Upload文件
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="UploadInput"></param>
         /// <returns></returns>
-        public async Task<UploadOutput> Save(UploadInput input, HttpRequest request)
+        public async Task<UploadOutput> Save(UploadInput UploadInput)
         {
-            TempStorageOperation tempStorage = new TempStorageOperation();
-            //IStorageService _StorageService = new LocalStorageService();
-
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":上传图片开始...");
-            //输出结果对象
-            UploadOutput imageOutput = new UploadOutput();
-            imageOutput.Id = Guid.NewGuid().ToString();
-            imageOutput.Name = input.Name;
-            imageOutput.Tags = input.Tags;
-            imageOutput.Length = input.File.Length;
-            imageOutput.Type = input.File.FileName.Split('.')[input.File.FileName.Split('.').Length - 1];
-            imageOutput.FileName = imageOutput.Id + "." + imageOutput.Type;
-            imageOutput.Url = StorageOperation.GetUrl(imageOutput.FileName);
-            imageOutput.Path = StorageOperation.GetPath();
-
-
-            //写入临时文件夹
-            var tempFilePath = await tempStorage.Write(input.File, imageOutput.Id);
-
             if (Register.StorageService.Count == 0)
             {
                 throw new Exception("必须添加存储服务");
             }
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":开始复制目录...");
+            TempStorageOperation tempStorage = new TempStorageOperation();
+
+            //输出结果对象
+            UploadOutput UploadOutput = new UploadOutput();
+            UploadOutput.Id = Guid.NewGuid().ToString();
+            UploadOutput.Type = UploadInput.File.FileName.Split('.')[UploadInput.File.FileName.Split('.').Length - 1];
+            UploadOutput.FileName = UploadOutput.Id + "." + UploadOutput.Type;
+            UploadOutput.Name = UploadInput.Name;
+            UploadOutput.Tags = UploadInput.Tags;
+            UploadOutput.Length = UploadInput.File.Length;
+            UploadOutput.Url = StorageOperation.GetUrl(UploadOutput.FileName);
+            UploadOutput.FilePath = StorageOperation.GetUrl(UploadOutput.FileName);
+            UploadOutput.Path = StorageOperation.GetPath();
+
+            //写入临时文件夹
+            var tempFilePath = await tempStorage.Write(UploadInput.File, UploadOutput.Id);
+
             //复制目录
             foreach (var storageService in Register.StorageService)
             {
-                await storageService.CopyDirectory(tempStorage.GetTempPath(imageOutput.Id));
+                await storageService.CopyDirectory(tempStorage.GetTempPath(UploadOutput.Id));
             }
 
             #region 生成Json
             //保存Json文件
             JsonFile jsonFile = new JsonFile();
-            jsonFile.Id = imageOutput.Id;
+            jsonFile.Id = UploadOutput.Id;
             jsonFile.CreateTime = DateTime.Now;
-            jsonFile.Name = imageOutput.Name;
-            jsonFile.Tags = imageOutput.Tags;
-            jsonFile.Url = imageOutput.Url;
-            jsonFile.FileName = imageOutput.FileName;
+            jsonFile.Name = UploadOutput.Name;
+            jsonFile.Tags = UploadOutput.Tags;
+            jsonFile.Url = UploadOutput.Url;
+            jsonFile.FileName = UploadOutput.FileName;
 
-            //创建处理作业
-            var task = new List<JsonFileDetail>();
-            //预览图
-            task.Add(new JsonFileDetail() { Key = "Medium", State = "0", Value = "" });
-            //缩略图
-            task.Add(new JsonFileDetail() { Key = "Small", State = "0", Value = "" });
+            #region 创建处理作业
+            jsonFile.Details = UploadInput.Jobs;
+            #endregion
 
-            //.Net Core生成 WebP格式,目前仅支持在Windows
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                //WebP格式
-                task.Add(new JsonFileDetail() { Key = "WebP", State = "0", Value = "" });
-            }
-
-            jsonFile.Details = task;
+            //保存Json
             await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
 
             #endregion
 
             //开始处理任务
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":任务处理开始...");
             StartJob(jsonFile, tempFilePath);
 
-            //删除临时目录
-            //tempStorage.Delete(jsonFile.Id);
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(DateTime.Now + ":上传结束...");
-            //返回结果
-
-            return imageOutput;
+            return UploadOutput;
         }
 
         /// <summary>
-        /// 多文件上传处理
+        /// 多文件保存
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="request"></param>
+        /// <param name="inputs"></param>
         /// <returns></returns>
-        public async Task<List<UploadOutput>> MultiSave(List<UploadInput> input, HttpRequest request)
+        public async Task<List<UploadOutput>> MultiSave(List<UploadInput> inputs)
         {
             List<UploadOutput> output = new List<UploadOutput>();
-            for (int i = 0; i < input.Count; i++)
+            for (int i = 0; i < inputs.Count; i++)
             {
-                var result = await Save(input[i], request);
+                var result = await Save(inputs[i]);
                 output.Add(result);
             }
             return output;
         }
+
 
         /// <summary>
         /// 开始处理任务
@@ -130,63 +111,71 @@ namespace NBeeNET.Mjolnir.Storage
         {
             StorageOperation storage = new StorageOperation();
             TempStorageOperation tempStorage = new TempStorageOperation();
+
+            DebugConsole.WriteLine(jsonFile.Id + " | 开始处理任务...");
+            bool isDeleteTempDirectory = true;
+
             if (jsonFile.Details?.Count > 0)
             {
-                
-                Queue<JsonFileDetail> queues = new Queue<JsonFileDetail>();
+                Scheduler scheduler = new Scheduler("UploadHandleService");
                 for (int i = 0; i < jsonFile.Details.Count; i++)
                 {
-                    queues.Enqueue(jsonFile.Details[i]);
+                    JsonFileDetail job = jsonFile.Details[i];
+                    DebugConsole.WriteLine(jsonFile.Id + " | 正在处理任务:" + job.Key);
+                    try
+                    {
+
+                        if (job.Key.Contains("Client"))
+                        {
+                            isDeleteTempDirectory = false;
+                            continue;
+                        }
+
+                        //判断Job类型是否有
+                        IJob outJob = null;
+                        var ret = Register.TryGetJob(job.Key, out outJob);
+                        if (ret)
+                        {
+                            //添加Job
+
+                            var jobContext = JobBuilder.Create(outJob.GetType())
+                           .WithName(job.Key)
+                           .AddJobData("tempFilePath", tempFilePath)
+                           .Initialize();
+                            scheduler.AddJob(jobContext);
+
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                    DebugConsole.WriteLine(jsonFile.Id + " | 完成处理任务:" + job.Key);
                 }
-
-                jsonFile.Details.Clear();
-                if (queues.Count > 0)
-                {
-                    JsonFileDetail job = null;
-                    //while (queues.TryDequeue(out job))
-                    //{
-                    //    Console.WriteLine("正在处理图片:" + job.Key);
-                    //    try
-                    //    {
-                    //        ////预览图处理
-                    //        //if (job.Key == "Medium")
-                    //        //{
-                    //        //    jsonFile.Details.Add(new Jobs.CreateMediumJob().Run(tempFilePath, job));
-                    //        //}
-                    //        ////缩略图处理
-                    //        //if (job.Key == "Small")
-                    //        //{
-                    //        //    jsonFile.Details.Add(new Jobs.CreateSmallJob().Run(tempFilePath, job));
-                    //        //}
-                    //        ////WebP格式转换
-                    //        //if (job.Key == "WebP")
-                    //        //{
-                    //        //    jsonFile.Details.Add(new Jobs.ConvertWebPJob().Run(tempFilePath, job));
-                    //        //}
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(ex.ToString());
-                    //    }
-                    //    Console.WriteLine("处理图片结束:" + job.Key);
-                    //}
-                }
-                //保存Json文件
-                await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
-
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(DateTime.Now + ":任务处理完成...");
-
-                Console.WriteLine(DateTime.Now + ":再次复制目录...");            
-
+                //开始处理任务
+                await scheduler.Start();
             }
+            //保存Json文件
+            await jsonFile.SaveAs(tempStorage.GetJsonFilePath(jsonFile.Id));
+
+            DebugConsole.WriteLine(jsonFile.Id + " | 结束任务处理...");
+
+
             //复制目录
             foreach (var storageService in Register.StorageService)
             {
                 await storageService.CopyDirectory(tempStorage.GetTempPath(jsonFile.Id));
             }
+            DebugConsole.WriteLine(jsonFile.Id + " | 存档临时目录...");
+
             //删除临时目录
-            tempStorage.Delete(jsonFile.Id);
+            if (isDeleteTempDirectory)
+            {
+                //tempStorage.Delete(jsonFile.Id);
+                //DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
+            }
         }
+
     }
 }

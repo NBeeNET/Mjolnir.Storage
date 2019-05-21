@@ -14,7 +14,7 @@
                     <div class="col-md-8" style="text-align:left">
                         <p>请选择一个需要打印的文档文件:</p>
                         <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png" />
-                        <input type="hidden" name="jobs" value="[{'Key':'CreatePDF'},{'Key':'Print'}]" />
+                        <input type="hidden" name="jobs" value="[{'Key':'Print'}]" />
                         <button id="btnUpload" type="button" class="btn btn-primary"> 上 传 </button>&nbsp;&nbsp;&nbsp;&nbsp;
                         <button id="btnView" type="button" class="btn btn-primary" disabled> 预 览 </button>
                     </div>
@@ -55,7 +55,7 @@
             var $output = document.getElementById('comment');
 
             $.ajax({
-                url: '/StorageApi/Office/Upload',
+                url: '/StorageApi/Upload',
                 type: 'POST',
                 data: formData,
                 async: false,

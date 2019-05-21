@@ -54,7 +54,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Implement
             {
                 IJobExecutionContext jobContext = null;
 
-                while ((jobContext = queues.Dequeue()) != null)
+                while (queues.Count > 0 && (jobContext = queues.Dequeue()) != null)
                 {
                     this.JobContextList.Add(jobContext);
                     ((IJob)jobContext.JobInstance).Execute(jobContext);

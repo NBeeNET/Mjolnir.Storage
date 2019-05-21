@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NBeeNET.Mjolnir.Storage.Local;
 using NBeeNET.Mjolnir.Storage.Print;
-using NBeeNET.Mjolnir.Storage.Job;
+using NBeeNET.Mjolnir.Storage;
 using NBeeNET.Mjolnir.Storage.Job.Print;
 using System;
 using System.Threading;
@@ -42,16 +42,22 @@ namespace NetworkPrint
                 .AddVirtualMemorySizeHealthCheck(10);
             services.AddHealthChecksUI();
 
+
+            services.AddStorage()
+                .AddStorageJob(new PrintJob())
+                .AddStorageLocal()
+                .AddStoragePrint();
+
             //添加 NBeeNET.Mjolnir.Storage.Image 上传及作业处理服务
             //services.AddStorageImage();
             //添加 NBeeNET.Mjolnir.Storage.Office 上传及作业处理服务
             //services.AddStorageOffice()
             //    .AddJob(new PrintJob());
 
-            //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
-            services.AddStorageLocal();
-            //添加 NBeeNET.Mjolnir.Storage.Print 打印服务
-            services.AddStoragePrint();
+            ////添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
+            //services.AddStorageLocal();
+            ////添加 NBeeNET.Mjolnir.Storage.Print 打印服务
+            //services.AddStoragePrint();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
