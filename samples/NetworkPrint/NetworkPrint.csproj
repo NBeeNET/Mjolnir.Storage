@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Office.cshtml.cs" />
+    <Compile Remove="Pages\Pdf.cshtml.cs" />
+    <Compile Remove="Pages\Privacy.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Office.cshtml" />
+    <Content Remove="Pages\Pdf.cshtml" />
+    <Content Remove="Pages\Privacy.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="healthchecksdb" />
   </ItemGroup>
 

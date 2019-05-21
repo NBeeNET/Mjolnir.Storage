@@ -170,11 +170,11 @@ namespace NBeeNET.Mjolnir.Storage.Serivces
             DebugConsole.WriteLine(jsonFile.Id + " | 存档临时目录...");
 
             //删除临时目录
-            if (isDeleteTempDirectory)
-            {
-                //tempStorage.Delete(jsonFile.Id);
-                //DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
-            }
+            //if (isDeleteTempDirectory)
+            //{
+            //    //tempStorage.Delete(jsonFile.Id);
+            //    //DebugConsole.WriteLine(jsonFile.Id + " | 删除临时目录...");
+            //}
         }
 
     }

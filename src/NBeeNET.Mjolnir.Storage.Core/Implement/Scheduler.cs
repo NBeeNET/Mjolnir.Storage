@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
+using NBeeNET.Mjolnir.Storage.Core.Models;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Implement
 {
@@ -48,20 +49,28 @@ namespace NBeeNET.Mjolnir.Storage.Core.Implement
         /// </summary>
         public List<IJobExecutionContext> JobContextList { get; set; } = new List<IJobExecutionContext>();
 
-        public Task Start()
+        public async Task Start()
         {
             if (queues.Count > 0)
             {
                 IJobExecutionContext jobContext = null;
 
+                //循环作业
                 while (queues.Count > 0 && (jobContext = queues.Dequeue()) != null)
                 {
                     this.JobContextList.Add(jobContext);
-                    ((IJob)jobContext.JobInstance).Execute(jobContext);
+                    await ((IJob)jobContext.JobInstance).Execute(jobContext);
+
+                    //if (jobContext.Result!=null)
+                    //{
+                    //   var tempJsonPath = jobContext.JobDetail.JobDataMap["tempJsonPath"].ToString();
+                    //   JsonFile JsonFileModel = JsonFile.ReadFrom(tempJsonPath);
+                    //   var result = (JsonFileDetail)jobContext.Result;
+                    //}
                 }
 
             }
-            return Task.CompletedTask;
+           
         }
     }
 }

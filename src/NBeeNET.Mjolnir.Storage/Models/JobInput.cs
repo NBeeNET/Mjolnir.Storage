@@ -21,6 +21,10 @@ namespace NBeeNET.Mjolnir.Storage.Models
         public string Key { get; set; }
 
         /// <summary>
+        /// 参数
+        /// </summary>
+        public string Param { get; set; }
+        /// <summary>
         /// State
         /// </summary>
         public string State { get; set; }

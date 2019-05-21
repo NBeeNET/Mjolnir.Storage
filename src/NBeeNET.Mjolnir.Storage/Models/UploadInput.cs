@@ -10,6 +10,8 @@ namespace NBeeNET.Mjolnir.Storage.Models
     /// </summary>
     public class UploadInput
     {
+        public string Id { get; set; }
+
         public IFormFile File { get; set; }
 
         public string Name { get; set; }

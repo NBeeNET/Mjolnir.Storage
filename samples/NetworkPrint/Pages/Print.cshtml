@@ -10,33 +10,45 @@
         <div class="card-body">
 
             <form method="post" id="printForm">
-                <div class="form-group">
-                    <div class="col-md-8" style="text-align:left">
-                        <p>请选择一个需要打印的文档文件:</p>
-                        <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png" />
-                        <input type="hidden" name="jobs" value="[{'Key':'Print'}]" />
-                        <button id="btnUpload" type="button" class="btn btn-primary"> 上 传 </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button id="btnView" type="button" class="btn btn-primary" disabled> 预 览 </button>
+
+                <p>请选择一个需要打印的文档文件:</p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group ">
+                            <input class="file" type="file" name="file" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf,.jpg,.png" />
+                        </div>
                     </div>
-                    <div class="col-md-4" style="text-align:left">
-                        
+                    <div class="col-md-4">
+                        <div class="form-group ">
+                            <input type="hidden" name="jobs" value="[{'Key':'Print'},{'Key':'CreatePDF'}]" />
+                            <button id="btnUpload" type="button" class="btn btn-primary"> 上传 </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button id="btnUpload2" type="button" class="btn btn-primary"> 上传并执行Job </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button id="btnView" type="button" class="btn btn-primary" disabled> 预 览 </button>
+                        </div>
                     </div>
                 </div>
             </form>
 
-            <div class="form-group">
+            <div class="row">
+
                 <div class="col-md-12" style="text-align:left">
-                    <label for="comment">返回结果:</label>
-                    <textarea class="form-control" rows="6" id="comment"></textarea>
+                    <div class="form-group">
+                        <label for="comment">返回结果:</label>
+                        <textarea class="form-control" rows="6" id="comment"></textarea>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="row">
+
                 <div class="col-md-12" style="text-align:left">
-                    <label for="comment">打印状态:</label>
-                    <textarea class="form-control" rows="6" id="printstatus"></textarea>
+                    <div class="form-group">
+                        <label for="comment">打印状态:</label>
+                        <textarea class="form-control" rows="6" id="printstatus"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -47,7 +59,10 @@
             $("#btnUpload").click(function () {
                 upload();
             });
-            
+            $("#btnUpload2").click(function () {
+                uploadAndRunJobs();
+            });
+
         });
 
         function upload() {
@@ -64,12 +79,70 @@
                 processData: false,
                 success: function (returndata) {
                     $output.value = JSON.stringify(returndata, null, 2);
+
+                },
+                error: function (returndata) {
+                    $output.value = JSON.stringify(returndata, null, 2);
+                }
+            });
+
+
+        }
+
+        function uploadAndRunJobs() {
+            var formData = new FormData($('#printForm')[0]);
+            var $output = document.getElementById('comment');
+
+            $.ajax({
+                url: '/StorageApi/UploadJob',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    $output.value = JSON.stringify(returndata, null, 2);
+                    //获取打印状态
+                    getPrintJob(returndata.id)
+
                 },
                 error: function (returndata) {
                     $output.value = JSON.stringify(returndata, null, 2);
                 }
             });
         }
+
+        function getPrintJob(id) {
+
+            var $output = document.getElementById('printstatus');
+
+
+            var interval = setInterval(function () {
+                $.ajax({
+                    url: '/StorageApi/PrintJob?id=' + id,
+                    type: 'Get',
+                    data: null,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+
+                        $output.value = JSON.stringify(returndata, null, 2);
+                        if (returndata != null && returndata.length > 0) {
+                            if (returndata[0].jobStatus == "打印完成") {
+                                clearInterval(interval);
+                            }
+                        }
+                    },
+                    error: function (returndata) {
+                        $output.value = JSON.stringify(returndata, null, 2);
+                    }
+                });
+            }, 1000);
+        }
+
     </script>
 }
 

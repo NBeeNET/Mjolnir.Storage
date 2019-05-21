@@ -17,10 +17,10 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
     [ApiController]
     public class JobController : ControllerBase
     {
-        private JsonHandleService _jsonHandleService;
+        private JobHandleService _jsonHandleService;
         public JobController()
         {
-            _jsonHandleService = new JsonHandleService();
+            _jsonHandleService = new JobHandleService();
         }
 
 
@@ -48,12 +48,45 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
         }
 
         /// <summary>
-        /// 设置Job信息
+        /// 添加Job信息
+        /// </summary>
+        /// <param name="jobsStr">多个Job组合</param>
+        /// <returns></returns>
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddJobs([FromForm]string jobsStr)
+        {
+            try
+            {
+                List<JobInput> jobInputModel = null;
+                if (string.IsNullOrEmpty(jobsStr))
+                {
+                    return BadRequest("参数jobInput有误，请检查");
+                }
+                else
+                {
+                    jobInputModel = JsonConvert.DeserializeObject<List<JobInput>>(jobsStr);
+                }
+                if (jobInputModel.Count > 0)
+                {
+                    var ret = await _jsonHandleService.AddJobs(jobInputModel);
+                    return Ok(ret);
+                }
+                return BadRequest("添加Job失败！");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("添加Job失败！原因：" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 修改Job信息并支持添加文件
         /// </summary>
         /// <param name="jobInput">Job信息</param>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> SetJob([FromForm]string jobStr)
+        [HttpPost("Modify")]
+        public async Task<IActionResult> ModifyJob([FromForm]string jobStr)
         {
             try
             {
@@ -66,6 +99,7 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                 {
                     jobInputModel = JsonConvert.DeserializeObject<JobInput>(jobStr);
                 }
+                //添加文件
                 if (jobInputModel.Files != null && jobInputModel.Files.Count == 0)
                 {
                     if (Request.Form.Files.Count > 0)
@@ -77,13 +111,64 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                         }
                     }
                 }
-                var ret = await _jsonHandleService.SetJob(jobInputModel);
+                var ret = await _jsonHandleService.ModifyJob(jobInputModel);
                 return Ok(ret);
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest("获取Job失败！原因：" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 执行job
+        /// </summary>
+        /// <param name="jobsStr"></param>
+        /// <returns></returns>
+        [HttpPost("RunJobs")]
+        public IActionResult RunJobs([FromBody]List<JobInput> jobInputs)
+        {
+            try
+            {
+   
+                if (jobInputs.Count > 0)
+                {
+                    var ret = _jsonHandleService.RunJobs(jobInputs);
+                    return Ok(ret);
+                }
+                return BadRequest("运行Job失败！");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("添加Job失败！原因：" + ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        ///执行Job
+        /// </summary>
+        /// <param name="jobIdInputs"></param>
+        /// <returns></returns>
+        [HttpPost("Run")]
+        public IActionResult RunJobs([FromBody]List<string> jobIdInputs)
+        {
+            try
+            {
+
+                if (jobIdInputs.Count > 0)
+                {
+                    var ret = _jsonHandleService.RunJobs(jobIdInputs);
+                    return Ok(ret);
+                }
+                return BadRequest("运行Job失败！");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("添加Job失败！原因：" + ex.Message);
             }
         }
 
