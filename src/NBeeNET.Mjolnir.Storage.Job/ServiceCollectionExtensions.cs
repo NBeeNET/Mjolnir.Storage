@@ -15,12 +15,12 @@ namespace NBeeNET.Mjolnir.Storage.Job
         /// <param name="services"></param>
         /// <param name="jobType">添加执行任务Job,JobType必须继承IJob</param>
         /// <returns></returns>
-        public static IServiceCollection AddJob(this IServiceCollection services, Type jobType)
+        public static IServiceCollection AddJob(this IServiceCollection services, IJob job)
         {
             var configuration = services.BuildServiceProvider()
                 .GetService<IConfiguration>();
 
-            IJob job = (IJob)jobType.Assembly.CreateInstance(jobType.FullName);
+            //IJob job = (IJob)jobType.Assembly.CreateInstance(jobType.FullName);
             Job.RegisterJobs.AddJob(job);
 
             return services;

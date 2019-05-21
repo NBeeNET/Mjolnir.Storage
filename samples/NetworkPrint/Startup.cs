@@ -47,7 +47,7 @@ namespace NetworkPrint
             //services.AddStorageImage();
             //添加 NBeeNET.Mjolnir.Storage.Office 上传及作业处理服务
             services.AddStorageOffice()
-                .AddJob(new PrintJob().GetType());
+                .AddJob(new PrintJob());
 
             //添加 NBeeNET.Mjolnir.Storage.Local 本地存储服务
             services.AddStorageLocal();
