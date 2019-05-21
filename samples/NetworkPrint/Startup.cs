@@ -14,6 +14,7 @@ using NBeeNET.Mjolnir.Storage.Job.Print;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NBeeNET.Mjolnir.Storage.Core.Jobs;
 
 namespace NetworkPrint
 {
@@ -45,6 +46,9 @@ namespace NetworkPrint
 
             services.AddStorage()
                 .AddStorageJob(new PrintJob())
+                  .AddStorageJob(new CreatePDFJob())
+                .AddStorageJob(new CopyDirectoryJob())
+                .AddStorageJob(new DeleteTempJob())
                 .AddStorageLocal()
                 .AddStoragePrint();
 

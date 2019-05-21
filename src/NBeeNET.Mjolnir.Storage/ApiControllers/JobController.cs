@@ -121,31 +121,6 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
             }
         }
 
-        /// <summary>
-        /// 执行job
-        /// </summary>
-        /// <param name="jobsStr"></param>
-        /// <returns></returns>
-        [HttpPost("RunJobs")]
-        public IActionResult RunJobs([FromBody]List<JobInput> jobInputs)
-        {
-            try
-            {
-   
-                if (jobInputs.Count > 0)
-                {
-                    var ret = _jsonHandleService.RunJobs(jobInputs);
-                    return Ok(ret);
-                }
-                return BadRequest("运行Job失败！");
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest("添加Job失败！原因：" + ex.Message);
-            }
-        }
-
 
         /// <summary>
         ///执行Job
@@ -163,12 +138,12 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                     var ret = _jsonHandleService.RunJobs(jobIdInputs);
                     return Ok(ret);
                 }
-                return BadRequest("运行Job失败！");
+                return BadRequest("执行Job失败！");
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest("添加Job失败！原因：" + ex.Message);
+                return BadRequest("执行Job失败！原因：" + ex.Message);
             }
         }
 

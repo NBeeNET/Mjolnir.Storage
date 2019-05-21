@@ -16,7 +16,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// <summary>
         /// 基础路径
         /// </summary>
-        public string BasePath
+        public static string BasePath
         {
             get
             {
@@ -34,7 +34,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetTempPath(string id)
+        public static string GetTempPath(string id)
         {
             string tempPath = Path.Combine(BasePath, id);
             if (!Directory.Exists(tempPath))
@@ -49,7 +49,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetJsonFilePath(string id)
+        public static string GetJsonFilePath(string id)
         {
             string tempPath = GetTempPath(id);
             if (!Directory.Exists(tempPath))
@@ -67,7 +67,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// <param name="file"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> Write(IFormFile file, string id)
+        public static async Task<string> Write(IFormFile file, string id)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace NBeeNET.Mjolnir.Storage.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public void Delete(string id)
+        public static void Delete(string id)
         {
             try
             {

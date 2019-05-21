@@ -26,22 +26,22 @@ namespace NBeeNET.Mjolnir.Storage.Core.Implement
 
         public void AddJob(IJobExecutionContext jobContext)
         {
-           queues.Enqueue(jobContext);
+            queues.Enqueue(jobContext);
         }
 
         public void Clear()
         {
-             queues.Clear(); 
+            queues.Clear();
         }
 
         public IJobDetail GetJobDetail(string jobKey)
         {
-           return queues.ToList().Where(t => t.JobDetail.Key == jobKey)?.First().JobDetail; 
+            return queues.ToList().Where(t => t.JobDetail.Key == jobKey)?.First().JobDetail;
         }
 
         public IEnumerable<string> GetJobKeys(string matcher = "")
         {
-            return queues.ToList().Where(t => t.JobDetail.Key == matcher).Select(t => t.JobDetail.Key); 
+            return queues.ToList().Where(t => t.JobDetail.Key == matcher).Select(t => t.JobDetail.Key);
         }
 
         /// <summary>
@@ -53,24 +53,47 @@ namespace NBeeNET.Mjolnir.Storage.Core.Implement
         {
             if (queues.Count > 0)
             {
-                IJobExecutionContext jobContext = null;
 
                 //循环作业
-                while (queues.Count > 0 && (jobContext = queues.Dequeue()) != null)
+                while (queues.Count > 0)
                 {
-                    this.JobContextList.Add(jobContext);
-                    await ((IJob)jobContext.JobInstance).Execute(jobContext);
+                    try
+                    {
 
-                    //if (jobContext.Result!=null)
-                    //{
-                    //   var tempJsonPath = jobContext.JobDetail.JobDataMap["tempJsonPath"].ToString();
-                    //   JsonFile JsonFileModel = JsonFile.ReadFrom(tempJsonPath);
-                    //   var result = (JsonFileDetail)jobContext.Result;
-                    //}
+                        IJobExecutionContext jobContext = queues.Dequeue();
+                        this.JobContextList.Add(jobContext);
+                        await ((IJob)jobContext.JobInstance).Execute(jobContext);
+
+                        if (jobContext.Result != null)
+                        {
+                           
+                            if (jobContext.JobInstance.Key != "DeleteTemp"|| jobContext.JobInstance.Key != "CopyDirectory")
+                            {
+                                var id = jobContext.JobDetail.JobDataMap["id"].ToString();
+                                var jsonFilePath = System.IO.Path.Combine(TempStorageOperation.BasePath, id) + "\\" + id + ".json";
+                                JsonFile JsonFileModel = JsonFile.ReadFrom(jsonFilePath);
+                                var result = (JsonFileDetail)jobContext.Result;
+
+                                if (JsonFileModel.Details.Where(t => t.Key == jobContext.JobInstance.Key).Count() > 0)
+                                {
+                                    var jobModel = JsonFileModel.Details.Where(t => t.Key == jobContext.JobInstance.Key)?.First();
+                                    jobModel.Value = result.Value;
+                                    jobModel.State = result.State;
+                                    //保存Json文件
+                                    await JsonFileModel.SaveAs(TempStorageOperation.GetJsonFilePath(id));
+                                }
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
 
             }
-           
+
         }
     }
 }

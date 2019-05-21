@@ -16,10 +16,10 @@ namespace NBeeNET.Mjolnir.Storage.Service
 {
     public class JobHandleService
     {
-        private TempStorageOperation tempStorage;
+     
         public JobHandleService()
         {
-            tempStorage = new TempStorageOperation();
+          
         }
         /// <summary>
         /// 获取Job信息
@@ -31,7 +31,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
         public List<JobOutput> GetJobs(string id = "", string key = "", string state = "")
         {
             List<JobOutput> jobModelList = new List<JobOutput>();
-            DirectoryInfo tempDirectoryInfo = new DirectoryInfo(tempStorage.BasePath);
+            DirectoryInfo tempDirectoryInfo = new DirectoryInfo(TempStorageOperation.BasePath);
 
             try
             {
@@ -112,7 +112,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                         var jobInput = jobInputs[i];
 
                         //判断Json文件是否存在
-                        var jsonFilePath = Path.Combine(tempStorage.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
+                        var jsonFilePath = Path.Combine(TempStorageOperation.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
                         if (!File.Exists(jsonFilePath))
                         {
                             continue;
@@ -151,20 +151,20 @@ namespace NBeeNET.Mjolnir.Storage.Service
                             JsonFileModel.Details.Add(jobInfo);
                         }
 
-                        await JsonFileModel.SaveAs(tempStorage.GetJsonFilePath(jobInput.Id));
+                        await JsonFileModel.SaveAs(TempStorageOperation.GetJsonFilePath(jobInput.Id));
 
                         #region 开始处理任务--复制文件夹，删除临时文件夹
 
                         //复制目录
                         foreach (var storageService in Register.StorageService)
                         {
-                            await storageService.CopyDirectory(tempStorage.GetTempPath(jobInput.Id));
+                            await storageService.CopyDirectory(TempStorageOperation.GetTempPath(jobInput.Id));
                         }
 
                         if (jobInput.IsDeleteTemp)
                         {
                             //删除临时文件夹
-                            tempStorage.Delete(jobInput.Id);
+                            TempStorageOperation.Delete(jobInput.Id);
                         }
                         #endregion
                     }
@@ -192,7 +192,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
             try
             {
                 //判断Json文件是否存在
-                var jsonFilePath = Path.Combine(tempStorage.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
+                var jsonFilePath = Path.Combine(TempStorageOperation.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
                 if (!File.Exists(jsonFilePath))
                 {
                     return false;
@@ -203,7 +203,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                 var jobInfo = JsonFileModel.Details.Where(t => t.Key == jobInput.Key)?.First();
                 jobInfo.State = jobInput.State;
                 jobInfo.Value = jobInput.Value;
-                await JsonFileModel.SaveAs(tempStorage.GetJsonFilePath(jobInput.Id));
+                await JsonFileModel.SaveAs(TempStorageOperation.GetJsonFilePath(jobInput.Id));
 
                 #region 开始处理任务，保存文件，复制文件夹，删除文件夹
 
@@ -212,20 +212,20 @@ namespace NBeeNET.Mjolnir.Storage.Service
                 {
                     foreach (var file in jobInput.Files)
                     {
-                        await tempStorage.Write(file, jobInput.Id);
+                        await TempStorageOperation.Write(file, jobInput.Id);
                     }
                 }
 
                 //复制目录
                 foreach (var storageService in Register.StorageService)
                 {
-                    await storageService.CopyDirectory(tempStorage.GetTempPath(jobInput.Id));
+                    await storageService.CopyDirectory(TempStorageOperation.GetTempPath(jobInput.Id));
                 }
 
                 if (jobInput.IsDeleteTemp)
                 {
                     //删除临时文件夹
-                    tempStorage.Delete(jobInput.Id);
+                    TempStorageOperation.Delete(jobInput.Id);
                 }
                 #endregion
                 result = true;
@@ -245,7 +245,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
         public async Task RunJobs(List<JobInput> jobInputs)
         {
             StorageOperation storage = new StorageOperation();
-            TempStorageOperation tempStorage = new TempStorageOperation();
+        
             if (jobInputs.Count > 0)
             {
                 Scheduler scheduler = new Scheduler("UploadHandleService");
@@ -256,7 +256,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                     var jobInput = jobInputs[i];
 
                     //判断Json文件是否存在
-                    var tempJsonPath = Path.Combine(tempStorage.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
+                    var tempJsonPath = Path.Combine(TempStorageOperation.BasePath, jobInput.Id) + "\\" + jobInput.Id + ".json";
                     if (!File.Exists(tempJsonPath))
                     {
                         continue;
@@ -265,7 +265,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                     //获取Json对象
                     JsonFile JsonFileModel = JsonFile.ReadFrom(tempJsonPath);
                     //临时文件全路径
-                    var tempFilePath = Path.Combine(tempStorage.BasePath, jobInput.Id) + "\\" + JsonFileModel.FileName;
+                    var tempFilePath = Path.Combine(TempStorageOperation.BasePath, jobInput.Id) + "\\" + JsonFileModel.FileName;
 
                     //获取要执行 job
                     JsonFileDetail job = JsonFileModel.Details.Where(t => t.Key == jobInput.Key)?.First();
@@ -316,7 +316,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                     var jobId = jobIdInputs[i];
 
                     //判断Json文件是否存在
-                    var jsonFilePath = Path.Combine(tempStorage.BasePath, jobId) + "\\" + jobId + ".json";
+                    var jsonFilePath = Path.Combine(TempStorageOperation.BasePath, jobId) + "\\" + jobId + ".json";
                     if (!File.Exists(jsonFilePath))
                     {
                         continue;
@@ -325,7 +325,7 @@ namespace NBeeNET.Mjolnir.Storage.Service
                     //获取Json对象
                     JsonFile JsonFileModel = JsonFile.ReadFrom(jsonFilePath);
                     //临时文件全路径
-                    var tempFilePath = Path.Combine(tempStorage.BasePath, jobId) + "\\" + JsonFileModel.FileName;
+                    var tempFilePath = Path.Combine(TempStorageOperation.BasePath, jobId) + "\\" + JsonFileModel.FileName;
 
                     //获取要执行Id下的所有job
 

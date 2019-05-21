@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
+    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Print\NBeeNET.Mjolnir.Storage.Print.csproj" />
   </ItemGroup>
 
 </Project>

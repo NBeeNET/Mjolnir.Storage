@@ -51,10 +51,8 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                     default:
                         context.Result = new JsonFileDetail()
                         {
-                            Key = this.Key,
                             State = "-1",
-                            Value = "当前操作系统不支持！",
-                            CreateTime = DateTime.Now
+                            Value = "当前操作系统不支持！"
                         };
                         break;
                 }
@@ -63,10 +61,8 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
             {
                 context.Result = new JsonFileDetail()
                 {
-                    Key = this.Key,
                     State = "-1",
-                    Value = "当前操作系统不支持！",
-                    CreateTime = DateTime.Now
+                    Value = "当前操作系统不支持！"
                 };
             }
         }
@@ -90,21 +86,25 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                 string OutFileName = tempFilePath.Replace(".docx", ".pdf").Replace(".doc", ".pdf");
                 doc.ExportAsFixedFormat(OutFileName, Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);
 
-                context.Result = new
+                //等待文件生成
+                while (!File.Exists(OutFileName))
                 {
-                    State = "1",
+                    System.Threading.Thread.Sleep(200);
+                }
+                context.Result = new JsonFileDetail()
+                {
+                    State = "2",
                     Value = OutFileName,
                     CreateTime = DateTime.Now
                 };
+
             }
             catch (Exception ex)
             {
                 context.Result = new JsonFileDetail()
                 {
-                    Key = this.Key,
                     State = "-1",
-                    Value = "CreatePDF失败:" + ex.Message,
-                    CreateTime = DateTime.Now
+                    Value = "CreatePDF失败:" + ex.Message
                 };
             }
             finally
@@ -137,20 +137,18 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                 Microsoft.Office.Interop.Excel.Worksheet workSheet = (Microsoft.Office.Interop.Excel.Worksheet)worksBook.Worksheets[1]; //在工作簿中得到sheet。
                 object outFileName = tempFilePath.Replace(".xlsx", ".pdf").Replace(".xls", ".pdf");
                 workSheet.ExportAsFixedFormat(Microsoft.Office.Interop.Excel.XlFixedFormatType.xlTypePDF, outFileName);
-                context.Result = new
+                context.Result = new JsonFileDetail()
                 {
-                    State = "1",
-                    Value = outFileName,
-                    CreateTime = DateTime.Now
+                    State = "2",
+                    Value = outFileName.ToString(),
                 };
             }
             catch (Exception ex)
             {
-                context.Result = new
+                context.Result = new JsonFileDetail()
                 {
                     State = "-1",
-                    Value = "CreatePDF失败:" + ex.ToString(),
-                    CreateTime = DateTime.Now
+                    Value = "CreatePDF失败:" + ex.ToString()
                 };
             }
             //销毁excel进程

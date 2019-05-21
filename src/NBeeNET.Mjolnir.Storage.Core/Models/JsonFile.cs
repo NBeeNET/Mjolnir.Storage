@@ -95,7 +95,7 @@ namespace NBeeNET.Mjolnir.Storage.Core.Models
         /// </summary>
         public string Param { get; set; }
         /// <summary>
-        /// 子文件处理状态
+        /// 子文件处理状态 （-1表示错误，0表示未执行，1表示执行中，2表示执行完成）
         /// </summary>
         public string State { get; set; }
         /// <summary>
