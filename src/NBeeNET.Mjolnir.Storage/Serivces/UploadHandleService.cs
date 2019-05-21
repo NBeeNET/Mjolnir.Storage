@@ -139,6 +139,7 @@ namespace NBeeNET.Mjolnir.Storage.Serivces
                            .WithName(job.Key)
                            .AddJobData("tempFilePath", tempFilePath)
                            .AddJobData("id", jsonFile.Id)
+                           .AddJobData("param", job.Param)
                            .Initialize();
                             scheduler.AddJob(jobContext);
 
