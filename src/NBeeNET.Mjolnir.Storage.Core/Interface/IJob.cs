@@ -1,17 +1,20 @@
-﻿using NBeeNET.Mjolnir.Storage.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Core.Interface
 {
     /// <summary>
-    /// job接口
+    /// 作业接口
     /// </summary>
     public interface IJob
     {
 
-        JsonFileDetail Run(string tempFilePath);
+        string Key { get; set; }
+
+        /// <summary>
+        /// 执行作业
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        Task Execute(IJobExecutionContext context);
     }
 }

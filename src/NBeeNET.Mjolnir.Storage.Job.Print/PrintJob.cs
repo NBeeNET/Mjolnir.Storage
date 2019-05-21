@@ -1,4 +1,4 @@
-﻿using NBeeNET.Mjolnir.Storage.Job.Interface;
+﻿using NBeeNET.Mjolnir.Storage.Core.Interface;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;

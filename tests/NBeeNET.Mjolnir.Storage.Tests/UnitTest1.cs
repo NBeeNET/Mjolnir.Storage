@@ -1,7 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NBeeNET.Mjolnir.Storage.Job;
-using NBeeNET.Mjolnir.Storage.Job.Implement;
-using NBeeNET.Mjolnir.Storage.Job.Interface;
 using System;
 using System.Threading;
 

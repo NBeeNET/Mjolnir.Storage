@@ -24,9 +24,9 @@ namespace NBeeNET.Mjolnir.Storage
         /// <summary>
         /// 单文件上传处理
         /// </summary>
-        /// <param name="imageInput"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<UploadOutput> Save(UploadInput imageInput, HttpRequest request)
+        public async Task<UploadOutput> Save(UploadInput input, HttpRequest request)
         {
             TempStorageOperation tempStorage = new TempStorageOperation();
             //IStorageService _StorageService = new LocalStorageService();
@@ -36,17 +36,17 @@ namespace NBeeNET.Mjolnir.Storage
             //输出结果对象
             UploadOutput imageOutput = new UploadOutput();
             imageOutput.Id = Guid.NewGuid().ToString();
-            imageOutput.Name = imageInput.Name;
-            imageOutput.Tags = imageInput.Tags;
-            imageOutput.Length = imageInput.File.Length;
-            imageOutput.Type = imageInput.File.FileName.Split('.')[imageInput.File.FileName.Split('.').Length - 1];
+            imageOutput.Name = input.Name;
+            imageOutput.Tags = input.Tags;
+            imageOutput.Length = input.File.Length;
+            imageOutput.Type = input.File.FileName.Split('.')[input.File.FileName.Split('.').Length - 1];
             imageOutput.FileName = imageOutput.Id + "." + imageOutput.Type;
             imageOutput.Url = StorageOperation.GetUrl(imageOutput.FileName);
             imageOutput.Path = StorageOperation.GetPath();
 
 
             //写入临时文件夹
-            var tempFilePath = await tempStorage.Write(imageInput.File, imageOutput.Id);
+            var tempFilePath = await tempStorage.Write(input.File, imageOutput.Id);
 
             if (Register.StorageService.Count == 0)
             {
@@ -108,15 +108,15 @@ namespace NBeeNET.Mjolnir.Storage
         /// <summary>
         /// 多文件上传处理
         /// </summary>
-        /// <param name="imageInput"></param>
+        /// <param name="input"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<UploadOutput>> MultiSave(List<UploadInput> imageInput, HttpRequest request)
+        public async Task<List<UploadOutput>> MultiSave(List<UploadInput> input, HttpRequest request)
         {
             List<UploadOutput> output = new List<UploadOutput>();
-            for (int i = 0; i < imageInput.Count; i++)
+            for (int i = 0; i < input.Count; i++)
             {
-                var result = await Save(imageInput[i], request);
+                var result = await Save(input[i], request);
                 output.Add(result);
             }
             return output;

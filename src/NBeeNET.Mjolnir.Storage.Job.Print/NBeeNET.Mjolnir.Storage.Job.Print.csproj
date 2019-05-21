@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Job\NBeeNET.Mjolnir.Storage.Job.csproj" />
+    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,8 +12,4 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\NBeeNET.Mjolnir.Storage.Job\NBeeNET.Mjolnir.Storage.Job.csproj" />
-  </ItemGroup>
-
 </Project>
