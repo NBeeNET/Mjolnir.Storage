@@ -1,0 +1,15 @@
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.deps.json
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.dll
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.csproj.CoreCompileInputs.cache
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.AssemblyInfoInputs.cache
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.AssemblyInfo.cs
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.csprojAssemblyReference.cache
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\libwebp.dll
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.pdb
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.Core.dll
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.Job.dll
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.Core.pdb
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\bin\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.Job.pdb
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.csproj.CopyComplete
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.dll
+D:\GitHub\NBeeNET\Mjolnir.Storage\NBeeNET.Mjolnir.Storage\obj\Debug\netcoreapp2.2\NBeeNET.Mjolnir.Storage.pdb
