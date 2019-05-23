@@ -8,8 +8,11 @@ namespace NBeeNET.Mjolnir.Storage.Core.Common
     {
         public static void WriteLine(string str)
         {
-            System.Console.ForegroundColor = ConsoleColor.DarkYellow;
-            System.Console.WriteLine(DateTime.Now + " | " + str);
+            if (Register.IsDebug)
+            {
+                System.Console.ForegroundColor = ConsoleColor.DarkYellow;
+                System.Console.WriteLine(DateTime.Now + " | " + str);
+            }
         }
     }
 }
