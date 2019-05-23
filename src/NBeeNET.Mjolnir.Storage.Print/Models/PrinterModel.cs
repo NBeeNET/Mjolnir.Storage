@@ -27,7 +27,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         /// <summary>
         /// 打印机状态
         /// </summary>
-        public PrinterState PrinterState { get; set; }
+        public string PrinterState { get; set; }
         /// <summary>
         /// 打印机打印状态
         /// </summary>
@@ -41,6 +41,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
         /// </summary>
         public DateTime ModifyTime { get; set; } = DateTime.Now;
     }
+
 
     /// <summary>
     /// 打印机的状态信息

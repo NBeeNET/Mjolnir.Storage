@@ -50,13 +50,95 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                 //}
                 _Printer.Name = printer.Properties["Name"].Value.ToString();
                 _Printer.IsDefault = (bool)printer.GetPropertyValue("default");
-                _Printer.PrinterState = (PrinterState)Convert.ToInt32(printer.Properties["PrinterState"].Value);
+                _Printer.PrinterState = GetPrinterStatus(Convert.ToInt32(printer.Properties["PrinterState"].Value));
                 _Printer.PrinterStatus = (PrinterStatus)Convert.ToInt32(printer.Properties["PrinterStatus"].Value);
                 _PrinterList.Add(_Printer);
             }
             return _PrinterList;
         }
-
+        public static string GetPrinterStatus(int intValue)
+        {
+            string strRet = string.Empty;
+            switch (intValue)
+            {
+                case 0:
+                    strRet = "准备就绪";
+                    break;
+                case 0x00000200:
+                    strRet = "忙";
+                    break;
+                case 0x00400000:
+                    strRet = "被打开";
+                    break;
+                case 0x00000002:
+                    strRet = "错误";
+                    break;
+                case 0x0008000:
+                    strRet = "初始化";
+                    break;
+                case 0x00000100:
+                    strRet = "正在输入,输出";
+                    break;
+                case 0x00000020:
+                    strRet = "手工送纸";
+                    break;
+                case 0x00040000:
+                    strRet = "无墨粉";
+                    break;
+                case 0x00001000:
+                    strRet = "不可用";
+                    break;
+                case 0x00000080:
+                    strRet = "脱机";
+                    break;
+                case 0x00200000:
+                    strRet = "内存溢出";
+                    break;
+                case 0x00000800:
+                    strRet = "输出口已满";
+                    break;
+                case 0x00080000:
+                    strRet = "当前页无法打印";
+                    break;
+                case 0x00000008:
+                    strRet = "塞纸";
+                    break;
+                case 0x00000010:
+                    strRet = "缺纸";
+                    break;
+                case 0x00000040:
+                    strRet = "纸张问题";
+                    break;
+                case 0x00000001:
+                    strRet = "暂停";
+                    break;
+                case 0x00000004:
+                    strRet = "正在删除";
+                    break;
+                case 0x00000400:
+                    strRet = "正在打印";
+                    break;
+                case 0x00004000:
+                    strRet = "正在处理";
+                    break;
+                case 0x00020000:
+                    strRet = "墨粉不足";
+                    break;
+                case 0x00100000:
+                    strRet = "需要用户干预";
+                    break;
+                case 0x20000000:
+                    strRet = "等待";
+                    break;
+                case 0x00010000:
+                    strRet = "热机中";
+                    break;
+                default:
+                    strRet = "未知状态";
+                    break;
+            }
+            return strRet;
+        }
         /// <summary>
         /// 获取打印机的详细状态
         /// </summary>
