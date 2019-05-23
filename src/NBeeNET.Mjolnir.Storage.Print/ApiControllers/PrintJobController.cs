@@ -42,7 +42,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.ApiControllers
         /// </summary>
         /// <returns></returns>
         [HttpPost()]
-        public IActionResult UpdateJob(List<PrintJobModel> list)
+        public IActionResult UpdateJob([FromForm]List<PrintJobModel> list)
         {
             try
             {

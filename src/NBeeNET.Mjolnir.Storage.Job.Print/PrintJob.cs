@@ -6,6 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Drawing.Printing;
+using System.Diagnostics;
+using System.Collections.Specialized;
+using System.Reflection;
 
 namespace NBeeNET.Mjolnir.Storage.Job.Print
 {
@@ -47,6 +51,7 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
 
                         break;
                     case ".PDF":
+                        PrintPDF(context);
                         break;
                     default:
                         context.Result = new JsonFileDetail()
@@ -87,7 +92,8 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                 doc = app.Documents.Open(tempFilePath);
                 //打印
                 object OutFileName = tempFilePath.Replace(".docx", "_print.pdf").Replace(".doc", "_print.pdf");
-                doc.PrintOut(OutputFileName: ref OutFileName);
+                //doc.PrintOut(OutputFileName: ref OutFileName);
+                doc.PrintOut();
                 //等待文件生成
                 var jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
                 if (jobModel != null)
@@ -132,6 +138,7 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
             Microsoft.Office.Interop.Excel.Workbook worksBook = null;
             var tempFilePath = context.MergedJobDataMap["tempFilePath"]?.ToString();
             var printName = context.MergedJobDataMap["printName"]?.ToString();//打印机名称
+            var id = context.MergedJobDataMap["id"].ToString();
             try
             {
                 app = new Microsoft.Office.Interop.Excel.Application(); //声明一个应用程序类实例
@@ -140,8 +147,19 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                                                                         //ExcelApp.SheetsInNewWorkbook = 1;///返回或设置 Microsoft Excel 自动插入到新工作簿中的工作表数目。
                 worksBook = app.Workbooks.Open(tempFilePath); //创建一个新工作簿
                 Microsoft.Office.Interop.Excel.Worksheet workSheet = (Microsoft.Office.Interop.Excel.Worksheet)worksBook.Worksheets[1]; //在工作簿中得到sheet。
-                object outFileName = tempFilePath.Replace(".xlsx", ".pdf").Replace(".xls", ".pdf");
-                workSheet.PrintOutEx(PrToFileName: outFileName, ActivePrinter: printName);
+                object outFileName = tempFilePath.Replace(".xlsx", "_print.pdf").Replace(".xls", "_print.pdf");
+                //workSheet.PrintOutEx(PrToFileName: outFileName, ActivePrinter: printName);
+                workSheet.PrintOutEx();
+                //等待文件生成
+                var jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                if (jobModel != null)
+                {
+                    while (jobModel.JobStatus != "打印完成" && jobModel.JobStatus != "打印异常")
+                    {
+                        System.Threading.Thread.Sleep(200);
+                        jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                    }
+                }
                 context.Result = new JsonFileDetail()
                 {
                     State = "2",
@@ -166,6 +184,63 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                     app.Quit();
             }
 
+        }
+        /// <summary>
+        /// 打印pdf
+        /// </summary>
+        /// <param name="context"></param>
+        public void PrintPDF(IJobExecutionContext context)
+        {
+            var filePath = context.MergedJobDataMap["tempFilePath"]?.ToString();
+            //PDFtoPrinter.exe打印
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            string fullFilePath = filePath;
+            startInfo.FileName = GetUtilPath();
+            startInfo.Arguments = " " + fullFilePath; //设定参数
+            startInfo.UseShellExecute = false; //不使用系统外壳程序启动
+            startInfo.RedirectStandardInput = false; //不重定向输入
+            startInfo.RedirectStandardOutput = true; //重定向输出
+            startInfo.CreateNoWindow = true; //不创建窗口
+            //startInfo.WorkingDirectory = wrokDirectory;
+            process.StartInfo = startInfo;
+
+            try
+            {
+                if (process.Start()) //开始进程
+                {
+                    process.StandardOutput.ReadToEnd(); //读取输出流释放缓冲,  不加这一句，进程会一直无限等待
+                    process.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception :" + ex.Message);
+            }
+        }
+
+        private static readonly string utilPath = GetUtilPath();
+
+        private static Process CreateProcess(string filePath)
+        {
+            return new Process
+            {
+                StartInfo =
+                    {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = utilPath,
+                        Arguments = $@"""{filePath}""",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+            };
+        }
+
+        private static string GetUtilPath()
+        {
+            return Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "PDFtoPrinter.exe");
         }
     }
 

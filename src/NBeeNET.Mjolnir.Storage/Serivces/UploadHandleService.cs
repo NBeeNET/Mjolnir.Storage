@@ -74,7 +74,7 @@ namespace NBeeNET.Mjolnir.Storage.Serivces
             if (jsonFile.Details != null)
             {
                 jsonFile.Details.Add(new JsonFileDetail() { Key = "CopyDirectory" });
-                jsonFile.Details.Add(new JsonFileDetail() { Key = "DeleteTemp" });
+                //jsonFile.Details.Add(new JsonFileDetail() { Key = "DeleteTemp" });
             }
 
             //复制目录
