@@ -1,0 +1,148 @@
+﻿@page
+@model NetworkPrint.Pages.PrintOnlineModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PrintNew</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link href="/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+    <link href="/fileinput/themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="/fileinput/js/plugins/piexif.js" type="text/javascript"></script>
+    <script src="/fileinput/js/plugins/sortable.js" type="text/javascript"></script>
+    <script src="/fileinput/js/fileinput.js" type="text/javascript"></script>
+    <script src="/fileinput/js/locales/zh.js" type="text/javascript"></script>
+    <script src="/fileinput/themes/fas/theme.js" type="text/javascript"></script>
+    <script src="/fileinput/themes/explorer-fas/theme.js" type="text/javascript"></script>
+    <style>
+        .full-height {
+            height: calc(100vh - 3rem);
+        }
+
+        .white-blank {
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4 full-height">
+
+        <div class="card full-height" style="text-align: center;">
+            <div class="card-header">文件在线打印</div>
+            <div class="card-body">
+                <div class="white-blank"></div>
+                <form enctype="multipart/form-data" id="printForm" action="/StorageApi/UploadJob">
+                    <div class="file-loading">
+                        <input id="kv-explorer" name="file" type="file" accept=".doc,.docx,.xls,.xlsx,.txt,.pdf">
+                    </div>
+                    <input type="hidden" name="jobs" value="[{'Key':'Print'},{'Key':'CreatePDF'}]" />
+                </form>
+                <div class="file-state" style="height: 60px;color:red;margin-top:50px;">
+
+                </div>
+
+                <div style="font-size:13px;color:dimgrey;margin-top:50px;">
+                    支持的文档类型：<br />
+                    Word ( .doc / .docx / .txt )<br />
+                    Excel ( .xls / .xlsx )<br />
+                    PDF ( .pdf )<br />
+                    <br />
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#kv-explorer").fileinput({
+            language: "zh",
+            uploadUrl: '/StorageApi/UploadJob',
+            showPreview: false,
+            showRemove: false,
+            showUpload: false,
+            showClose: false,
+            showCancel: false,
+            showCaption: false,
+            dropZoneEnabled: false,
+            allowedFileExtensions: ["doc", "docx", "txt", "xls", "xlsx", "pdf"]
+        });
+
+        function uploadAndRunJobs() {
+            var formData = new FormData($('#printForm')[0]);
+            $('#kv-explorer').fileinput('disable');
+            $(".file-state").html("上传中...");
+
+            $.ajax({
+                url: '/StorageApi/UploadJob',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+
+                    //获取打印状态
+                    getPrintJob(returndata.id)
+
+                },
+                error: function (returndata) {
+                    // $output.value = JSON.stringify(returndata, null, 2);
+                }
+            });
+        }
+
+        function getPrintJob(id) {
+
+            var $output = document.getElementById('printstatus');
+
+
+            var interval = setInterval(function () {
+                $.ajax({
+                    url: '/StorageApi/PrintJob?id=' + id,
+                    type: 'Get',
+                    data: null,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (returndata) {
+
+                        console.log(returndata);
+                        if (returndata != null && returndata.length > 0) {
+                            $(".file-state").html(returndata[0].jobStatus + "<br />已打印 <b>" + returndata[0].totalPages + "</b> 页...");
+                            if (returndata[0].jobStatus == "打印完成") {
+                                $('#kv-explorer').fileinput('enable');
+                                clearInterval(interval);
+                            }
+
+                        }
+                    },
+                    error: function (returndata) {
+                        $output.value = JSON.stringify(returndata, null, 2);
+                    }
+                });
+            }, 500);
+        }
+
+        $('#kv-explorer').on('fileselect', function (event, numFiles, label) {
+            uploadAndRunJobs();
+        });
+
+
+    });
+</script>
+</html>
