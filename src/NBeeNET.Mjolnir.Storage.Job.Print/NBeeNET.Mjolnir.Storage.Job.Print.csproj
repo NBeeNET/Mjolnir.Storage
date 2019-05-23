@@ -14,4 +14,10 @@
     <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Print\NBeeNET.Mjolnir.Storage.Print.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="PDFtoPrinter.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

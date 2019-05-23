@@ -1,4 +1,5 @@
-﻿using NBeeNET.Mjolnir.Storage.Print.Models;
+﻿using NBeeNET.Mjolnir.Storage.Core.Common;
+using NBeeNET.Mjolnir.Storage.Print.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,10 +42,6 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             ManagementObjectCollection printerCollection = searchPrinters.Get();
             foreach (ManagementObject printer in printerCollection)
             {
-                foreach (var item in printer.Properties)
-                {
-                    Console.WriteLine(item.Name + " : " + item.Value);
-                }
                 PrinterModel _Printer = new PrinterModel();
                 //judge if the current print is the default printer 
                 //if ((bool)printer.GetPropertyValue("default") == true)
@@ -98,10 +95,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             string path = @"win32_printerconfiguration.Name='" + PrinterName + "'";
             ManagementObject printerConfiguration = new ManagementObject(path);
             printerConfiguration.Get();
-            foreach (var item in printerConfiguration.Properties)
-            {
-                Console.WriteLine(item.Name + " : " + item.Value);
-            }
+            //foreach (var item in printerConfiguration.Properties)
+            //{
+            //    DebugConsole.WriteLine(item.Name + " : " + item.Value);
+            //}
 
         }
 
@@ -119,10 +116,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             ManagementObjectCollection prntJobCollection = searchPrintJobs.Get();
             foreach (ManagementObject prntJob in prntJobCollection)
             {
-                foreach (var item in prntJob.Properties)
-                {
-                    Console.WriteLine(item.Name + " : " + item.Value);
-                }
+                //foreach (var item in prntJob.Properties)
+                //{
+                //    DebugConsole.WriteLine(item.Name + " : " + item.Value);
+                //}
 
                 int jobId = Convert.ToInt32(prntJob.Properties["JobId"].Value);
                 string jobName = prntJob.Properties["Name"].Value.ToString();
@@ -167,11 +164,10 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             ManagementObjectCollection prntJobCollection = searchPrintJobs.Get();
             foreach (ManagementObject prntJob in prntJobCollection)
             {
-                foreach (var item in prntJob.Properties)
-                {
-                    Console.WriteLine(item.Name + " : " + item.Value);
-                }
-
+                //foreach (var item in prntJob.Properties)
+                //{
+                //    DebugConsole.WriteLine(item.Name + " : " + item.Value);
+                //}
                 int jobId = Convert.ToInt32(prntJob.Properties["JobId"].Value);
                 string jobName = prntJob.Properties["Name"].Value.ToString();
                 string printer = jobName.Split(',')[0];

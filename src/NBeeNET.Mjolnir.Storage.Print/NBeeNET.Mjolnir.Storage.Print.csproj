@@ -14,4 +14,8 @@
     <PackageReference Include="System.Management" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NBeeNET.Mjolnir.Storage.Core\NBeeNET.Mjolnir.Storage.Core.csproj" />
+  </ItemGroup>
+
 </Project>
