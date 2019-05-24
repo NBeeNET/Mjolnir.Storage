@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Management;
+using System.Reflection;
 using System.Text;
 
 namespace NBeeNET.Mjolnir.Storage.Print.Common
@@ -14,6 +15,8 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
         /// 默认打印机名称
         /// </summary>
         public static string DefaultPrinterName { get; set; }
+
+
         /// <summary>
         /// 获取默认打印机
         /// </summary>
@@ -28,6 +31,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
             }
             return null;
         }
+
         /// <summary>
         /// 获取打印机列表
         /// </summary>
@@ -50,111 +54,72 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                 //}
                 _Printer.Name = printer.Properties["Name"].Value.ToString();
                 _Printer.IsDefault = (bool)printer.GetPropertyValue("default");
-                _Printer.PrinterState = GetPrinterState(_Printer.Name);
+                _Printer.PrinterState = GetPrinterState(_Printer.Name).ToString();
                 _Printer.PrinterStatus = (PrinterStatus)Convert.ToInt32(printer.Properties["PrinterStatus"].Value);
                 _PrinterList.Add(_Printer);
             }
             return _PrinterList;
         }
-        public static string GetPrinterState(string PrinterName)
+
+        /// <summary>
+        /// 获取枚举的描述
+        /// </summary>
+        /// <param name="enumValue"></param>
+        /// <returns></returns>
+        private static string GetEnumDescription(Enum enumValue)
         {
-            try
-            {
-                string path = @"win32_printer.DeviceId='" + PrinterName + "'";
-                ManagementObject printer = new ManagementObject(path);
-                printer.Get();
-
-                var  intValue =Convert.ToInt32(printer.Properties["PrinterState"].Value);
-           
-                string strRet = string.Empty;
-                switch (intValue)
-                {
-                    case 0:
-                        strRet = "准备就绪";
-                        break;
-                    case 0x00000200:
-                        strRet = "忙";
-                        break;
-                    case 0x00400000:
-                        strRet = "被打开";
-                        break;
-                    case 0x00000002:
-                        strRet = "错误";
-                        break;
-                    case 0x0008000:
-                        strRet = "初始化";
-                        break;
-                    case 0x00000100:
-                        strRet = "正在输入,输出";
-                        break;
-                    case 0x00000020:
-                        strRet = "手工送纸";
-                        break;
-                    case 0x00040000:
-                        strRet = "无墨粉";
-                        break;
-                    case 0x00001000:
-                        strRet = "不可用";
-                        break;
-                    case 0x00000080:
-                        strRet = "脱机";
-                        break;
-                    case 0x00200000:
-                        strRet = "内存溢出";
-                        break;
-                    case 0x00000800:
-                        strRet = "输出口已满";
-                        break;
-                    case 0x00080000:
-                        strRet = "当前页无法打印";
-                        break;
-                    case 0x00000008:
-                        strRet = "塞纸";
-                        break;
-                    case 0x00000010:
-                        strRet = "缺纸";
-                        break;
-                    case 0x00000040:
-                        strRet = "纸张问题";
-                        break;
-                    case 0x00000001:
-                        strRet = "暂停";
-                        break;
-                    case 0x00000004:
-                        strRet = "正在删除";
-                        break;
-                    case 0x00000400:
-                        strRet = "正在打印";
-                        break;
-                    case 0x00004000:
-                    case 0x00004400:
-                        strRet = "正在处理";
-                        break;
-                    case 0x00020000:
-                        strRet = "墨粉不足";
-                        break;
-                    case 0x00100000:
-                        strRet = "需要用户干预";
-                        break;
-                    case 0x20000000:
-                        strRet = "等待";
-                        break;
-                    case 0x00010000:
-                        strRet = "热机中";
-                        break;
-                    default:
-                        strRet = intValue.ToString();
-                        break;
-                }
-                return strRet;
-
-            }
-            catch (Exception)
-            {
-                return "";
-            }
+            string value = enumValue.ToString();
+            FieldInfo field = enumValue.GetType().GetField(value);
+            object[] objs = field.GetCustomAttributes(typeof(DescriptionAttribute), false);    //获取描述属性
+            if (objs == null || objs.Length == 0)    //当描述属性没有时，直接返回名称
+                return value;
+            DescriptionAttribute descriptionAttribute = (DescriptionAttribute)objs[0];
+            return descriptionAttribute.Description;
         }
 
+        /// <summary>
+        /// 获取打印机的当前状态
+        /// </summary>
+        /// <param name="PrinterDevice">打印机设备名称</param>
+        /// <returns>打印机状态</returns>
+        public static int GetPrinterStateInt(string PrinterDevice)
+        {
+
+            string path = @"win32_printer.DeviceId='" + PrinterDevice + "'";
+            ManagementObject printer = new ManagementObject(path);
+            printer.Get();
+            int intValue = Convert.ToInt32(printer.Properties["PrinterState"].Value);
+            return intValue;
+        }
+
+        /// <summary>
+        /// 获取打印机的当前状态
+        /// </summary>
+        /// <param name="PrinterDevice">打印机设备名称</param>
+        /// <returns>打印机状态</returns>
+        public static PrinterState GetPrinterState(string PrinterDevice)
+        {
+
+            string path = @"win32_printer.DeviceId='" + PrinterDevice + "'";
+            ManagementObject printer = new ManagementObject(path);
+            printer.Get();
+            int intValue = Convert.ToInt32(printer.Properties["PrinterState"].Value);
+            return (PrinterState)intValue;
+        }
+
+        /// <summary>
+        /// 获取打印机的状态信息
+        /// </summary>
+        /// <param name="PrinterName"></param>
+        /// <returns></returns>
+        public static int GetPrinterStatusInt(string PrinterName)
+        {
+            string path = @"win32_printer.DeviceId='" + PrinterName + "'";
+            ManagementObject printer = new ManagementObject(path);
+            printer.Get();
+            int intValue = Convert.ToInt32(printer.Properties["PrinterStatus"].Value);
+            return intValue;
+        }
 
         /// <summary>
         /// 获取打印机的状态信息
@@ -211,7 +176,15 @@ namespace NBeeNET.Mjolnir.Storage.Print.Common
                 string printerName = jobName.Split(',')[0];
                 string driverName = prntJob.Properties["DriverName"].Value.ToString();
                 string documentName = prntJob.Properties["Document"].Value.ToString();
-                string jobStatus = prntJob.Properties["JobStatus"].Value.ToString() + "|" + GetPrinterState(printerName);
+                string jobStatusText = prntJob.Properties["JobStatus"].Value.ToString();
+
+                PrinterStatus printerStatusEnum = GetPrinterStatus(printerName);
+                string printerStatusText = GetEnumDescription(printerStatusEnum);
+
+                string printerStatus = printerStatusText + "(" + printerStatusEnum.ToString() + ")";
+                jobStatusText = jobStatusText.IndexOf('|') > 0 ? jobStatusText.Split('|')[0] : jobStatusText;
+                string jobStatus = string.Format("{0}<br />{1}", jobStatusText, printerStatus);
+
                 //DateTime TimeSubmitted = (DateTime)prntJob.Properties["JobStatus"].Value;
                 string dataType = prntJob.Properties["DataType"].Value.ToString();
                 int totalPages = Convert.ToInt32(prntJob.Properties["TotalPages"].Value);

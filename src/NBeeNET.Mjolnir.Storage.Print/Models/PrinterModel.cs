@@ -48,7 +48,7 @@ namespace NBeeNET.Mjolnir.Storage.Print.Models
     /// </summary>
     public enum PrinterStatus
     {
-        [Description("其他")]
+        [Description("异常")]
         Other = 1,
 
         [Description("未知")]
