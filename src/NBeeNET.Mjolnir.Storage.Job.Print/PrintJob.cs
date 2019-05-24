@@ -10,6 +10,7 @@ using System.Drawing.Printing;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Drawing;
 
 namespace NBeeNET.Mjolnir.Storage.Job.Print
 {
@@ -39,19 +40,22 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
                 {
                     case ".XLS":
                     case ".XLSX":
-
                         PrintExcel(context);
-
                         break;
                     case ".DOC":
                     case ".DOCX":
                     case ".TXT":
-
                         PrintWord(context);
-
                         break;
                     case ".PDF":
                         PrintPDF(context);
+                        break;
+                    case ".PPT":
+                    case ".PPTX":
+                        PrintPPT(context);
+                        break;
+                    case ".JPG":
+                        PrintImage(context);
                         break;
                     default:
                         context.Result = new JsonFileDetail()
@@ -73,7 +77,102 @@ namespace NBeeNET.Mjolnir.Storage.Job.Print
             return Task.CompletedTask;
             
         }
+        private void PrintImage(IJobExecutionContext context)
+        {
+            var tempFilePath = context.MergedJobDataMap["tempFilePath"].ToString();
+            var id = context.MergedJobDataMap["id"].ToString();
+            try
+            {
+                image = new Bitmap(tempFilePath);
+                PrintDocument printDocument = new PrintDocument();
+                printDocument.DocumentName = id;
+                printDocument.PrintPage += PrintDocument_PrintPage;
+                printDocument.Print();
+                //等待文件生成
+                var jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                if (jobModel != null)
+                {
+                    while (jobModel.JobStatus != "打印完成" && jobModel.JobStatus != "打印异常")
+                    {
+                        System.Threading.Thread.Sleep(200);
+                        jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                    }
+                }
+                image.Dispose();
+                context.Result = new JsonFileDetail()
+                {
+                    State = "2",
+                    Value = "打印完成"
+                };
+            }
+            catch (Exception ex)
+            {
+                context.Result = new JsonFileDetail()
+                {
+                    State = "-1",
+                    Value = "打印失败:" + ex.Message
+                };
+            }
+            finally
+            {
 
+            }
+        }
+
+        private Image image= null;
+        private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            if (image != null)
+            {
+                e.Graphics.DrawImage(image, 0, 0);
+            }
+            e.HasMorePages = false;
+        }
+
+        private void PrintPPT(IJobExecutionContext context)
+        {
+            Microsoft.Office.Interop.PowerPoint.Application PPT = new Microsoft.Office.Interop.PowerPoint.Application();//创建PPT应用
+            Microsoft.Office.Interop.PowerPoint.Presentation MyPres = null;//PPT应用的实例
+            //Microsoft.Office.Interop.PowerPoint.Slide MySlide = null;//PPT中的幻灯片
+            var tempFilePath = context.MergedJobDataMap["tempFilePath"].ToString();
+            var id = context.MergedJobDataMap["id"].ToString();
+            try
+            {
+                //PPT.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                MyPres = PPT.Presentations.Open(tempFilePath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoFalse);
+                MyPres.PrintOut();
+                //等待文件生成
+                var jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                if (jobModel != null)
+                {
+                    while (jobModel.JobStatus != "打印完成" && jobModel.JobStatus != "打印异常")
+                    {
+                        System.Threading.Thread.Sleep(200);
+                        jobModel = PrintHandleService.GetResource().GetJobById(id).FirstOrDefault();
+                    }
+                }
+                context.Result = new JsonFileDetail()
+                {
+                    State = "2",
+                    Value = "打印完成"
+                };
+            }
+            catch (Exception ex)
+            {
+                context.Result = new JsonFileDetail()
+                {
+                    State = "-1",
+                    Value = "打印失败:" + ex.Message
+                };
+            }
+            finally
+            {
+                if (MyPres != null)
+                    MyPres.Close();
+                if (PPT != null)
+                    PPT.Quit();
+            }
+        }
         /// <summary>
         /// 打印word
         /// </summary>
