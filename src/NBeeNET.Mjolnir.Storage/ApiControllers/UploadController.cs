@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -9,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.ApiControllers
 {
+    [Authorize]
     [Route("/StorageApi/")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class UploadController : ControllerBase
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -80,7 +84,7 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
                 if (file.Length >= settings.MaxLength)
                 {
                     string msg = "上传文件的大小超过了最大限制" + settings.MaxLength / 1024 / 1024 + "M";
-                    return BadRequest("图片上传失败！原因：" + msg);
+                    return BadRequest("文件上传失败！原因：" + msg);
                 }
                 Models.UploadOutput output = new Models.UploadOutput();
                 if (file != null)
@@ -101,7 +105,6 @@ namespace NBeeNET.Mjolnir.Storage.ApiControllers
             }
             return BadRequest("上传失败！");
         }
-
 
         /// <summary>
         /// 多文件上传

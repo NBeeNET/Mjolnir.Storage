@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using NBeeNET.Mjolnir.Storage.Core;
+﻿using NBeeNET.Mjolnir.Storage.Core;
 using NBeeNET.Mjolnir.Storage.Core.Common;
 using NBeeNET.Mjolnir.Storage.Core.Implement;
 using NBeeNET.Mjolnir.Storage.Core.Interface;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NBeeNET.Mjolnir.Storage.Service
